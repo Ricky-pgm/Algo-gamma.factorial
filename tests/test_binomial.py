@@ -32,3 +32,13 @@ def test_continuous_interpolation_between_integers():
 def test_half_integer_known_value():
     # C(4.5, 2) = 4.5! / (2! * 2.5!) = 7.875
     assert binomial(4.5, 2) == pytest.approx(7.875, rel=1e-9)
+
+
+def test_error_message_identifies_k_as_pole_source():
+    with pytest.raises(ValueError, match="k=-1"):
+        binomial(5, -1)
+
+
+def test_error_message_identifies_n_minus_k_as_pole_source():
+    with pytest.raises(ValueError, match="n-k"):
+        binomial(-3, 1)

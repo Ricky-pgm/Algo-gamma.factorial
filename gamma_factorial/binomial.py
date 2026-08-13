@@ -25,4 +25,17 @@ def binomial(n: Number, k: Number) -> Number:
     Lève ValueError si n+1, k+1 ou (n-k+1) tombe sur un pôle de Gamma
     (entier <= 0) — ex: k entier négatif, ou n-k entier négatif.
     """
-    return gamma(n + 1) / (gamma(k + 1) * gamma(n - k + 1))
+    try:
+        gamma_k1 = gamma(k + 1)
+    except ValueError:
+        raise ValueError(
+            f"binomial({n}, {k}) indéfini : k={k} est un pôle de Gamma (k+1 entier <= 0)"
+        ) from None
+    try:
+        gamma_nk1 = gamma(n - k + 1)
+    except ValueError:
+        raise ValueError(
+            f"binomial({n}, {k}) indéfini : n-k={n - k} est un pôle de Gamma "
+            f"(n-k+1 entier <= 0)"
+        ) from None
+    return gamma(n + 1) / (gamma_k1 * gamma_nk1)
