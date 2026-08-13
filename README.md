@@ -80,3 +80,7 @@ mypy gamma_factorial               # type checking (strict mode)
   binomial coefficient `C(n, k) = n! / (k!(n-k)!)` to real `n`, `k` via
   Gamma — this lets you "interpolate" between rows/columns of Pascal's
   triangle, as shown in `docs/pascal-continuous.html`.
+
+## License
+
+MIT — see [LICENSE](LICENSE).

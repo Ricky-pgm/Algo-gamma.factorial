@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "Generalized factorial via the Gamma function (Lanczos), valid for any real/complex number"
 requires-python = ">=3.9"
 readme = "README.md"
+license = { file = "LICENSE" }
 
 [project.scripts]
 gamma-factorial = "gamma_factorial.cli:main"
