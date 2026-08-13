@@ -37,7 +37,7 @@ def main(argv: list[str] | None = None) -> int:
             n = _parse_number(raw)
             result = factorial(n)
             print(f"{raw}! = {result}")
-        except ValueError as exc:
+        except (ValueError, OverflowError) as exc:
             print(f"{raw}! -> erreur: {exc}", file=sys.stderr)
             exit_code = 1
 
