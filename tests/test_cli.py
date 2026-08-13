@@ -27,4 +27,20 @@ def test_overflow_reported_as_error_not_traceback(capsys):
     exit_code = main(["171"])
     err = capsys.readouterr().err
     assert exit_code == 1
-    assert "erreur" in err
+    assert "error" in err
+
+
+def test_invalid_number_reports_clear_error_not_raw_exception(capsys):
+    exit_code = main(["not-a-number"])
+    err = capsys.readouterr().err
+    assert exit_code == 1
+    assert "not a valid number" in err
+
+
+def test_binomial_with_invalid_n_does_not_crash(capsys):
+    # Regression: n used to be parsed outside the try/except in
+    # _run_binomial, so an invalid n crashed with a raw traceback.
+    exit_code = main(["binomial", "not-a-number", "1"])
+    err = capsys.readouterr().err
+    assert exit_code == 1
+    assert "not a valid number" in err
