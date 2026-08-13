@@ -51,6 +51,13 @@ gamma-factorial binomial 10 0 1 2 3   # plusieurs valeurs de k d'un coup
 pytest
 ```
 
+## Qualité de code
+
+```bash
+ruff check gamma_factorial tests   # lint
+mypy gamma_factorial               # vérification de types (mode strict)
+```
+
 ## Comment ça marche
 
 - `gamma(z)` implémente Γ via Lanczos (g=7, ~15 chiffres significatifs de
