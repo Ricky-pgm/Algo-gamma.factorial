@@ -1,0 +1,19 @@
+[project]
+name = "gamma-factorial"
+version = "0.1.0"
+description = "Factorielle généralisée via la fonction Gamma (Lanczos), valable sur tout réel/complexe"
+requires-python = ">=3.9"
+readme = "README.md"
+
+[project.scripts]
+gamma-factorial = "gamma_factorial.cli:main"
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["gamma_factorial*"]
