@@ -1,4 +1,4 @@
-<title>Le triangle de Pascal continu</title>
+<title>The continuous Pascal's triangle</title>
 <style>
 @font-face {
   font-family: "Source Serif";
@@ -310,37 +310,37 @@ h2 {
 </style>
 
 <div class="page">
-  <p class="eyebrow">gamma-factorial · démo interactive</p>
-  <h1>Le triangle de Pascal, rendu continu</h1>
+  <p class="eyebrow">gamma-factorial · interactive demo</p>
+  <h1>Pascal's triangle, made continuous</h1>
   <p class="lede">
-    Le coefficient binomial classique C(n, k) n'existe qu'aux points entiers.
-    En remplaçant les factorielles par la fonction Gamma — <code>C(n,k) =
-    Γ(n+1) / (Γ(k+1)Γ(n-k+1))</code> — la même formule se prolonge en une
-    courbe lisse qui passe exactement par chaque valeur du triangle de Pascal,
-    et prend aussi un sens entre les entiers.
+    The classic binomial coefficient C(n, k) only exists at integer points.
+    By replacing factorials with the Gamma function — <code>C(n,k) =
+    Γ(n+1) / (Γ(k+1)Γ(n-k+1))</code> — the same formula extends into a
+    smooth curve that passes exactly through every value of Pascal's
+    triangle, and also makes sense between the integers.
   </p>
 
   <section class="panel">
     <div class="control-row">
-      <span class="control-label">Ligne du triangle — n</span>
+      <span class="control-label">Triangle row — n</span>
       <span class="n-value" id="nValue">5</span>
     </div>
-    <input type="range" id="nSlider" min="0" max="12" step="1" value="5" aria-label="Choisir n">
+    <input type="range" id="nSlider" min="0" max="12" step="1" value="5" aria-label="Choose n">
 
     <div class="plot-wrap">
-      <canvas id="plot" width="920" height="380" role="img" aria-label="Courbe de C(n,k) en fonction de k"></canvas>
+      <canvas id="plot" width="920" height="380" role="img" aria-label="Curve of C(n,k) as a function of k"></canvas>
     </div>
 
     <div class="legend">
-      <span class="legend-item"><span class="swatch curve"></span> C(n, k) — interpolation continue</span>
-      <span class="legend-item"><span class="swatch integer"></span> valeurs entières (triangle de Pascal classique)</span>
-      <span class="legend-item"><span class="swatch cursor"></span> curseur k</span>
+      <span class="legend-item"><span class="swatch curve"></span> C(n, k) — continuous interpolation</span>
+      <span class="legend-item"><span class="swatch integer"></span> integer values (classic Pascal's triangle)</span>
+      <span class="legend-item"><span class="swatch cursor"></span> k cursor</span>
     </div>
   </section>
 
   <div class="readout">
     <div class="readout-cell">
-      <div class="readout-key">k (curseur)</div>
+      <div class="readout-key">k (cursor)</div>
       <div class="readout-val" id="kOut">2.00</div>
     </div>
     <div class="readout-cell">
@@ -348,17 +348,17 @@ h2 {
       <div class="readout-val accent" id="cOut">10.000</div>
     </div>
     <div class="readout-cell">
-      <div class="readout-key">Statut</div>
-      <div class="readout-val integer-flag" id="statusOut">valeur entière exacte</div>
+      <div class="readout-key">Status</div>
+      <div class="readout-val integer-flag" id="statusOut">exact integer value</div>
     </div>
   </div>
 
   <section class="panel">
-    <h2>Ligne n = <span id="tableN">5</span> — comparaison au Pascal classique</h2>
+    <h2>Row n = <span id="tableN">5</span> — comparison with classic Pascal</h2>
     <div class="row-table">
       <table>
         <thead>
-          <tr><th>k</th><th>C(n,k) — formule Gamma</th><th>math.comb(n,k)</th></tr>
+          <tr><th>k</th><th>C(n,k) — Gamma formula</th><th>math.comb(n,k)</th></tr>
         </thead>
         <tbody id="tableBody"></tbody>
       </table>
@@ -366,21 +366,21 @@ h2 {
   </section>
 
   <section class="panel usage">
-    <h2>Tester en local</h2>
-    <p>Ce module fait partie du package <code>gamma-factorial</code> :</p>
+    <h2>Try it locally</h2>
+    <p>This module is part of the <code>gamma-factorial</code> package:</p>
     <pre><code>from gamma_factorial import binomial
 
-binomial(5, 2)      # 10.0            — coefficient classique
-binomial(4.5, 2)    # 7.875           — interpolation continue
+binomial(5, 2)      # 10.0            — classic coefficient
+binomial(4.5, 2)    # 7.875           — continuous interpolation
 binomial(0.5, 0.5)  # 1.0</code></pre>
-    <p>Chaque point de la courbe ci-dessus est calculé par cette même
-    fonction, exécutée en Python puis figée en données pour cette page.</p>
+    <p>Every point on the curve above is computed by this same function,
+    run in Python and then frozen into data for this page.</p>
   </section>
 
   <footer>
-    C(n, k) = Γ(n+1) / (Γ(k+1)·Γ(n−k+1)), calculé via l'approximation de
-    Lanczos de la fonction Gamma. Aux points entiers 0 ≤ k ≤ n, coïncide
-    exactement avec le triangle de Pascal usuel.
+    C(n, k) = Γ(n+1) / (Γ(k+1)·Γ(n−k+1)), computed via the Lanczos
+    approximation of the Gamma function. At integer points 0 ≤ k ≤ n, it
+    matches classic Pascal's triangle exactly.
   </footer>
 </div>
 
@@ -525,7 +525,7 @@ function draw() {
   kOut.textContent = cK.toFixed(2);
   cOut.textContent = cV < 1000 ? cV.toFixed(3) : cV.toFixed(1);
   const isInt = Math.abs(cK - Math.round(cK)) < 1e-6;
-  statusOut.textContent = isInt ? 'valeur entière exacte' : 'interpolation continue';
+  statusOut.textContent = isInt ? 'exact integer value' : 'continuous interpolation';
   statusOut.className = 'readout-val ' + (isInt ? 'integer-flag' : 'accent');
 }
 

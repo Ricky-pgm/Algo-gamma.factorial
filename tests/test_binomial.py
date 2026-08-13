@@ -21,8 +21,8 @@ def test_zero_and_full_choice():
 
 
 def test_continuous_interpolation_between_integers():
-    # C(n, k) pour n non-entier doit être strictement entre les valeurs
-    # entières encadrantes lorsque la fonction y est monotone localement.
+    # C(n, k) for non-integer n should sit strictly between the bracketing
+    # integer values where the function is locally monotonic.
     low = binomial(4, 2)
     mid = binomial(4.5, 2)
     high = binomial(5, 2)

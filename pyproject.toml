@@ -1,7 +1,7 @@
 [project]
 name = "gamma-factorial"
 version = "0.1.0"
-description = "Factorielle généralisée via la fonction Gamma (Lanczos), valable sur tout réel/complexe"
+description = "Generalized factorial via the Gamma function (Lanczos), valid for any real/complex number"
 requires-python = ">=3.9"
 readme = "README.md"
 

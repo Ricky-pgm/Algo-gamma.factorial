@@ -1,12 +1,12 @@
 """
-Coefficient binomial généralisé (triangle de Pascal continu).
+Generalized binomial coefficient (continuous Pascal's triangle).
 
     C(n, k) = n! / (k! (n-k)!) = Gamma(n+1) / (Gamma(k+1) Gamma(n-k+1))
 
-Pour n, k entiers positifs avec k <= n, c'est le coefficient binomial
-classique. Grâce à `factorial`/`gamma`, cette implémentation reste valable
-pour n et k réels quelconques (ex: C(4.5, 2)), ce qui interpole "entre" les
-lignes et colonnes du triangle de Pascal habituel.
+For non-negative integer n, k with k <= n, this is the usual binomial
+coefficient. Thanks to `factorial`/`gamma`, this implementation remains
+valid for any real n and k (e.g. C(4.5, 2)), interpolating "between" the
+rows and columns of the usual Pascal's triangle.
 """
 
 from __future__ import annotations
@@ -15,25 +15,26 @@ from .core import gamma
 
 
 def binomial(n: float | complex, k: float | complex) -> float | complex:
-    """Coefficient binomial généralisé C(n, k) = Gamma(n+1) / (Gamma(k+1) Gamma(n-k+1)).
+    """Generalized binomial coefficient C(n, k) = Gamma(n+1) / (Gamma(k+1) Gamma(n-k+1)).
 
-    Coïncide avec le coefficient binomial usuel pour n, k entiers (0 <= k <= n).
-    Défini aussi pour n, k réels non-entiers via la fonction Gamma.
+    Matches the usual binomial coefficient for non-negative integer n, k
+    (0 <= k <= n). Also defined for non-integer real n, k via the Gamma
+    function.
 
-    Lève ValueError si n+1, k+1 ou (n-k+1) tombe sur un pôle de Gamma
-    (entier <= 0) — ex: k entier négatif, ou n-k entier négatif.
+    Raises ValueError if n+1, k+1, or (n-k+1) lands on a pole of Gamma
+    (integer <= 0) — e.g. negative integer k, or negative integer n-k.
     """
     try:
         gamma_k1 = gamma(k + 1)
     except ValueError:
         raise ValueError(
-            f"binomial({n}, {k}) indéfini : k={k} est un pôle de Gamma (k+1 entier <= 0)"
+            f"binomial({n}, {k}) is undefined: k={k} is a pole of Gamma (k+1 integer <= 0)"
         ) from None
     try:
         gamma_nk1 = gamma(n - k + 1)
     except ValueError:
         raise ValueError(
-            f"binomial({n}, {k}) indéfini : n-k={n - k} est un pôle de Gamma "
-            f"(n-k+1 entier <= 0)"
+            f"binomial({n}, {k}) is undefined: n-k={n - k} is a pole of Gamma "
+            f"(n-k+1 integer <= 0)"
         ) from None
     return gamma(n + 1) / (gamma_k1 * gamma_nk1)

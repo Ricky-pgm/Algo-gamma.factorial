@@ -1,13 +1,13 @@
 """
-Factorielle généralisée via la fonction Gamma (approximation de Lanczos).
+Generalized factorial via the Gamma function (Lanczos approximation).
 
-    Gamma(n+1) = n!             pour n entier >= 0
-    Gamma(z)   se prolonge à presque tout C (pôles aux entiers <= 0)
+    Gamma(n+1) = n!             for integer n >= 0
+    Gamma(z)   extends to almost all of C (poles at integers <= 0)
     Gamma(1/2) = sqrt(pi)   =>  factorial(-1/2) = sqrt(pi)
     Gamma(3/2) = sqrt(pi)/2 =>  factorial(1/2)  = sqrt(pi)/2
 
-Formule de réflexion d'Euler pour Re(z) < 0.5, utilisée ici pour couvrir
-tous les réels/complexes négatifs non-entiers :
+Euler's reflection formula for Re(z) < 0.5, used here to cover all
+non-integer negative reals/complex numbers:
     Gamma(z) * Gamma(1-z) = pi / sin(pi*z)
 """
 
@@ -44,15 +44,15 @@ def _is_finite(z: float | complex) -> bool:
 
 
 def gamma(z: float | complex) -> float | complex:
-    """Fonction Gamma d'Euler, valable sur C \\ {0, -1, -2, ...}.
+    """Euler's Gamma function, defined on C \\ {0, -1, -2, ...}.
 
-    Renvoie un float si l'entrée est réelle (et le résultat l'est
-    numériquement), sinon un complex.
+    Returns a float if the input is real (and the result is numerically
+    real), otherwise a complex number.
     """
     if not _is_finite(z):
-        raise ValueError(f"Gamma n'est pas définie en {z} (NaN ou infini)")
+        raise ValueError(f"Gamma is not defined at {z} (NaN or infinity)")
     if _is_nonpositive_integer(z):
-        raise ValueError(f"Gamma a un pôle en {z} (infini)")
+        raise ValueError(f"Gamma has a pole at {z} (infinite)")
 
     is_real_input = isinstance(z, (int, float))
     zc = complex(z)
@@ -66,9 +66,9 @@ def gamma(z: float | complex) -> float | complex:
             acc += _LANCZOS_COEF[i] / (zc + i)
 
         t = zc + _G + 0.5
-        # log-espace : (zc+0.5)*log(t) - t plutôt que t**(zc+0.5) * exp(-t),
-        # sinon t**(zc+0.5) déborde (float/complex) bien avant que le
-        # résultat final (une fois multiplié par exp(-t), minuscule) déborde.
+        # Log-space: (zc+0.5)*log(t) - t rather than t**(zc+0.5) * exp(-t),
+        # since t**(zc+0.5) overflows (float/complex) well before the final
+        # result (once multiplied by the tiny exp(-t)) actually would.
         log_result = (zc + 0.5) * cmath.log(t) - t
         result = math.sqrt(2 * math.pi) * cmath.exp(log_result) * acc
 
@@ -80,11 +80,11 @@ def gamma(z: float | complex) -> float | complex:
 
 
 def factorial(n: float | complex) -> float | complex:
-    """Factorielle généralisée : n! = Gamma(n+1).
+    """Generalized factorial: n! = Gamma(n+1).
 
-    Fonctionne pour entiers positifs, zéro, réels/complexes quelconques,
-    y compris les négatifs non-entiers (ex: factorial(-0.5) = sqrt(pi)).
+    Works for non-negative integers, zero, and any real/complex number,
+    including non-integer negatives (e.g. factorial(-0.5) = sqrt(pi)).
 
-    Lève ValueError sur les pôles (entiers négatifs), où n! est infini.
+    Raises ValueError at poles (negative integers), where n! is infinite.
     """
     return gamma(n + 1)

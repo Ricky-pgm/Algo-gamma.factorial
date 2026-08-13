@@ -54,9 +54,9 @@ def test_recursive_relation_gamma_z_plus_1():
 
 
 def test_large_values_near_float_max_do_not_overflow_prematurely():
-    # 142! ~ 1.4e245 : loin du plafond float (~1.8e308), ne doit pas déborder.
+    # 142! ~ 1.4e245: far from the float ceiling (~1.8e308), must not overflow.
     assert factorial(142) == pytest.approx(math.factorial(142), rel=1e-9)
-    # 170! est le plus grand n! représentable en float ; doit passer aussi.
+    # 170! is the largest n! representable as a float; must also pass.
     assert factorial(170) == pytest.approx(float(math.factorial(170)), rel=1e-9)
 
 
