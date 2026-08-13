@@ -60,7 +60,11 @@ def gamma(z: Number) -> Number:
             acc += _LANCZOS_COEF[i] / (zc + i)
 
         t = zc + _G + 0.5
-        result = math.sqrt(2 * math.pi) * t ** (zc + 0.5) * cmath.exp(-t) * acc
+        # log-espace : (zc+0.5)*log(t) - t plutôt que t**(zc+0.5) * exp(-t),
+        # sinon t**(zc+0.5) déborde (float/complex) bien avant que le
+        # résultat final (une fois multiplié par exp(-t), minuscule) déborde.
+        log_result = (zc + 0.5) * cmath.log(t) - t
+        result = math.sqrt(2 * math.pi) * cmath.exp(log_result) * acc
 
     if is_real_input:
         return result.real

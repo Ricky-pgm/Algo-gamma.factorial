@@ -51,3 +51,15 @@ def test_complex_input_returns_complex():
 def test_recursive_relation_gamma_z_plus_1():
     for z in [0.3, 1.7, 2.9, -0.3, -1.7]:
         assert gamma(z + 1) == pytest.approx(z * gamma(z), rel=1e-9)
+
+
+def test_large_values_near_float_max_do_not_overflow_prematurely():
+    # 142! ~ 1.4e245 : loin du plafond float (~1.8e308), ne doit pas déborder.
+    assert factorial(142) == pytest.approx(math.factorial(142), rel=1e-9)
+    # 170! est le plus grand n! représentable en float ; doit passer aussi.
+    assert factorial(170) == pytest.approx(float(math.factorial(170)), rel=1e-9)
+
+
+def test_beyond_float_max_raises_overflow():
+    with pytest.raises(OverflowError):
+        factorial(171)
