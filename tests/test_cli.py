@@ -1,4 +1,20 @@
-from gamma_factorial.cli import main
+import builtins
+
+import pytest
+
+from gamma_factorial.cli import _eval_repl_expression, main
+
+
+def _feed_input(monkeypatch, lines):
+    it = iter(lines)
+
+    def fake_input(prompt=""):
+        try:
+            return next(it)
+        except StopIteration:
+            raise EOFError from None
+
+    monkeypatch.setattr(builtins, "input", fake_input)
 
 
 def test_factorial_retrocompat_without_subcommand(capsys):
@@ -44,3 +60,55 @@ def test_binomial_with_invalid_n_does_not_crash(capsys):
     err = capsys.readouterr().err
     assert exit_code == 1
     assert "not a valid number" in err
+
+
+@pytest.mark.parametrize(
+    ("expr", "expected"),
+    [
+        ("5!", 120.0),
+        ("gamma(2.5)", 1.3293403881791384),
+        ("C(10, 3)", 120.0),
+        ("binomial(5, 2)", 10.0),
+        ("factorial(5)", 120.0),
+    ],
+)
+def test_eval_repl_expression(expr, expected):
+    result = _eval_repl_expression(expr)
+    assert float(result) == pytest.approx(expected, rel=1e-9)
+
+
+def test_repl_starts_with_no_arguments(monkeypatch, capsys):
+    _feed_input(monkeypatch, ["5!", "quit"])
+    exit_code = main([])
+    out = capsys.readouterr().out
+    assert exit_code == 0
+    assert "120" in out
+
+
+def test_repl_via_interactive_subcommand(monkeypatch, capsys):
+    _feed_input(monkeypatch, ["C(10, 3)", "quit"])
+    exit_code = main(["interactive"])
+    out = capsys.readouterr().out
+    assert exit_code == 0
+    assert "119.99" in out or "120" in out
+
+
+def test_repl_help_command(monkeypatch, capsys):
+    _feed_input(monkeypatch, ["help", "quit"])
+    main([])
+    out = capsys.readouterr().out
+    assert "Enter an expression" in out
+
+
+def test_repl_reports_errors_without_crashing(monkeypatch, capsys):
+    _feed_input(monkeypatch, ["-1!", "gibberish", "quit"])
+    exit_code = main([])
+    err = capsys.readouterr().err
+    assert exit_code == 0
+    assert "error:" in err
+
+
+def test_repl_exits_cleanly_on_eof(monkeypatch, capsys):
+    _feed_input(monkeypatch, [])
+    exit_code = main([])
+    assert exit_code == 0

@@ -45,6 +45,30 @@ gamma-factorial binomial 4.5 2    # C(4.5, 2) = 7.875 (continuous interpolation)
 gamma-factorial binomial 10 0 1 2 3   # several values of k at once
 ```
 
+### Interactive mode
+
+Running `gamma-factorial` with no arguments (or `gamma-factorial interactive`)
+opens a REPL where you can type expressions and see results immediately,
+without re-invoking the command each time:
+
+```
+$ gamma-factorial
+gamma-factorial interactive mode — type 'help' or 'quit'
+> 5!
+120.0
+> gamma(2.5)
+1.3293403881791384
+> C(10, 3)
+120.0
+> C(4.5, 2)
+7.874999999999998
+> quit
+```
+
+Recognized expressions: `n!`, `factorial(n)`, `gamma(z)`, `C(n, k)` /
+`binomial(n, k)`. Type `help` inside the REPL for a reminder, `quit` (or
+`exit`, or Ctrl-D) to leave.
+
 ## Tests
 
 ```bash
