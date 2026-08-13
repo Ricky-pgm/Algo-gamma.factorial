@@ -20,7 +20,7 @@ def _parse_number(raw: str) -> complex | float:
     return complex(raw.replace(" ", ""))
 
 
-def _run_factorial(args) -> int:
+def _run_factorial(args: argparse.Namespace) -> int:
     exit_code = 0
     for raw in args.numbers:
         try:
@@ -33,7 +33,7 @@ def _run_factorial(args) -> int:
     return exit_code
 
 
-def _run_binomial(args) -> int:
+def _run_binomial(args: argparse.Namespace) -> int:
     exit_code = 0
     n = _parse_number(args.n)
     for raw_k in args.k:
@@ -85,7 +85,8 @@ def main(argv: list[str] | None = None) -> int:
         parser.print_help()
         return 1
 
-    return args.func(args)
+    exit_code: int = args.func(args)
+    return exit_code
 
 
 if __name__ == "__main__":

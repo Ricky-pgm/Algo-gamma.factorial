@@ -15,7 +15,6 @@ from __future__ import annotations
 
 import cmath
 import math
-from numbers import Number
 
 _G = 7
 _LANCZOS_COEF = (
@@ -31,21 +30,20 @@ _LANCZOS_COEF = (
 )
 
 
-def _is_nonpositive_integer(z: Number) -> bool:
-    if isinstance(z, complex):
-        if z.imag != 0:
-            return False
-        z = z.real
-    return float(z).is_integer() and z <= 0
+def _is_nonpositive_integer(z: float | complex) -> bool:
+    zr = z.real if isinstance(z, complex) else z
+    if isinstance(z, complex) and z.imag != 0:
+        return False
+    return float(zr).is_integer() and zr <= 0
 
 
-def _is_finite(z: Number) -> bool:
+def _is_finite(z: float | complex) -> bool:
     if isinstance(z, complex):
         return math.isfinite(z.real) and math.isfinite(z.imag)
     return math.isfinite(z)
 
 
-def gamma(z: Number) -> Number:
+def gamma(z: float | complex) -> float | complex:
     """Fonction Gamma d'Euler, valable sur C \\ {0, -1, -2, ...}.
 
     Renvoie un float si l'entrée est réelle (et le résultat l'est
@@ -63,7 +61,7 @@ def gamma(z: Number) -> Number:
         result = math.pi / (cmath.sin(math.pi * zc) * gamma(1 - zc))
     else:
         zc -= 1
-        acc = _LANCZOS_COEF[0]
+        acc: complex = _LANCZOS_COEF[0]
         for i in range(1, _G + 2):
             acc += _LANCZOS_COEF[i] / (zc + i)
 
@@ -81,7 +79,7 @@ def gamma(z: Number) -> Number:
     return result
 
 
-def factorial(n: Number) -> Number:
+def factorial(n: float | complex) -> float | complex:
     """Factorielle généralisée : n! = Gamma(n+1).
 
     Fonctionne pour entiers positifs, zéro, réels/complexes quelconques,

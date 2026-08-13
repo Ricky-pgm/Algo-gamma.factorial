@@ -11,12 +11,10 @@ lignes et colonnes du triangle de Pascal habituel.
 
 from __future__ import annotations
 
-from numbers import Number
-
 from .core import gamma
 
 
-def binomial(n: Number, k: Number) -> Number:
+def binomial(n: float | complex, k: float | complex) -> float | complex:
     """Coefficient binomial généralisé C(n, k) = Gamma(n+1) / (Gamma(k+1) Gamma(n-k+1)).
 
     Coïncide avec le coefficient binomial usuel pour n, k entiers (0 <= k <= n).
