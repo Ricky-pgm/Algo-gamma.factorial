@@ -63,3 +63,15 @@ def test_large_values_near_float_max_do_not_overflow_prematurely():
 def test_beyond_float_max_raises_overflow():
     with pytest.raises(OverflowError):
         factorial(171)
+
+
+def test_nan_input_raises_instead_of_returning_nan():
+    with pytest.raises(ValueError):
+        gamma(float("nan"))
+
+
+def test_infinite_input_raises_instead_of_returning_nan():
+    with pytest.raises(ValueError):
+        gamma(float("inf"))
+    with pytest.raises(ValueError):
+        gamma(float("-inf"))

@@ -39,12 +39,20 @@ def _is_nonpositive_integer(z: Number) -> bool:
     return float(z).is_integer() and z <= 0
 
 
+def _is_finite(z: Number) -> bool:
+    if isinstance(z, complex):
+        return math.isfinite(z.real) and math.isfinite(z.imag)
+    return math.isfinite(z)
+
+
 def gamma(z: Number) -> Number:
     """Fonction Gamma d'Euler, valable sur C \\ {0, -1, -2, ...}.
 
     Renvoie un float si l'entrée est réelle (et le résultat l'est
     numériquement), sinon un complex.
     """
+    if not _is_finite(z):
+        raise ValueError(f"Gamma n'est pas définie en {z} (NaN ou infini)")
     if _is_nonpositive_integer(z):
         raise ValueError(f"Gamma a un pôle en {z} (infini)")
 
