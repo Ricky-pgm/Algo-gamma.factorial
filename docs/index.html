@@ -173,11 +173,40 @@ h1 {
   word-break: break-all;
 }
 
+.result-expr-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.6rem;
+  margin-bottom: 0.3rem;
+}
+
 .result-expr {
   font-family: ui-monospace, "SF Mono", Menlo, monospace;
   font-size: 0.82rem;
   color: var(--ink-faint);
-  margin-bottom: 0.3rem;
+}
+
+.copy-link-btn {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 0.75rem;
+  background: none;
+  border: none;
+  color: var(--ink-faint);
+  cursor: pointer;
+  padding: 0.1rem 0.3rem;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+.copy-link-btn:hover {
+  color: var(--accent);
+}
+.copy-link-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+.copy-link-btn.copied {
+  color: var(--curve);
 }
 
 .result-error {
@@ -768,6 +797,33 @@ svg#plot {
     return `C(${plot.n}, k) around k = ${plot.center}`;
   }
 
+  function urlFor(expr) {
+    const url = new URL(window.location.href);
+    url.searchParams.set("expr", expr);
+    return url;
+  }
+
+  function makeCopyLinkButton(expr) {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "copy-link-btn";
+    btn.textContent = "copy link";
+    btn.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(urlFor(expr).toString());
+        btn.textContent = "copied";
+        btn.classList.add("copied");
+        setTimeout(() => {
+          btn.textContent = "copy link";
+          btn.classList.remove("copied");
+        }, 1500);
+      } catch (e) {
+        btn.textContent = "copy failed";
+      }
+    });
+    return btn;
+  }
+
   function renderHistory() {
     if (history.length === 0) {
       historySection.hidden = true;
@@ -805,10 +861,14 @@ svg#plot {
       const { value, plot } = evalExpression(expr);
       const display = formatResult(value);
 
+      const exprRow = document.createElement("div");
+      exprRow.className = "result-expr-row";
       const exprLine = document.createElement("p");
       exprLine.className = "result-expr";
       exprLine.textContent = expr;
-      resultArea.appendChild(exprLine);
+      exprRow.appendChild(exprLine);
+      exprRow.appendChild(makeCopyLinkButton(expr));
+      resultArea.appendChild(exprRow);
 
       const valueLine = document.createElement("p");
       valueLine.className = "result-value";
@@ -833,6 +893,7 @@ svg#plot {
       }
 
       history.unshift({ expr, display, isError: false });
+      updateUrl(expr);
     } catch (e) {
       const errBox = document.createElement("p");
       errBox.className = "result-error";
@@ -840,9 +901,14 @@ svg#plot {
       resultArea.appendChild(errBox);
 
       history.unshift({ expr, display: "error", isError: true });
+      updateUrl(expr);
     }
 
     renderHistory();
+  }
+
+  function updateUrl(expr) {
+    window.history.replaceState(null, "", urlFor(expr));
   }
 
   evalBtn.addEventListener("click", runEval);
@@ -855,6 +921,12 @@ svg#plot {
     exprInput.value = btn.dataset.expr;
     runEval();
   });
+
+  const urlExpr = new URL(window.location.href).searchParams.get("expr");
+  if (urlExpr) {
+    exprInput.value = urlExpr;
+    runEval();
+  }
 
   exprInput.focus();
 })();
