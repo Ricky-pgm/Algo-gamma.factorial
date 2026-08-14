@@ -22,9 +22,17 @@ binomial(5, 2)    # 10.0     (classic binomial coefficient)
 binomial(4.5, 2)  # 7.875    (continuous interpolation "between" rows of Pascal's triangle)
 ```
 
+A standalone web calculator lives in `docs/index.html` — type an
+expression (`5!`, `gamma(2.5)`, `C(10, 3)`), get an instant result plus a
+live curve of the function around it. Pure HTML/JS, no server, no build
+step: open the file directly in a browser, or deploy the `docs/` folder as
+a static site (GitHub Pages, Netlify, Vercel...). It's a JS port of the
+same Lanczos math as the Python package — real numbers only (no complex
+support in the browser build).
+
 An interactive demo of the continuous Pascal's triangle (slider on `n`,
 curve of `C(n, k)` vs. `k`) is available in `docs/pascal-continuous.html` -
-a preview of what `binomial()` lets you plot.
+also linked from the calculator page.
 
 ## Installation
 
