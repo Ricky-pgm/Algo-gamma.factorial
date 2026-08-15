@@ -1,120 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The continuous Pascal's triangle</title>
+<meta name="description" content="An interactive explorer for the generalized binomial coefficient C(n,k), showing how it interpolates smoothly between rows of Pascal's triangle.">
 <style>
-@font-face {
-  font-family: "Source Serif";
-  src: local("Source Serif 4"), local("Source Serif Pro"), local("Georgia");
-}
-
 :root {
-  --ground: #fbfaf7;
-  --ground-raised: #f3f0e8;
-  --ink: #1c1a17;
-  --ink-soft: #6b6459;
-  --rule: #ddd7cb;
-  --rule-strong: #c7bfae;
-  --accent: #c4501e;
-  --accent-soft: #e8ceb9;
-  --integer: #2f6f4f;
-  --integer-soft: #d3e3d5;
-  --mono-bg: #f3f0e8;
+  --bg: #f7f8fa;
+  --surface: #ffffff;
+  --surface-sunken: #eef0f3;
+  --ink: #14181f;
+  --ink-soft: #5c6472;
+  --ink-faint: #8a919d;
+  --rule: #dde1e7;
+  --rule-strong: #c3cad4;
+  --accent: #2563a8;
+  --accent-soft: #dbe8f6;
+  --integer: #1f8a70;
+  --integer-soft: #d9f0ea;
+  --mono-bg: #eef0f3;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --ground: #17140f;
-    --ground-raised: #211d16;
-    --ink: #ece6da;
-    --ink-soft: #a89e8c;
-    --rule: #3a3428;
-    --rule-strong: #4d4635;
-    --accent: #e2743f;
-    --accent-soft: #4a3222;
-    --integer: #5fae83;
-    --integer-soft: #1e3327;
-    --mono-bg: #211d16;
+    --bg: #0f1216;
+    --surface: #171b21;
+    --surface-sunken: #101317;
+    --ink: #e7eaef;
+    --ink-soft: #9aa2b1;
+    --ink-faint: #6b7280;
+    --rule: #2a3038;
+    --rule-strong: #3a414d;
+    --accent: #6ea8dc;
+    --accent-soft: #1c2c3d;
+    --integer: #5cc4a3;
+    --integer-soft: #1a332b;
+    --mono-bg: #101317;
   }
 }
 
 :root[data-theme="dark"] {
-  --ground: #17140f;
-  --ground-raised: #211d16;
-  --ink: #ece6da;
-  --ink-soft: #a89e8c;
-  --rule: #3a3428;
-  --rule-strong: #4d4635;
-  --accent: #e2743f;
-  --accent-soft: #4a3222;
-  --integer: #5fae83;
-  --integer-soft: #1e3327;
-  --mono-bg: #211d16;
+  --bg: #0f1216;
+  --surface: #171b21;
+  --surface-sunken: #101317;
+  --ink: #e7eaef;
+  --ink-soft: #9aa2b1;
+  --ink-faint: #6b7280;
+  --rule: #2a3038;
+  --rule-strong: #3a414d;
+  --accent: #6ea8dc;
+  --accent-soft: #1c2c3d;
+  --integer: #5cc4a3;
+  --integer-soft: #1a332b;
+  --mono-bg: #101317;
 }
 
 * { box-sizing: border-box; }
 
+html, body {
+  background: var(--bg);
+  margin: 0;
+}
+
 body {
-  background: var(--ground);
   color: var(--ink);
   font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
-  margin: 0;
   padding: 2.5rem 1.25rem 4rem;
   line-height: 1.5;
 }
 
 .page {
-  max-width: 760px;
+  max-width: 720px;
   margin: 0 auto;
 }
 
+.top-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
 .eyebrow {
-  font-size: 0.72rem;
-  letter-spacing: 0.11em;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--ink-faint);
   font-weight: 600;
   margin: 0 0 0.6rem;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+.lang-switch {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.lang-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 0.78rem;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  color: var(--ink-soft);
+  border-radius: 999px;
+  padding: 0.35rem 0.7rem;
+  cursor: pointer;
+}
+.lang-btn:hover {
+  border-color: var(--accent);
+  color: var(--ink);
+}
+.lang-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.lang-globe {
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+.lang-menu {
+  position: absolute;
+  top: calc(100% + 0.4rem);
+  right: 0;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.25);
+  padding: 0.3rem;
+  min-width: 140px;
+  z-index: 10;
+}
+.lang-menu[hidden] { display: none; }
+
+.lang-option {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 0.82rem;
+  background: none;
+  border: none;
+  color: var(--ink);
+  padding: 0.4rem 0.6rem;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: left;
+}
+.lang-option:hover {
+  background: var(--surface-sunken);
+}
+.lang-option[aria-current="true"] {
+  color: var(--accent);
+  font-weight: 600;
 }
 
 h1 {
-  font-family: "Source Serif", Georgia, "Times New Roman", serif;
-  font-size: clamp(1.7rem, 4.5vw, 2.35rem);
-  font-weight: 600;
+  font-size: clamp(1.5rem, 4.5vw, 1.9rem);
+  font-weight: 700;
   margin: 0 0 0.75rem;
-  text-wrap: balance;
   letter-spacing: -0.01em;
 }
 
 .lede {
-  font-size: 1.02rem;
+  font-size: 0.98rem;
   color: var(--ink-soft);
   max-width: 62ch;
   margin: 0 0 0.5rem;
 }
 
-.formula {
-  font-family: "Source Serif", Georgia, serif;
-  font-style: italic;
-  font-size: 1.15rem;
-  color: var(--ink);
-  background: var(--ground-raised);
-  border: 1px solid var(--rule);
-  border-radius: 3px;
-  padding: 0.85rem 1.1rem;
-  margin: 1.4rem 0 2rem;
-  display: inline-block;
-}
-
-.formula sub {
-  font-style: normal;
-  font-family: -apple-system, sans-serif;
-  font-size: 0.7em;
+.lede code {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 0.9em;
 }
 
 section.panel {
-  background: var(--ground-raised);
+  background: var(--surface);
   border: 1px solid var(--rule);
-  border-radius: 6px;
-  padding: 1.5rem 1.5rem 1.75rem;
-  margin-bottom: 1.75rem;
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .control-row {
@@ -156,7 +227,7 @@ input[type="range"]::-webkit-slider-thumb {
   height: 18px;
   border-radius: 50%;
   background: var(--accent);
-  border: 3px solid var(--ground);
+  border: 3px solid var(--surface);
   box-shadow: 0 0 0 1px var(--accent);
   cursor: pointer;
 }
@@ -165,13 +236,13 @@ input[type="range"]::-moz-range-thumb {
   height: 18px;
   border-radius: 50%;
   background: var(--accent);
-  border: 3px solid var(--ground);
+  border: 3px solid var(--surface);
   box-shadow: 0 0 0 1px var(--accent);
   cursor: pointer;
   border: none;
 }
 input[type="range"]:focus-visible::-webkit-slider-thumb {
-  box-shadow: 0 0 0 2px var(--ground), 0 0 0 4px var(--accent);
+  box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--accent);
 }
 
 .plot-wrap {
@@ -197,7 +268,7 @@ canvas {
 .swatch { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
 .swatch.integer { background: var(--integer); }
 .swatch.curve { background: var(--accent); }
-.swatch.cursor { background: var(--ink); border: 2px solid var(--ground); box-shadow: 0 0 0 1px var(--ink-soft); }
+.swatch.cursor { background: var(--ink); border: 2px solid var(--surface); box-shadow: 0 0 0 1px var(--ink-soft); }
 
 .readout {
   display: grid;
@@ -205,12 +276,12 @@ canvas {
   gap: 1px;
   background: var(--rule);
   border: 1px solid var(--rule);
-  border-radius: 6px;
+  border-radius: 10px;
   overflow: hidden;
-  margin-bottom: 1.75rem;
+  margin-bottom: 1.5rem;
 }
 .readout-cell {
-  background: var(--ground-raised);
+  background: var(--surface);
   padding: 1rem 1.1rem;
 }
 .readout-key {
@@ -232,7 +303,7 @@ canvas {
 .row-table {
   overflow-x: auto;
   border: 1px solid var(--rule);
-  border-radius: 6px;
+  border-radius: 8px;
 }
 table {
   border-collapse: collapse;
@@ -240,7 +311,7 @@ table {
   font-family: ui-monospace, "SF Mono", Menlo, monospace;
   font-variant-numeric: tabular-nums;
   font-size: 0.86rem;
-  min-width: 480px;
+  min-width: 400px;
 }
 th, td {
   padding: 0.55rem 0.8rem;
@@ -256,7 +327,7 @@ th {
   text-transform: uppercase;
   color: var(--ink-soft);
   font-weight: 600;
-  background: var(--ground-raised);
+  background: var(--surface-sunken);
 }
 tr:last-child td { border-bottom: none; }
 td.exact { color: var(--integer); font-weight: 600; }
@@ -289,58 +360,100 @@ td.exact { color: var(--integer); font-weight: 600; }
   padding: 0;
 }
 
+.links {
+  margin: 0 0 1.5rem;
+  font-size: 0.85rem;
+}
+.links a {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+.links a:hover {
+  border-bottom-color: currentColor;
+}
+
 footer {
-  margin-top: 2.5rem;
+  margin-top: 2rem;
   font-size: 0.8rem;
-  color: var(--ink-soft);
+  color: var(--ink-faint);
   border-top: 1px solid var(--rule);
   padding-top: 1.25rem;
 }
 
 h2 {
-  font-family: "Source Serif", Georgia, serif;
-  font-size: 1.1rem;
-  font-weight: 600;
+  font-size: 1.05rem;
+  font-weight: 700;
   margin: 0 0 0.9rem;
+  letter-spacing: -0.01em;
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 1.5rem 0.85rem 3rem;
+  }
+  section.panel {
+    padding: 1.1rem;
+  }
+  .lang-menu {
+    right: 0;
+    left: auto;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; }
 }
 </style>
-
+</head>
+<body>
 <div class="page">
-  <p class="eyebrow">gamma-factorial · interactive demo</p>
-  <h1>Pascal's triangle, made continuous</h1>
-  <p class="lede">
-    The classic binomial coefficient C(n, k) only exists at integer points.
-    By replacing factorials with the Gamma function — <code>C(n,k) =
-    Γ(n+1) / (Γ(k+1)Γ(n-k+1))</code> — the same formula extends into a
-    smooth curve that passes exactly through every value of Pascal's
-    triangle, and also makes sense between the integers.
+  <div class="top-row">
+    <p class="eyebrow" id="eyebrow">gamma-factorial · interactive explorer</p>
+    <div class="lang-switch">
+      <button class="lang-btn" id="langBtn" type="button" aria-haspopup="true" aria-expanded="false">
+        <span class="lang-globe" aria-hidden="true">🌐</span>
+        <span id="langBtnLabel">EN</span>
+      </button>
+      <div class="lang-menu" id="langMenu" role="menu" hidden>
+        <button class="lang-option" type="button" role="menuitem" data-lang="en">English</button>
+        <button class="lang-option" type="button" role="menuitem" data-lang="fr">Français</button>
+        <button class="lang-option" type="button" role="menuitem" data-lang="de">Deutsch</button>
+      </div>
+    </div>
+  </div>
+
+  <h1 id="pageTitle">Pascal's triangle, made continuous</h1>
+  <p class="lede" id="pageLede">
+    The classic binomial coefficient C(n, k) only exists at whole numbers.
+    Replacing factorials with the Gamma function extends it into a smooth
+    curve that still passes exactly through every value of Pascal's
+    triangle — and also makes sense between the whole numbers.
   </p>
+
+  <p class="links" id="linksText"></p>
 
   <section class="panel">
     <div class="control-row">
-      <span class="control-label">Triangle row — n</span>
+      <span class="control-label" id="rowLabel">Triangle row — n</span>
       <span class="n-value" id="nValue">5</span>
     </div>
-    <input type="range" id="nSlider" min="0" max="12" step="1" value="5" aria-label="Choose n">
+    <input type="range" id="nSlider" min="0" max="12" step="1" value="5">
 
     <div class="plot-wrap">
-      <canvas id="plot" width="920" height="380" role="img" aria-label="Curve of C(n,k) as a function of k"></canvas>
+      <canvas id="plot" width="920" height="380" role="img"></canvas>
     </div>
 
-    <div class="legend">
-      <span class="legend-item"><span class="swatch curve"></span> C(n, k) — continuous interpolation</span>
-      <span class="legend-item"><span class="swatch integer"></span> integer values (classic Pascal's triangle)</span>
-      <span class="legend-item"><span class="swatch cursor"></span> k cursor</span>
+    <div class="legend" id="legend">
+      <span class="legend-item"><span class="swatch curve"></span><span id="legendCurve"></span></span>
+      <span class="legend-item"><span class="swatch integer"></span><span id="legendInteger"></span></span>
+      <span class="legend-item"><span class="swatch cursor"></span><span id="legendCursor"></span></span>
     </div>
   </section>
 
   <div class="readout">
     <div class="readout-cell">
-      <div class="readout-key">k (cursor)</div>
+      <div class="readout-key" id="kLabel">k (cursor)</div>
       <div class="readout-val" id="kOut">2.00</div>
     </div>
     <div class="readout-cell">
@@ -348,17 +461,17 @@ h2 {
       <div class="readout-val accent" id="cOut">10.000</div>
     </div>
     <div class="readout-cell">
-      <div class="readout-key">Status</div>
+      <div class="readout-key" id="statusLabel">Status</div>
       <div class="readout-val integer-flag" id="statusOut">exact integer value</div>
     </div>
   </div>
 
   <section class="panel">
-    <h2>Row n = <span id="tableN">5</span> — comparison with classic Pascal</h2>
+    <h2 id="tableTitle">Row n = <span id="tableN">5</span> — comparison with classic Pascal</h2>
     <div class="row-table">
       <table>
         <thead>
-          <tr><th>k</th><th>C(n,k) — Gamma formula</th><th>math.comb(n,k)</th></tr>
+          <tr><th>k</th><th id="thGamma">C(n,k) — Gamma formula</th><th>math.comb(n,k)</th></tr>
         </thead>
         <tbody id="tableBody"></tbody>
       </table>
@@ -366,225 +479,405 @@ h2 {
   </section>
 
   <section class="panel usage">
-    <h2>Try it locally</h2>
-    <p>This module is part of the <code>gamma-factorial</code> package:</p>
+    <h2 id="usageTitle">Try it locally</h2>
+    <p id="usageIntro">This module is part of the <code>gamma-factorial</code> package:</p>
     <pre><code>from gamma_factorial import binomial
 
-binomial(5, 2)      # 10.0            — classic coefficient
-binomial(4.5, 2)    # 7.875           — continuous interpolation
+binomial(5, 2)      # 10.0
+binomial(4.5, 2)    # 7.875
 binomial(0.5, 0.5)  # 1.0</code></pre>
-    <p>Every point on the curve above is computed by this same function,
-    run in Python and then frozen into data for this page.</p>
+    <p id="usageOutro">Every point on the curve above is computed by this same function, run in Python and then frozen into data for this page.</p>
   </section>
 
-  <footer>
-    C(n, k) = Γ(n+1) / (Γ(k+1)·Γ(n−k+1)), computed via the Lanczos
-    approximation of the Gamma function. At integer points 0 ≤ k ≤ n, it
-    matches classic Pascal's triangle exactly.
-  </footer>
+  <footer id="footerText"></footer>
 </div>
 
 <script>
 const DATA = {"0":[[-0.5,0.63662],[-0.4,0.756827],[-0.3,0.858394],[-0.2,0.935489],[-0.1,0.983632],[-0.0,1.0],[0.1,0.983632],[0.2,0.935489],[0.3,0.858394],[0.4,0.756827],[0.5,0.63662]],"1":[[-0.5,0.424413],[-0.4,0.540591],[-0.3,0.660303],[-0.2,0.779574],[-0.1,0.894211],[-0.0,1.0],[0.1,1.092924],[0.2,1.169362],[0.3,1.226277],[0.4,1.261378],[0.5,1.27324],[0.6,1.261378],[0.7,1.226277],[0.8,1.169362],[0.9,1.092924],[1.0,1.0],[1.1,0.894211],[1.2,0.779574],[1.3,0.660303],[1.4,0.540591],[1.5,0.424413]],"2":[[-0.5,0.339531],[-0.4,0.450492],[-0.3,0.574176],[-0.2,0.708704],[-0.1,0.851629],[-0.0,1.0],[0.1,1.150446],[0.2,1.299291],[0.3,1.442678],[0.4,1.576722],[0.5,1.697653],[0.6,1.801968],[0.7,1.88658],[0.8,1.948936],[0.9,1.987135],[1.0,2.0],[1.1,1.987135],[1.2,1.948936],[1.3,1.88658],[1.4,1.801968],[1.5,1.697653],[1.6,1.576722],[1.7,1.442678],[1.8,1.299291],[1.9,1.150446],[2.0,1.0],[2.1,0.851629],[2.2,0.708704],[2.3,0.574176],[2.4,0.450492],[2.5,0.339531]],"3":[[-0.5,0.291026],[-0.4,0.397493],[-0.3,0.521979],[-0.2,0.66441],[-0.1,0.824157],[-0.0,1.0],[0.1,1.190117],[0.2,1.392097],[0.3,1.602976],[0.4,1.819295],[0.5,2.037183],[0.6,2.252461],[0.7,2.460756],[0.8,2.65764],[0.9,2.838764],[1.0,3.0],[1.1,3.137581],[1.2,3.248227],[1.3,3.329258],[1.4,3.378691],[1.5,3.395305],[1.6,3.378691],[1.7,3.329258],[1.8,3.248227],[1.9,3.137581],[2.0,3.0],[2.1,2.838764],[2.2,2.65764],[2.3,2.460756],[2.4,2.252461],[2.5,2.037183],[2.6,1.819295],[2.7,1.602976],[2.8,1.392097],[2.9,1.190117],[3.0,1.0],[3.1,0.824157],[3.2,0.66441],[3.3,0.521979],[3.4,0.397493],[3.5,0.291026]],"4":[[-0.5,0.25869],[-0.4,0.361357],[-0.3,0.485561],[-0.2,0.632771],[-0.1,0.804056],[-0.0,1.0],[0.1,1.220633],[0.2,1.465365],[0.3,1.732947],[0.4,2.021439],[0.5,2.328209],[0.6,2.649954],[0.7,2.982734],[0.8,3.32205],[0.9,3.662921],[1.0,4.0],[1.1,4.327698],[1.2,4.640324],[1.3,4.932234],[1.4,5.197986],[1.5,5.432489],[1.6,5.631151],[1.7,5.790014],[1.8,5.905867],[1.9,5.976345],[2.0,6.0],[2.1,5.976345],[2.2,5.905867],[2.3,5.790014],[2.4,5.631151],[2.5,5.432489],[2.6,5.197986],[2.7,4.932234],[2.8,4.640324],[2.9,4.327698],[3.0,4.0],[3.1,3.662921],[3.2,3.32205],[3.3,2.982734],[3.4,2.649954],[3.5,2.328209],[3.6,2.021439],[3.7,1.732947],[3.8,1.465365],[3.9,1.220633],[4.0,1.0],[4.1,0.804056],[4.2,0.632771],[4.3,0.485561],[4.4,0.361357],[4.5,0.25869]],"5":[[-0.5,0.235173],[-0.4,0.33459],[-0.3,0.458077],[-0.2,0.608434],[-0.1,0.78829],[-0.0,1.0],[0.1,1.245544],[0.2,1.526422],[0.3,1.843561],[0.4,2.197216],[0.5,2.586899],[0.6,3.011311],[0.7,3.468296],[0.8,3.954821],[0.9,4.466977],[1.0,5.0],[1.1,5.548331],[1.2,6.105689],[1.3,6.665181],[1.4,7.219425],[1.5,7.760698],[1.6,8.281105],[1.7,8.772748],[1.8,9.227917],[1.9,9.639266],[2.0,10.0],[2.1,10.304043],[2.2,10.546191],[2.3,10.722248],[2.4,10.829137],[2.5,10.864977],[2.6,10.829137],[2.7,10.722248],[2.8,10.546191],[2.9,10.304043],[3.0,10.0],[3.1,9.639266],[3.2,9.227917],[3.3,8.772748],[3.4,8.281105],[3.5,7.760698],[3.6,7.219425],[3.7,6.665181],[3.8,6.105689],[3.9,5.548331],[4.0,5.0],[4.1,4.466977],[4.2,3.954821],[4.3,3.468296],[4.4,3.011311],[4.5,2.586899],[4.6,2.197216],[4.7,1.843561],[4.8,1.526422],[4.9,1.245544],[5.0,1.0],[5.1,0.78829],[5.2,0.608434],[5.3,0.458077],[5.4,0.33459],[5.5,0.235173]],"6":[[-0.5,0.217082],[-0.4,0.313678],[-0.3,0.436264],[-0.2,0.588807],[-0.1,0.775367],[-0.0,1.0],[0.1,1.266655],[0.2,1.579058],[0.3,1.94059],[0.4,2.35416],[0.5,2.822072],[0.6,3.345901],[0.7,3.926373],[0.8,4.563256],[0.9,5.255267],[1.0,6.0],[1.1,6.793874],[1.2,7.632112],[1.3,8.508742],[1.4,9.416641],[1.5,10.347598],[1.6,11.292416],[1.7,12.241044],[1.8,13.182738],[1.9,14.106243],[2.0,15.0],[2.1,15.852373],[2.2,16.65188],[2.3,17.387429],[2.4,18.048562],[2.5,18.625676],[2.6,19.110242],[2.7,19.494996],[2.8,19.774107],[2.9,19.943308],[3.0,20.0],[3.1,19.943308],[3.2,19.774107],[3.3,19.494996],[3.4,19.110242],[3.5,18.625676],[3.6,18.048562],[3.7,17.387429],[3.8,16.65188],[3.9,15.852373],[4.0,15.0],[4.1,14.106243],[4.2,13.182738],[4.3,12.241044],[4.4,11.292416],[4.5,10.347598],[4.6,9.416641],[4.7,8.508742],[4.8,7.632112],[4.9,6.793874],[5.0,6.0],[5.1,5.255267],[5.2,4.563256],[5.3,3.926373],[5.4,3.345901],[5.5,2.822072],[5.6,2.35416],[5.7,1.94059],[5.8,1.579058],[5.9,1.266655],[6.0,1.0],[6.1,0.775367],[6.2,0.588807],[6.3,0.436264],[6.4,0.313678],[6.5,0.217082]],"7":[[-0.5,0.20261],[-0.4,0.296723],[-0.3,0.418335],[-0.2,0.572451],[-0.1,0.764447],[-0.0,1.0],[0.1,1.285012],[0.2,1.6255],[0.3,2.027482],[0.4,2.496837],[0.5,3.039155],[0.6,3.659579],[0.7,4.362636],[0.8,5.152063],[0.9,6.030634],[1.0,7.0],[1.1,8.060529],[1.2,9.211169],[1.3,10.449332],[1.4,11.770801],[1.5,13.16967],[1.6,14.638317],[1.7,16.167417],[1.8,17.745994],[1.9,19.361509],[2.0,21.0],[2.1,22.646248],[2.2,24.283991],[2.3,25.896171],[2.4,27.465203],[2.5,28.973273],[2.6,30.402657],[2.7,31.736041],[2.8,32.956845],[2.9,34.049551],[3.0,35.0],[3.1,35.795682],[3.2,36.425987],[3.3,36.882426],[3.4,37.158804],[3.5,37.251351],[3.6,37.158804],[3.7,36.882426],[3.8,36.425987],[3.9,35.795682],[4.0,35.0],[4.1,34.049551],[4.2,32.956845],[4.3,31.736041],[4.4,30.402657],[4.5,28.973273],[4.6,27.465203],[4.7,25.896171],[4.8,24.283991],[4.9,22.646248],[5.0,21.0],[5.1,19.361509],[5.2,17.745994],[5.3,16.167417],[5.4,14.638317],[5.5,13.16967],[5.6,11.770801],[5.7,10.449332],[5.8,9.211169],[5.9,8.060529],[6.0,7.0],[6.1,6.030634],[6.2,5.152063],[6.3,4.362636],[6.4,3.659579],[6.5,3.039155],[6.6,2.496837],[6.7,2.027482],[6.8,1.6255],[6.9,1.285012],[7.0,1.0],[7.1,0.764447],[7.2,0.572451],[7.3,0.418335],[7.4,0.296723],[7.5,0.20261]],"8":[[-0.5,0.190692],[-0.4,0.282593],[-0.3,0.403214],[-0.2,0.558489],[-0.1,0.755009],[-0.0,1.0],[0.1,1.301278],[0.2,1.66718],[0.3,2.106475],[0.4,2.628249],[0.5,3.241765],[0.6,3.956302],[0.7,4.780971],[0.8,5.724514],[0.9,6.795081],[1.0,8.0],[1.1,9.345541],[1.2,10.83667],[1.3,12.476815],[1.4,14.267638],[1.5,16.208824],[1.6,18.297896],[1.7,20.530053],[1.8,22.898056],[1.9,25.392143],[2.0,28.0],[2.1,30.706776],[2.2,33.49516],[2.3,36.345503],[2.4,39.236004],[2.5,42.142943],[2.6,45.040974],[2.7,47.903458],[2.8,50.702839],[2.9,53.41106],[3.0,56.0],[3.1,58.441929],[3.2,60.709978],[3.3,62.778597],[3.4,64.624006],[3.5,66.224624],[3.6,67.561461],[3.7,68.618466],[3.8,69.382832],[3.9,69.845233],[4.0,70.0],[4.1,69.845233],[4.2,69.382832],[4.3,68.618466],[4.4,67.561461],[4.5,66.224624],[4.6,64.624006],[4.7,62.778597],[4.8,60.709978],[4.9,58.441929],[5.0,56.0],[5.1,53.41106],[5.2,50.702839],[5.3,47.903458],[5.4,45.040974],[5.5,42.142943],[5.6,39.236004],[5.7,36.345503],[5.8,33.49516],[5.9,30.706776],[6.0,28.0],[6.1,25.392143],[6.2,22.898056],[6.3,20.530053],[6.4,18.297896],[6.5,16.208824],[6.6,14.267638],[6.7,12.476815],[6.8,10.83667],[6.9,9.345541],[7.0,8.0],[7.1,6.795081],[7.2,5.724514],[7.3,4.780971],[7.4,3.956302],[7.5,3.241765],[7.6,2.628249],[7.7,2.106475],[7.8,1.66718],[7.9,1.301278],[8.0,1.0],[8.1,0.755009],[8.2,0.558489],[8.3,0.403214],[8.4,0.282593],[8.5,0.190692]],"9":[[-0.5,0.180656],[-0.4,0.270568],[-0.3,0.390208],[-0.2,0.546348],[-0.1,0.746712],[-0.0,1.0],[0.1,1.315899],[0.2,1.70507],[0.3,2.179112],[0.4,2.750493],[0.5,3.432457],[0.6,4.238895],[0.7,5.184186],[0.8,6.283003],[0.9,7.55009],[1.0,9.0],[1.1,10.646818],[1.2,12.503849],[1.3,14.58329],[1.4,16.895887],[1.5,19.450589],[1.6,22.254197],[1.7,25.311025],[1.8,28.62257],[1.9,32.187224],[2.0,36.0],[2.1,40.052317],[2.2,44.33183],[2.3,48.822318],[2.4,53.503641],[2.5,58.351767],[2.6,63.33887],[2.7,68.433511],[2.8,73.600895],[2.9,78.803204],[3.0,84.0],[3.1,89.148706],[3.2,94.205139],[3.3,99.1241],[3.4,103.86001],[3.5,108.367567],[3.6,112.602435],[3.7,116.521924],[3.8,120.085671],[3.9,123.256293],[4.0,126.0],[4.1,128.287162],[4.2,130.092811],[4.3,131.397063],[4.4,132.185467],[4.5,132.449249],[4.6,132.185467],[4.7,131.397063],[4.8,130.092811],[4.9,128.287162],[5.0,126.0],[5.1,123.256293],[5.2,120.085671],[5.3,116.521924],[5.4,112.602435],[5.5,108.367567],[5.6,103.86001],[5.7,99.1241],[5.8,94.205139],[5.9,89.148706],[6.0,84.0],[6.1,78.803204],[6.2,73.600895],[6.3,68.433511],[6.4,63.33887],[6.5,58.351767],[6.6,53.503641],[6.7,48.822318],[6.8,44.33183],[6.9,40.052317],[7.0,36.0],[7.1,32.187224],[7.2,28.62257],[7.3,25.311025],[7.4,22.254197],[7.5,19.450589],[7.6,16.895887],[7.7,14.58329],[7.8,12.503849],[7.9,10.646818],[8.0,9.0],[8.1,7.55009],[8.2,6.283003],[8.3,5.184186],[8.4,4.238895],[8.5,3.432457],[8.6,2.750493],[8.7,2.179112],[8.8,1.70507],[8.9,1.315899],[9.0,1.0],[9.1,0.746712],[9.2,0.546348],[9.3,0.390208],[9.4,0.270568],[9.5,0.180656]],"10":[[-0.5,0.172053],[-0.4,0.260161],[-0.3,0.378842],[-0.2,0.535635],[-0.1,0.739319],[-0.0,1.0],[0.1,1.329191],[0.2,1.739868],[0.3,2.246507],[0.4,2.865097],[0.5,3.613113],[0.6,4.509463],[0.7,5.574393],[0.8,6.829351],[0.9,8.296802],[1.0,10.0],[1.1,11.962717],[1.2,14.20892],[1.3,16.762402],[1.4,19.64638],[1.5,22.883046],[1.6,26.493092],[1.7,30.49521],[1.8,34.905574],[1.9,39.737314],[2.0,45.0],[2.1,50.699136],[2.2,56.835679],[2.3,63.405608],[2.4,70.399528],[2.5,77.802356],[2.6,85.593067],[2.7,93.744536],[2.8,102.223466],[2.9,110.990428],[3.0,120.0],[3.1,129.201023],[3.2,138.536969],[3.3,147.946418],[3.4,157.363651],[3.5,166.719334],[3.6,175.941305],[3.7,184.955435],[3.8,193.686567],[3.9,202.059497],[4.0,210.0],[4.1,217.435868],[4.2,224.297949],[4.3,230.521164],[4.4,236.045477],[4.5,240.816816],[4.6,244.787902],[4.7,247.918987],[4.8,250.178482],[4.9,251.543455],[5.0,252.0],[5.1,251.543455],[5.2,250.178482],[5.3,247.918987],[5.4,244.787902],[5.5,240.816816],[5.6,236.045477],[5.7,230.521164],[5.8,224.297949],[5.9,217.435868],[6.0,210.0],[6.1,202.059497],[6.2,193.686567],[6.3,184.955435],[6.4,175.941305],[6.5,166.719334],[6.6,157.363651],[6.7,147.946418],[6.8,138.536969],[6.9,129.201023],[7.0,120.0],[7.1,110.990428],[7.2,102.223466],[7.3,93.744536],[7.4,85.593067],[7.5,77.802356],[7.6,70.399528],[7.7,63.405608],[7.8,56.835679],[7.9,50.699136],[8.0,45.0],[8.1,39.737314],[8.2,34.905574],[8.3,30.49521],[8.4,26.493092],[8.5,22.883046],[8.6,19.64638],[8.7,16.762402],[8.8,14.20892],[8.9,11.962717],[9.0,10.0],[9.1,8.296802],[9.2,6.829351],[9.3,5.574393],[9.4,4.509463],[9.5,3.613113],[9.6,2.865097],[9.7,2.246507],[9.8,1.739868],[9.9,1.329191],[10.0,1.0],[10.1,0.739319],[10.2,0.535635],[10.3,0.378842],[10.4,0.260161],[10.5,0.172053]],"11":[[-0.5,0.164572],[-0.4,0.251033],[-0.3,0.368785],[-0.2,0.52607],[-0.1,0.732658],[-0.0,1.0],[0.1,1.341385],[0.2,1.772088],[0.3,2.309494],[0.4,2.973214],[0.5,3.785165],[0.6,4.769624],[0.7,5.953236],[0.8,7.364987],[0.9,9.036121],[1.0,11.0],[1.1,13.291908],[1.2,15.948788],[1.3,19.00891],[1.4,22.511477],[1.5,26.496158],[1.6,31.002555],[1.7,36.069604],[1.8,41.734925],[1.9,48.034115],[2.0,55.0],[2.1,62.661853],[2.2,71.044599],[2.3,80.16801],[2.4,90.045908],[2.5,100.685402],[2.6,112.086159],[2.7,124.239746],[2.8,137.129039],[2.9,150.727742],[3.0,165.0],[3.1,179.900159],[3.2,195.372648],[3.3,211.352026],[3.4,227.76318],[3.5,244.52169],[3.6,261.534372],[3.7,278.69997],[3.8,295.910033],[3.9,313.049925],[4.0,330.0],[4.1,346.636891],[4.2,362.834918],[4.3,378.467582],[4.4,393.409128],[4.5,407.53615],[4.6,420.729207],[4.7,432.874422],[4.8,443.865049],[4.9,453.602952],[5.0,462.0],[5.1,468.979324],[5.2,474.476432],[5.3,478.440151],[5.4,480.833379],[5.5,481.633632],[5.6,480.833379],[5.7,478.440151],[5.8,474.476432],[5.9,468.979324],[6.0,462.0],[6.1,453.602952],[6.2,443.865049],[6.3,432.874422],[6.4,420.729207],[6.5,407.53615],[6.6,393.409128],[6.7,378.467582],[6.8,362.834918],[6.9,346.636891],[7.0,330.0],[7.1,313.049925],[7.2,295.910033],[7.3,278.69997],[7.4,261.534372],[7.5,244.52169],[7.6,227.76318],[7.7,211.352026],[7.8,195.372648],[7.9,179.900159],[8.0,165.0],[8.1,150.727742],[8.2,137.129039],[8.3,124.239746],[8.4,112.086159],[8.5,100.685402],[8.6,90.045908],[8.7,80.16801],[8.8,71.044599],[8.9,62.661853],[9.0,55.0],[9.1,48.034115],[9.2,41.734925],[9.3,36.069604],[9.4,31.002555],[9.5,26.496158],[9.6,22.511477],[9.7,19.00891],[9.8,15.948788],[9.9,13.291908],[10.0,11.0],[10.1,9.036121],[10.2,7.364987],[10.3,5.953236],[10.4,4.769624],[10.5,3.785165],[10.6,2.973214],[10.7,2.309494],[10.8,1.772088],[10.9,1.341385],[11.0,1.0],[11.1,0.732658],[11.2,0.52607],[11.3,0.368785],[11.4,0.251033],[11.5,0.164572]],"12":[[-0.5,0.15799],[-0.4,0.242935],[-0.3,0.35979],[-0.2,0.517446],[-0.1,0.726603],[-0.0,1.0],[0.1,1.352657],[0.2,1.802123],[0.3,2.368711],[0.4,3.075739],[0.5,3.949738],[0.6,5.020657],[0.7,6.32202],[0.8,7.891057],[0.9,9.768779],[1.0,12.0],[1.1,14.633293],[1.2,17.720875],[1.3,21.318403],[1.4,25.484691],[1.5,30.281324],[1.6,35.772178],[1.7,42.022839],[1.8,49.099912],[1.9,57.070236],[2.0,66.0],[2.1,75.953761],[2.2,86.993387],[2.3,99.17692],[2.4,112.557385],[2.5,127.18156],[2.6,143.088714],[2.7,160.309349],[2.8,178.863965],[2.9,198.761857],[3.0,220.0],[3.1,242.562012],[3.2,266.417248],[3.3,291.520036],[3.4,317.809088],[3.5,345.207092],[3.6,373.620531],[3.7,402.939716],[3.8,433.039072],[3.9,463.777666],[4.0,495.0],[4.1,526.53705],[4.2,558.207566],[4.3,589.819608],[4.4,621.172308],[4.5,652.057841],[4.6,682.263578],[4.7,711.574393],[4.8,739.775081],[4.9,766.652877],[5.0,792.0],[5.1,815.616215],[5.2,837.31135],[5.3,856.907733],[5.4,874.242507],[5.5,889.169783],[5.6,901.562586],[5.7,911.314573],[5.8,918.34148],[5.9,922.582276],[6.0,924.0],[6.1,922.582276],[6.2,918.34148],[6.3,911.314573],[6.4,901.562586],[6.5,889.169783],[6.6,874.242507],[6.7,856.907733],[6.8,837.31135],[6.9,815.616215],[7.0,792.0],[7.1,766.652877],[7.2,739.775081],[7.3,711.574393],[7.4,682.263578],[7.5,652.057841],[7.6,621.172308],[7.7,589.819608],[7.8,558.207566],[7.9,526.53705],[8.0,495.0],[8.1,463.777666],[8.2,433.039072],[8.3,402.939716],[8.4,373.620531],[8.5,345.207092],[8.6,317.809088],[8.7,291.520036],[8.8,266.417248],[8.9,242.562012],[9.0,220.0],[9.1,198.761857],[9.2,178.863965],[9.3,160.309349],[9.4,143.088714],[9.5,127.18156],[9.6,112.557385],[9.7,99.17692],[9.8,86.993387],[9.9,75.953761],[10.0,66.0],[10.1,57.070236],[10.2,49.099912],[10.3,42.022839],[10.4,35.772178],[10.5,30.281324],[10.6,25.484691],[10.7,21.318403],[10.8,17.720875],[10.9,14.633293],[11.0,12.0],[11.1,9.768779],[11.2,7.891057],[11.3,6.32202],[11.4,5.020657],[11.5,3.949738],[11.6,3.075739],[11.7,2.368711],[11.8,1.802123],[11.9,1.352657],[12.0,1.0],[12.1,0.726603],[12.2,0.517446],[12.3,0.35979],[12.4,0.242935],[12.5,0.15799]]};
 
-const canvas = document.getElementById('plot');
-const ctx = canvas.getContext('2d');
-const slider = document.getElementById('nSlider');
-const nValueEl = document.getElementById('nValue');
-const kOut = document.getElementById('kOut');
-const cOut = document.getElementById('cOut');
-const statusOut = document.getElementById('statusOut');
-const tableN = document.getElementById('tableN');
-const tableBody = document.getElementById('tableBody');
+(function () {
+  "use strict";
 
-function getStyle(name) {
-  return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-}
+  const I18N = {
+    en: {
+      eyebrow: "gamma-factorial · interactive explorer",
+      pageTitle: "Pascal's triangle, made continuous",
+      pageLede: "The classic binomial coefficient C(n, k) only exists at whole numbers. Replacing factorials with the Gamma function extends it into a smooth curve that still passes exactly through every value of Pascal's triangle — and also makes sense between the whole numbers.",
+      links: "Back to {link}.",
+      linkText: "the factorial calculator",
+      rowLabel: "Triangle row — n",
+      legendCurve: "C(n, k) — continuous interpolation",
+      legendInteger: "integer values (classic Pascal's triangle)",
+      legendCursor: "k cursor",
+      kLabel: "k (cursor)",
+      statusLabel: "Status",
+      statusInteger: "exact integer value",
+      statusInterpolated: "continuous interpolation",
+      tableTitle: "Row n = {n} — comparison with classic Pascal",
+      thGamma: "C(n,k) — Gamma formula",
+      usageTitle: "Try it locally",
+      usageIntro: "This module is part of the gamma-factorial package:",
+      usageOutro: "Every point on the curve above is computed by this same function, run in Python and then frozen into data for this page.",
+      footer: "C(n, k) = Γ(n+1) / (Γ(k+1)·Γ(n−k+1)), computed via the Lanczos approximation of the Gamma function. At integer points 0 ≤ k ≤ n, it matches classic Pascal's triangle exactly.",
+    },
+    fr: {
+      eyebrow: "gamma-factorial · explorateur interactif",
+      pageTitle: "Le triangle de Pascal, rendu continu",
+      pageLede: "Le coefficient binomial classique C(n, k) n'existe qu'aux nombres entiers. En remplaçant les factorielles par la fonction Gamma, il s'étend en une courbe lisse qui passe toujours exactement par chaque valeur du triangle de Pascal — et prend aussi un sens entre les entiers.",
+      links: "Retour à {link}.",
+      linkText: "la calculatrice de factorielle",
+      rowLabel: "Ligne du triangle — n",
+      legendCurve: "C(n, k) — interpolation continue",
+      legendInteger: "valeurs entières (triangle de Pascal classique)",
+      legendCursor: "curseur k",
+      kLabel: "k (curseur)",
+      statusLabel: "Statut",
+      statusInteger: "valeur entière exacte",
+      statusInterpolated: "interpolation continue",
+      tableTitle: "Ligne n = {n} — comparaison avec le Pascal classique",
+      thGamma: "C(n,k) — formule Gamma",
+      usageTitle: "Tester en local",
+      usageIntro: "Ce module fait partie du package gamma-factorial :",
+      usageOutro: "Chaque point de la courbe ci-dessus est calculé par cette même fonction, exécutée en Python puis figée en données pour cette page.",
+      footer: "C(n, k) = Γ(n+1) / (Γ(k+1)·Γ(n−k+1)), calculé via l'approximation de Lanczos de la fonction Gamma. Aux points entiers 0 ≤ k ≤ n, ça correspond exactement au triangle de Pascal classique.",
+    },
+    de: {
+      eyebrow: "gamma-factorial · interaktiver Explorer",
+      pageTitle: "Das Pascalsche Dreieck, kontinuierlich gemacht",
+      pageLede: "Der klassische Binomialkoeffizient C(n, k) existiert nur bei ganzen Zahlen. Ersetzt man Fakultäten durch die Gammafunktion, erweitert er sich zu einer glatten Kurve, die immer noch genau durch jeden Wert des Pascalschen Dreiecks verläuft — und auch zwischen den ganzen Zahlen Sinn ergibt.",
+      links: "Zurück zum {link}.",
+      linkText: "Fakultätsrechner",
+      rowLabel: "Dreieckszeile — n",
+      legendCurve: "C(n, k) — kontinuierliche Interpolation",
+      legendInteger: "ganzzahlige Werte (klassisches Pascalsches Dreieck)",
+      legendCursor: "k-Cursor",
+      kLabel: "k (Cursor)",
+      statusLabel: "Status",
+      statusInteger: "exakter ganzzahliger Wert",
+      statusInterpolated: "kontinuierliche Interpolation",
+      tableTitle: "Zeile n = {n} — Vergleich mit klassischem Pascal",
+      thGamma: "C(n,k) — Gamma-Formel",
+      usageTitle: "Lokal ausprobieren",
+      usageIntro: "Dieses Modul ist Teil des gamma-factorial-Pakets:",
+      usageOutro: "Jeder Punkt der Kurve oben wird von derselben Funktion berechnet, in Python ausgeführt und dann als Daten für diese Seite eingefroren.",
+      footer: "C(n, k) = Γ(n+1) / (Γ(k+1)·Γ(n−k+1)), berechnet über die Lanczos-Approximation der Gammafunktion. An ganzzahligen Punkten 0 ≤ k ≤ n entspricht es genau dem klassischen Pascalschen Dreieck.",
+    },
+  };
 
-let cursorK = 2;
-let dragging = false;
+  const LANG_LABELS = { en: "EN", fr: "FR", de: "DE" };
+  let currentLang = "en";
 
-function currentN() {
-  return parseInt(slider.value, 10);
-}
+  function t(key, vars) {
+    const dict = I18N[currentLang] || I18N.en;
+    let str = dict[key] !== undefined ? dict[key] : I18N.en[key] || key;
+    if (vars) {
+      for (const k of Object.keys(vars)) str = str.split(`{${k}}`).join(vars[k]);
+    }
+    return str;
+  }
 
-function pointsFor(n) {
-  return DATA[String(n)];
-}
+  function detectInitialLang() {
+    try {
+      const saved = window.localStorage.getItem("gf-lang");
+      if (saved && I18N[saved]) return saved;
+    } catch (e) { /* localStorage unavailable */ }
+    const nav = (navigator.language || "en").slice(0, 2).toLowerCase();
+    return I18N[nav] ? nav : "en";
+  }
 
-function interpolate(pts, k) {
-  for (let i = 0; i < pts.length - 1; i++) {
-    const [k0, v0] = pts[i];
-    const [k1, v1] = pts[i + 1];
-    if (k >= k0 - 1e-9 && k <= k1 + 1e-9) {
-      const t = (k - k0) / (k1 - k0);
-      return v0 + t * (v1 - v0);
+  const canvas = document.getElementById('plot');
+  const ctx = canvas.getContext('2d');
+  const slider = document.getElementById('nSlider');
+  const nValueEl = document.getElementById('nValue');
+  const kOut = document.getElementById('kOut');
+  const cOut = document.getElementById('cOut');
+  const statusOut = document.getElementById('statusOut');
+  const tableN = document.getElementById('tableN');
+  const tableBody = document.getElementById('tableBody');
+  const langBtn = document.getElementById('langBtn');
+  const langBtnLabel = document.getElementById('langBtnLabel');
+  const langMenu = document.getElementById('langMenu');
+
+  function getStyle(name) {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  }
+
+  let cursorK = 2;
+  let dragging = false;
+
+  function currentN() {
+    return parseInt(slider.value, 10);
+  }
+
+  function pointsFor(n) {
+    return DATA[String(n)];
+  }
+
+  function interpolate(pts, k) {
+    for (let i = 0; i < pts.length - 1; i++) {
+      const [k0, v0] = pts[i];
+      const [k1, v1] = pts[i + 1];
+      if (k >= k0 - 1e-9 && k <= k1 + 1e-9) {
+        const tt = (k - k0) / (k1 - k0);
+        return v0 + tt * (v1 - v0);
+      }
+    }
+    return pts[pts.length - 1][1];
+  }
+
+  function draw() {
+    const n = currentN();
+    const pts = pointsFor(n);
+    const dpr = window.devicePixelRatio || 1;
+    const cssW = canvas.clientWidth || 920;
+    const cssH = 380;
+    canvas.width = cssW * dpr;
+    canvas.height = cssH * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, cssW, cssH);
+
+    const pad = { left: 56, right: 20, top: 20, bottom: 34 };
+    const plotW = cssW - pad.left - pad.right;
+    const plotH = cssH - pad.top - pad.bottom;
+
+    const kMin = pts[0][0];
+    const kMax = pts[pts.length - 1][0];
+    const vMax = Math.max(...pts.map(p => p[1])) * 1.08;
+
+    const xFor = k => pad.left + ((k - kMin) / (kMax - kMin)) * plotW;
+    const yFor = v => pad.top + plotH - (v / vMax) * plotH;
+
+    ctx.strokeStyle = getStyle('--rule');
+    ctx.lineWidth = 1;
+    const ySteps = 4;
+    ctx.fillStyle = getStyle('--ink-soft');
+    ctx.font = '11px ui-monospace, monospace';
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'middle';
+    for (let i = 0; i <= ySteps; i++) {
+      const v = (vMax / ySteps) * i;
+      const y = yFor(v);
+      ctx.beginPath();
+      ctx.moveTo(pad.left, y);
+      ctx.lineTo(cssW - pad.right, y);
+      ctx.stroke();
+      ctx.fillText(Math.round(v).toString(), pad.left - 10, y);
+    }
+
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+    ctx.strokeStyle = getStyle('--rule-strong');
+    for (let k = Math.ceil(kMin); k <= Math.floor(kMax); k++) {
+      const x = xFor(k);
+      ctx.beginPath();
+      ctx.moveTo(x, pad.top);
+      ctx.lineTo(x, pad.top + plotH);
+      ctx.stroke();
+      ctx.fillStyle = getStyle('--ink-soft');
+      ctx.fillText(k.toString(), x, pad.top + plotH + 8);
+    }
+
+    ctx.beginPath();
+    ctx.strokeStyle = getStyle('--accent');
+    ctx.lineWidth = 2.5;
+    ctx.lineJoin = 'round';
+    pts.forEach((p, i) => {
+      const x = xFor(p[0]);
+      const y = yFor(p[1]);
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+
+    ctx.fillStyle = getStyle('--integer');
+    for (let k = Math.ceil(kMin); k <= Math.floor(kMax); k++) {
+      const v = interpolate(pts, k);
+      ctx.beginPath();
+      ctx.arc(xFor(k), yFor(v), 4.5, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    const cK = Math.max(kMin, Math.min(kMax, cursorK));
+    const cV = interpolate(pts, cK);
+    const cx = xFor(cK);
+    const cy = yFor(cV);
+
+    ctx.strokeStyle = getStyle('--ink-soft');
+    ctx.setLineDash([3, 3]);
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(cx, pad.top);
+    ctx.lineTo(cx, pad.top + plotH);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    ctx.beginPath();
+    ctx.fillStyle = getStyle('--ink');
+    ctx.arc(cx, cy, 6, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = getStyle('--surface');
+    ctx.lineWidth = 2.5;
+    ctx.stroke();
+
+    kOut.textContent = cK.toFixed(2);
+    cOut.textContent = cV < 1000 ? cV.toFixed(3) : cV.toFixed(1);
+    const isInt = Math.abs(cK - Math.round(cK)) < 1e-6;
+    statusOut.textContent = isInt ? t("statusInteger") : t("statusInterpolated");
+    statusOut.className = 'readout-val ' + (isInt ? 'integer-flag' : 'accent');
+  }
+
+  function updateTable() {
+    const n = currentN();
+    tableN.textContent = n;
+    const pts = pointsFor(n);
+    let rows = '';
+    for (let k = 0; k <= n; k++) {
+      const v = interpolate(pts, k);
+      let comb = 1;
+      for (let i = 0; i < k; i++) comb = comb * (n - i) / (i + 1);
+      comb = Math.round(comb);
+      rows += `<tr><td>${k}</td><td class="exact">${v.toFixed(4)}</td><td>${comb}</td></tr>`;
+    }
+    tableBody.innerHTML = rows;
+  }
+
+  function setN(n) {
+    slider.value = n;
+    nValueEl.textContent = n;
+    const pts = pointsFor(n);
+    cursorK = Math.max(pts[0][0], Math.min(pts[pts.length - 1][0], cursorK));
+    draw();
+    updateTable();
+  }
+
+  function kFromEvent(evt) {
+    const rect = canvas.getBoundingClientRect();
+    const clientX = evt.touches ? evt.touches[0].clientX : evt.clientX;
+    const x = clientX - rect.left;
+    const pad = { left: 56, right: 20 };
+    const plotW = rect.width - pad.left - pad.right;
+    const n = currentN();
+    const pts = pointsFor(n);
+    const kMin = pts[0][0];
+    const kMax = pts[pts.length - 1][0];
+    const frac = (x - pad.left) / plotW;
+    return kMin + frac * (kMax - kMin);
+  }
+
+  canvas.addEventListener('pointerdown', e => {
+    dragging = true;
+    cursorK = kFromEvent(e);
+    draw();
+  });
+  window.addEventListener('pointermove', e => {
+    if (!dragging) return;
+    cursorK = kFromEvent(e);
+    draw();
+  });
+  window.addEventListener('pointerup', () => { dragging = false; });
+
+  slider.addEventListener('input', () => setN(parseInt(slider.value, 10)));
+  window.addEventListener('resize', draw);
+
+  if (window.matchMedia) {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', draw);
+  }
+
+  function applyStaticText() {
+    document.getElementById("eyebrow").textContent = t("eyebrow");
+    document.getElementById("pageTitle").textContent = t("pageTitle");
+    document.getElementById("pageLede").textContent = t("pageLede");
+    document.getElementById("rowLabel").textContent = t("rowLabel");
+    document.getElementById("legendCurve").textContent = t("legendCurve");
+    document.getElementById("legendInteger").textContent = t("legendInteger");
+    document.getElementById("legendCursor").textContent = t("legendCursor");
+    document.getElementById("kLabel").textContent = t("kLabel");
+    document.getElementById("statusLabel").textContent = t("statusLabel");
+    document.getElementById("thGamma").textContent = t("thGamma");
+    document.getElementById("usageTitle").textContent = t("usageTitle");
+    document.getElementById("usageOutro").textContent = t("usageOutro");
+    document.getElementById("footerText").textContent = t("footer");
+
+    const tableTitle = document.getElementById("tableTitle");
+    const n = currentN();
+    tableTitle.innerHTML = "";
+    const parts = t("tableTitle", { n: " N " }).split(/( N )/);
+    for (const part of parts) {
+      if (part === " N ") {
+        const span = document.createElement("span");
+        span.id = "tableN";
+        span.textContent = n;
+        tableTitle.appendChild(span);
+      } else {
+        tableTitle.appendChild(document.createTextNode(part));
+      }
+    }
+
+    const usageIntro = document.getElementById("usageIntro");
+    usageIntro.innerHTML = "";
+    const introParts = t("usageIntro").split(/(gamma-factorial)/);
+    for (const part of introParts) {
+      if (part === "gamma-factorial") {
+        const code = document.createElement("code");
+        code.textContent = part;
+        usageIntro.appendChild(code);
+      } else {
+        usageIntro.appendChild(document.createTextNode(part));
+      }
+    }
+
+    const linksP = document.getElementById("linksText");
+    linksP.innerHTML = "";
+    const linkA = document.createElement("a");
+    linkA.href = "index.html";
+    linkA.textContent = t("linkText");
+    const linkParts = t("links", { link: " LINK " }).split(/( LINK )/);
+    for (const part of linkParts) {
+      if (part === " LINK ") linksP.appendChild(linkA);
+      else linksP.appendChild(document.createTextNode(part));
     }
   }
-  return pts[pts.length - 1][1];
-}
 
-function draw() {
-  const n = currentN();
-  const pts = pointsFor(n);
-  const dpr = window.devicePixelRatio || 1;
-  const cssW = canvas.clientWidth || 920;
-  const cssH = 380;
-  canvas.width = cssW * dpr;
-  canvas.height = cssH * dpr;
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  ctx.clearRect(0, 0, cssW, cssH);
-
-  const pad = { left: 56, right: 20, top: 20, bottom: 34 };
-  const plotW = cssW - pad.left - pad.right;
-  const plotH = cssH - pad.top - pad.bottom;
-
-  const kMin = pts[0][0];
-  const kMax = pts[pts.length - 1][0];
-  const vMax = Math.max(...pts.map(p => p[1])) * 1.08;
-
-  const xFor = k => pad.left + ((k - kMin) / (kMax - kMin)) * plotW;
-  const yFor = v => pad.top + plotH - (v / vMax) * plotH;
-
-  // grid
-  ctx.strokeStyle = getStyle('--rule');
-  ctx.lineWidth = 1;
-  const ySteps = 4;
-  ctx.fillStyle = getStyle('--ink-soft');
-  ctx.font = '11px ui-monospace, monospace';
-  ctx.textAlign = 'right';
-  ctx.textBaseline = 'middle';
-  for (let i = 0; i <= ySteps; i++) {
-    const v = (vMax / ySteps) * i;
-    const y = yFor(v);
-    ctx.beginPath();
-    ctx.moveTo(pad.left, y);
-    ctx.lineTo(cssW - pad.right, y);
-    ctx.stroke();
-    ctx.fillText(Math.round(v).toString(), pad.left - 10, y);
+  function setLang(lang) {
+    if (!I18N[lang]) lang = "en";
+    currentLang = lang;
+    try { window.localStorage.setItem("gf-lang", lang); } catch (e) { /* ignore */ }
+    document.documentElement.lang = lang;
+    langBtnLabel.textContent = LANG_LABELS[lang];
+    langMenu.querySelectorAll(".lang-option").forEach((opt) => {
+      opt.setAttribute("aria-current", opt.dataset.lang === lang ? "true" : "false");
+    });
+    applyStaticText();
+    draw();
   }
 
-  // x axis integer ticks
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'top';
-  ctx.strokeStyle = getStyle('--rule-strong');
-  for (let k = Math.ceil(kMin); k <= Math.floor(kMax); k++) {
-    const x = xFor(k);
-    ctx.beginPath();
-    ctx.moveTo(x, pad.top);
-    ctx.lineTo(x, pad.top + plotH);
-    ctx.stroke();
-    ctx.fillStyle = getStyle('--ink-soft');
-    ctx.fillText(k.toString(), x, pad.top + plotH + 8);
-  }
-
-  // curve
-  ctx.beginPath();
-  ctx.strokeStyle = getStyle('--accent');
-  ctx.lineWidth = 2.5;
-  ctx.lineJoin = 'round';
-  pts.forEach((p, i) => {
-    const x = xFor(p[0]);
-    const y = yFor(p[1]);
-    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  langBtn.addEventListener("click", () => {
+    const isOpen = !langMenu.hidden;
+    langMenu.hidden = isOpen;
+    langBtn.setAttribute("aria-expanded", String(!isOpen));
   });
-  ctx.stroke();
+  langMenu.addEventListener("click", (event) => {
+    const opt = event.target.closest(".lang-option");
+    if (!opt) return;
+    setLang(opt.dataset.lang);
+    langMenu.hidden = true;
+    langBtn.setAttribute("aria-expanded", "false");
+  });
+  document.addEventListener("click", (event) => {
+    if (!langBtn.contains(event.target) && !langMenu.contains(event.target)) {
+      langMenu.hidden = true;
+      langBtn.setAttribute("aria-expanded", "false");
+    }
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      langMenu.hidden = true;
+      langBtn.setAttribute("aria-expanded", "false");
+    }
+  });
 
-  // integer points
-  ctx.fillStyle = getStyle('--integer');
-  for (let k = Math.ceil(kMin); k <= Math.floor(kMax); k++) {
-    const v = interpolate(pts, k);
-    ctx.beginPath();
-    ctx.arc(xFor(k), yFor(v), 4.5, 0, Math.PI * 2);
-    ctx.fill();
-  }
-
-  // cursor
-  const cK = Math.max(kMin, Math.min(kMax, cursorK));
-  const cV = interpolate(pts, cK);
-  const cx = xFor(cK);
-  const cy = yFor(cV);
-
-  ctx.strokeStyle = getStyle('--ink-soft');
-  ctx.setLineDash([3, 3]);
-  ctx.lineWidth = 1;
-  ctx.beginPath();
-  ctx.moveTo(cx, pad.top);
-  ctx.lineTo(cx, pad.top + plotH);
-  ctx.stroke();
-  ctx.setLineDash([]);
-
-  ctx.beginPath();
-  ctx.fillStyle = getStyle('--ink');
-  ctx.arc(cx, cy, 6, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.strokeStyle = getStyle('--ground-raised');
-  ctx.lineWidth = 2.5;
-  ctx.stroke();
-
-  kOut.textContent = cK.toFixed(2);
-  cOut.textContent = cV < 1000 ? cV.toFixed(3) : cV.toFixed(1);
-  const isInt = Math.abs(cK - Math.round(cK)) < 1e-6;
-  statusOut.textContent = isInt ? 'exact integer value' : 'continuous interpolation';
-  statusOut.className = 'readout-val ' + (isInt ? 'integer-flag' : 'accent');
-}
-
-function updateTable() {
-  const n = currentN();
-  tableN.textContent = n;
-  const pts = pointsFor(n);
-  let rows = '';
-  for (let k = 0; k <= n; k++) {
-    const v = interpolate(pts, k);
-    let comb = 1;
-    for (let i = 0; i < k; i++) comb = comb * (n - i) / (i + 1);
-    comb = Math.round(comb);
-    rows += `<tr><td>${k}</td><td class="exact">${v.toFixed(4)}</td><td>${comb}</td></tr>`;
-  }
-  tableBody.innerHTML = rows;
-}
-
-function setN(n) {
-  slider.value = n;
-  nValueEl.textContent = n;
-  const pts = pointsFor(n);
-  cursorK = Math.max(pts[0][0], Math.min(pts[pts.length - 1][0], cursorK));
-  draw();
-  updateTable();
-}
-
-function kFromEvent(evt) {
-  const rect = canvas.getBoundingClientRect();
-  const clientX = evt.touches ? evt.touches[0].clientX : evt.clientX;
-  const x = clientX - rect.left;
-  const pad = { left: 56, right: 20 };
-  const plotW = rect.width - pad.left - pad.right;
-  const n = currentN();
-  const pts = pointsFor(n);
-  const kMin = pts[0][0];
-  const kMax = pts[pts.length - 1][0];
-  const frac = (x - pad.left) / plotW;
-  return kMin + frac * (kMax - kMin);
-}
-
-canvas.addEventListener('pointerdown', e => {
-  dragging = true;
-  cursorK = kFromEvent(e);
-  draw();
-});
-window.addEventListener('pointermove', e => {
-  if (!dragging) return;
-  cursorK = kFromEvent(e);
-  draw();
-});
-window.addEventListener('pointerup', () => { dragging = false; });
-
-slider.addEventListener('input', () => setN(parseInt(slider.value, 10)));
-window.addEventListener('resize', draw);
-
-if (window.matchMedia) {
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', draw);
-}
-
-setN(5);
+  setLang(detectInitialLang());
+  setN(5);
+})();
 </script>
+</body>
+</html>
