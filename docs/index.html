@@ -236,12 +236,14 @@ h1 {
 .plot-wrap {
   margin-top: 1.1rem;
   overflow-x: auto;
+  position: relative;
 }
 
 svg#plot {
   display: block;
   width: 100%;
   height: auto;
+  user-select: none;
 }
 
 .plot-caption {
@@ -249,6 +251,34 @@ svg#plot {
   color: var(--ink-faint);
   margin-top: 0.5rem;
   font-family: ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+.plot-hint {
+  font-size: 0.72rem;
+  color: var(--ink-faint);
+  margin-top: 0.35rem;
+}
+
+.reset-zoom-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 0.72rem;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  color: var(--ink-soft);
+  border-radius: 999px;
+  padding: 0.2rem 0.6rem;
+  cursor: pointer;
+}
+.reset-zoom-btn:hover {
+  border-color: var(--accent);
+  color: var(--ink);
+}
+.reset-zoom-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
 }
 
 .examples {
@@ -713,22 +743,26 @@ svg#plot {
     }
   }
 
-  function sampleCurve(plot) {
+  function defaultRange(plot) {
+    if (plot.kind === "binomial") return [-1, plot.n + 1];
+    const span = Math.max(3, Math.abs(plot.center) * 0.6 + 2);
+    return [plot.center - span, plot.center + span];
+  }
+
+  function sampleCurve(plot, range) {
     const points = [];
+    const [rangeLo, rangeHi] = range || defaultRange(plot);
     if (plot.kind === "gamma" || plot.kind === "factorial") {
       const offset = plot.kind === "factorial" ? 1 : 0;
-      const span = Math.max(3, Math.abs(plot.center) * 0.6 + 2);
-      const lo = plot.center - span;
-      const hi = plot.center + span;
-      const step = (hi - lo) / 160;
+      const lo = rangeLo, hi = rangeHi;
+      const step = (hi - lo) / 200;
       for (let x = lo; x <= hi; x += step) {
         const y = gammaSafe(x + offset);
         if (y !== null && Number.isFinite(y)) points.push([x, y]);
       }
     } else if (plot.kind === "binomial") {
-      const lo = -1;
-      const hi = plot.n + 1;
-      const step = (hi - lo) / 160;
+      const lo = rangeLo, hi = rangeHi;
+      const step = (hi - lo) / 200;
       for (let x = lo; x <= hi; x += step) {
         const y = binomialSafe(plot.n, x);
         if (y !== null) points.push([x, y]);
@@ -754,21 +788,36 @@ svg#plot {
   }
 
   const SERIES_COLORS = ["--curve", "--series-2", "--series-3", "--series-4"];
+  const MIN_ZOOM_SPAN = 0.5;
+
+  // Mutable per-plot viewport state, reset each time a fresh series list is
+  // drawn (i.e. on every new evaluation), but preserved across pin/unpin
+  // re-renders of the *same* result via rerenderPlot's `keepViewport` flag.
+  let viewportRange = null; // [xLo, xHi] or null for auto-fit
 
   // series: array of { plot, resultValue, pinned }. The first entry is the
   // current (active) result; the rest are pinned curves shown for comparison.
-  function drawPlot(container, series) {
+  function drawPlot(container, series, keepViewport) {
+    if (!keepViewport) viewportRange = null;
     container.innerHTML = "";
-    const curves = series
-      .map((s) => ({ ...s, points: sampleCurve(s.plot) }))
-      .filter((s) => s.points.length >= 2);
+
+    const baseCurves = series.map((s) => ({ ...s, fullPoints: sampleCurve(s.plot) }));
+    const fullXs = baseCurves.flatMap((c) => c.fullPoints.map((p) => p[0]));
+    const dataXMin = Math.min(...fullXs), dataXMax = Math.max(...fullXs);
+
+    const [rangeLo, rangeHi] = viewportRange || [dataXMin, dataXMax];
+    const curves = baseCurves
+      .map((c) => ({ ...c, points: sampleCurve(c.plot, [rangeLo, rangeHi]) }))
+      .filter((c) => c.points.length >= 2);
     if (curves.length === 0) return;
 
     const svg = document.createElementNS(NS, "svg");
     svg.setAttribute("id", "plot");
     svg.setAttribute("viewBox", `0 0 ${PLOT_W} ${PLOT_H}`);
     svg.setAttribute("role", "img");
-    svg.setAttribute("aria-label", "Curve of the function around the computed value");
+    svg.setAttribute("aria-label", "Curve of the function around the computed value. Scroll to zoom, drag to pan.");
+    svg.style.cursor = "grab";
+    svg.style.touchAction = "none";
 
     const allXs = curves.flatMap((c) => c.points.map((p) => p[0]));
     const allYs = curves.flatMap((c) => c.points.map((p) => p[1]));
@@ -780,12 +829,15 @@ svg#plot {
     const plotH = PLOT_H - PAD.top - PAD.bottom;
     const xFor = (x) => PAD.left + ((x - xMin) / (xMax - xMin || 1)) * plotW;
     const yFor = (y) => PAD.top + plotH - ((y - yMin) / (yMax - yMin || 1)) * plotH;
+    const xInv = (px) => xMin + ((px - PAD.left) / plotW) * (xMax - xMin);
 
     const style = getComputedStyle(document.documentElement);
     const ruleColor = style.getPropertyValue("--rule").trim();
     const inkFaint = style.getPropertyValue("--ink-faint").trim();
+    const inkColor = style.getPropertyValue("--ink").trim();
     const pointColor = style.getPropertyValue("--point").trim();
     const surfaceColor = style.getPropertyValue("--surface").trim();
+    const surfaceSunkenColor = style.getPropertyValue("--surface-sunken").trim();
     const seriesColors = SERIES_COLORS.map((v) => style.getPropertyValue(v).trim());
 
     // zero line
@@ -800,12 +852,12 @@ svg#plot {
       svg.appendChild(zeroLine);
     }
 
-    // x-axis integer ticks (sparse)
-    const xLo = Math.ceil(xMin);
-    const xHi = Math.floor(xMax);
-    const span = xHi - xLo;
-    const tickStep = Math.max(1, Math.round(span / 6));
-    for (let x = xLo; x <= xHi; x += tickStep) {
+    // x-axis ticks (sparse, adapts to zoomed range)
+    const rawStep = (xMax - xMin) / 6;
+    const niceStep = rawStep <= 0 ? 1 : Math.pow(10, Math.floor(Math.log10(rawStep)));
+    const tickStep = Math.max(niceStep, (xMax - xMin) / 30 || 1);
+    const xTickLo = Math.ceil(xMin / tickStep) * tickStep;
+    for (let x = xTickLo; x <= xMax; x += tickStep) {
       const tx = xFor(x);
       const tick = document.createElementNS(NS, "text");
       tick.setAttribute("x", tx);
@@ -814,7 +866,7 @@ svg#plot {
       tick.setAttribute("font-size", "10");
       tick.setAttribute("font-family", "ui-monospace, SF Mono, Menlo, monospace");
       tick.setAttribute("fill", inkFaint);
-      tick.textContent = String(x);
+      tick.textContent = Number(x.toFixed(2)).toString();
       svg.appendChild(tick);
     }
 
@@ -846,7 +898,7 @@ svg#plot {
 
       const cx = curve.plot.center;
       const cy = curve.resultValue.isReal ? curve.resultValue.re : null;
-      if (cy !== null && Number.isFinite(cy)) {
+      if (cy !== null && Number.isFinite(cy) && cx >= xMin && cx <= xMax) {
         const hx = xFor(cx);
         const hy = yFor(cy);
         const ring = document.createElementNS(NS, "circle");
@@ -860,7 +912,154 @@ svg#plot {
       }
     });
 
+    // --- hover: crosshair + readout for the primary (first, non-pinned) curve ---
+    const primary = curves[0];
+    const hoverLine = document.createElementNS(NS, "line");
+    hoverLine.setAttribute("y1", PAD.top);
+    hoverLine.setAttribute("y2", PAD.top + plotH);
+    hoverLine.setAttribute("stroke", inkFaint);
+    hoverLine.setAttribute("stroke-width", "1");
+    hoverLine.setAttribute("stroke-dasharray", "2 2");
+    hoverLine.style.display = "none";
+    svg.appendChild(hoverLine);
+
+    const hoverDot = document.createElementNS(NS, "circle");
+    hoverDot.setAttribute("r", "3.5");
+    hoverDot.setAttribute("fill", inkColor);
+    hoverDot.style.display = "none";
+    svg.appendChild(hoverDot);
+
+    const hoverLabelBg = document.createElementNS(NS, "rect");
+    hoverLabelBg.setAttribute("fill", surfaceSunkenColor);
+    hoverLabelBg.setAttribute("rx", "3");
+    hoverLabelBg.style.display = "none";
+    svg.appendChild(hoverLabelBg);
+
+    const hoverLabel = document.createElementNS(NS, "text");
+    hoverLabel.setAttribute("font-size", "10");
+    hoverLabel.setAttribute("font-family", "ui-monospace, SF Mono, Menlo, monospace");
+    hoverLabel.setAttribute("fill", inkColor);
+    hoverLabel.style.display = "none";
+    svg.appendChild(hoverLabel);
+
+    function nearestPoint(px) {
+      if (!primary) return null;
+      const targetX = xInv(px);
+      let best = primary.points[0];
+      let bestDist = Infinity;
+      for (const p of primary.points) {
+        const d = Math.abs(p[0] - targetX);
+        if (d < bestDist) { bestDist = d; best = p; }
+      }
+      return best;
+    }
+
+    function showHover(px) {
+      const pt = nearestPoint(px);
+      if (!pt) return;
+      const hx = xFor(pt[0]);
+      const hy = yFor(pt[1]);
+      hoverLine.setAttribute("x1", hx);
+      hoverLine.setAttribute("x2", hx);
+      hoverLine.style.display = "";
+      hoverDot.setAttribute("cx", hx);
+      hoverDot.setAttribute("cy", hy);
+      hoverDot.style.display = "";
+
+      const labelText = `x=${Number(pt[0].toFixed(3))}  y=${Number(pt[1].toFixed(4))}`;
+      hoverLabel.textContent = labelText;
+      const labelW = labelText.length * 5.6 + 10;
+      let labelX = hx + 8;
+      if (labelX + labelW > PLOT_W - PAD.right) labelX = hx - labelW - 8;
+      const labelY = Math.max(PAD.top + 12, hy - 12);
+      hoverLabel.setAttribute("x", labelX + 5);
+      hoverLabel.setAttribute("y", labelY);
+      hoverLabelBg.setAttribute("x", labelX);
+      hoverLabelBg.setAttribute("y", labelY - 11);
+      hoverLabelBg.setAttribute("width", labelW);
+      hoverLabelBg.setAttribute("height", "16");
+      hoverLabelBg.style.display = "";
+      hoverLabel.style.display = "";
+    }
+
+    function hideHover() {
+      hoverLine.style.display = "none";
+      hoverDot.style.display = "none";
+      hoverLabelBg.style.display = "none";
+      hoverLabel.style.display = "none";
+    }
+
+    // --- zoom (wheel) ---
+    svg.addEventListener("wheel", (event) => {
+      event.preventDefault();
+      const rect = svg.getBoundingClientRect();
+      const px = ((event.clientX - rect.left) / rect.width) * PLOT_W;
+      const centerX = xInv(Math.max(PAD.left, Math.min(PLOT_W - PAD.right, px)));
+      const factor = event.deltaY > 0 ? 1.15 : 1 / 1.15;
+      let newLo = centerX - (centerX - xMin) * factor;
+      let newHi = centerX + (xMax - centerX) * factor;
+      if (newHi - newLo < MIN_ZOOM_SPAN) {
+        const mid = (newLo + newHi) / 2;
+        newLo = mid - MIN_ZOOM_SPAN / 2;
+        newHi = mid + MIN_ZOOM_SPAN / 2;
+      }
+      if (newHi - newLo >= dataXMax - dataXMin) {
+        viewportRange = null;
+      } else {
+        viewportRange = [newLo, newHi];
+      }
+      drawPlot(container, series, true);
+    }, { passive: false });
+
+    // --- pan (drag) ---
+    let dragState = null;
+    svg.addEventListener("pointerdown", (event) => {
+      svg.setPointerCapture(event.pointerId);
+      svg.style.cursor = "grabbing";
+      dragState = { startClientX: event.clientX, startRange: [xMin, xMax] };
+      hideHover();
+    });
+    svg.addEventListener("pointermove", (event) => {
+      const rect = svg.getBoundingClientRect();
+      const px = ((event.clientX - rect.left) / rect.width) * PLOT_W;
+      if (dragState) {
+        const dxPx = event.clientX - dragState.startClientX;
+        const dataPerPx = (dragState.startRange[1] - dragState.startRange[0]) / plotW;
+        const shift = -dxPx * dataPerPx;
+        viewportRange = [dragState.startRange[0] + shift, dragState.startRange[1] + shift];
+        drawPlot(container, series, true);
+      } else if (px >= PAD.left && px <= PLOT_W - PAD.right) {
+        showHover(px);
+      } else {
+        hideHover();
+      }
+    });
+    svg.addEventListener("pointerup", (event) => {
+      svg.releasePointerCapture(event.pointerId);
+      svg.style.cursor = "grab";
+      dragState = null;
+    });
+    svg.addEventListener("pointerleave", () => {
+      if (!dragState) hideHover();
+    });
+    svg.addEventListener("dblclick", () => {
+      viewportRange = null;
+      drawPlot(container, series, true);
+    });
+
     container.appendChild(svg);
+
+    if (viewportRange) {
+      const resetBtn = document.createElement("button");
+      resetBtn.type = "button";
+      resetBtn.className = "reset-zoom-btn";
+      resetBtn.textContent = "reset zoom";
+      resetBtn.addEventListener("click", () => {
+        viewportRange = null;
+        drawPlot(container, series, true);
+      });
+      container.appendChild(resetBtn);
+    }
   }
 
   // --- UI wiring ---
@@ -1035,6 +1234,11 @@ svg#plot {
         captionRow.appendChild(caption);
         captionRow.appendChild(makePinButton(expr, value, plot));
         resultArea.appendChild(captionRow);
+
+        const hint = document.createElement("p");
+        hint.className = "plot-hint";
+        hint.textContent = "Scroll to zoom, drag to pan, hover for exact values, double-click to reset.";
+        resultArea.appendChild(hint);
       } else {
         const caption = document.createElement("p");
         caption.className = "plot-caption";
