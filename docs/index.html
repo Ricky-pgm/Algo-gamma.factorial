@@ -407,7 +407,38 @@ svg#plot {
 }
 
 .table-toggle-row {
-  margin-top: 0.6rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.8rem;
+}
+
+.tool-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 0.78rem;
+  font-weight: 600;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  color: var(--ink-soft);
+  border-radius: 6px;
+  padding: 0.35rem 0.7rem;
+  cursor: pointer;
+}
+.tool-btn:hover {
+  border-color: var(--accent);
+  color: var(--ink);
+  background: var(--accent-soft);
+}
+.tool-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+.tool-btn-icon {
+  font-size: 0.85rem;
+  line-height: 1;
 }
 
 .value-table-wrap {
@@ -1850,6 +1881,20 @@ table.value-table tr:last-child td { border-bottom: none; }
     return btn;
   }
 
+  function makeToolButton(icon, label, onClick) {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "tool-btn";
+    const iconSpan = document.createElement("span");
+    iconSpan.className = "tool-btn-icon";
+    iconSpan.setAttribute("aria-hidden", "true");
+    iconSpan.textContent = icon;
+    btn.appendChild(iconSpan);
+    btn.appendChild(document.createTextNode(label));
+    btn.addEventListener("click", onClick);
+    return btn;
+  }
+
   function urlFor(expr) {
     const url = new URL(window.location.href);
     url.searchParams.set("expr", expr);
@@ -2103,14 +2148,15 @@ table.value-table tr:last-child td { border-bottom: none; }
 
         const { wrap: tableWrap, rows } = makeValueTable(plot);
         const toolRow = document.createElement("div");
-        toolRow.className = "table-toggle-row action-btns";
-        const toggleBtn = makeTextButton(t("showTable"), () => {
+        toolRow.className = "table-toggle-row";
+        const toggleBtn = makeToolButton("▤", t("showTable"), () => {
           tableWrap.hidden = !tableWrap.hidden;
-          toggleBtn.textContent = tableWrap.hidden ? t("showTable") : t("hideTable");
+          const label = tableWrap.hidden ? t("showTable") : t("hideTable");
+          toggleBtn.lastChild.textContent = label;
         });
         toolRow.appendChild(toggleBtn);
-        toolRow.appendChild(makeTextButton(t("exportCsv"), () => exportCsv(plot, rows)));
-        toolRow.appendChild(makeTextButton(t("exportPng"), () => exportPng(plotWrap)));
+        toolRow.appendChild(makeToolButton("⇩", t("exportCsv"), () => exportCsv(plot, rows)));
+        toolRow.appendChild(makeToolButton("⇩", t("exportPng"), () => exportPng(plotWrap)));
         resultArea.appendChild(toolRow);
         resultArea.appendChild(tableWrap);
 
