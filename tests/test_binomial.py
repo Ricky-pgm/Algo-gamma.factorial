@@ -34,11 +34,19 @@ def test_half_integer_known_value():
     assert binomial(4.5, 2) == pytest.approx(7.875, rel=1e-9)
 
 
-def test_error_message_identifies_k_as_pole_source():
-    with pytest.raises(ValueError, match="k=-1"):
-        binomial(5, -1)
+def test_out_of_range_integer_choices_are_zero():
+    # C(n, k) = 0 for k > n or k < 0, as with math.comb: the denominator
+    # Gamma pole makes the ratio 0.
+    assert binomial(5, 6) == 0.0
+    assert binomial(5, -1) == 0.0
+    assert binomial(2, 5) == 0.0
+    assert binomial(0, 1) == 0.0
+    assert binomial(3.5, 4.5) == 0.0
 
 
-def test_error_message_identifies_n_minus_k_as_pole_source():
-    with pytest.raises(ValueError, match="n-k"):
+def test_n_pole_raises_with_clear_message():
+    # When n itself is a non-positive integer the ratio is indeterminate.
+    with pytest.raises(ValueError, match="n=-3"):
         binomial(-3, 1)
+    with pytest.raises(ValueError, match="n=-1"):
+        binomial(-1, -1)
