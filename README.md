@@ -23,12 +23,20 @@ binomial(4.5, 2)  # 7.875    (continuous interpolation "between" rows of Pascal'
 ```
 
 A standalone web calculator lives in `docs/index.html` — type an
-expression (`5!`, `gamma(2.5)`, `C(10, 3)`), get an instant result plus a
-live curve of the function around it. Pure HTML/JS, no server, no build
-step: open the file directly in a browser, or deploy the `docs/` folder as
-a static site (GitHub Pages, Netlify, Vercel...). It's a JS port of the
-same Lanczos math as the Python package — real numbers only (no complex
-support in the browser build).
+expression (`5!`, `gamma(2.5)`, `C(10, 3)`, `1+2i`), get an instant result
+plus a live curve of the function around it. Pure HTML/JS, no server, no
+build step: open the file directly in a browser, or deploy the `docs/`
+folder as a static site (GitHub Pages, Netlify, Vercel...). It's a JS port
+of the same Lanczos math as the Python package, including complex-number
+support.
+
+The calculator also supports:
+- **Pin to compare** — overlay multiple results on the same plot (e.g.
+  `gamma(2.5)` pinned against `gamma(6)`, or `C(5,k)` against `C(8,k)`).
+- **Zoom, pan, and hover** — scroll to zoom around the cursor, drag to pan,
+  hover for the exact (x, y) at any point, double-click to reset.
+- **Shareable links** — every evaluation updates the URL's `?expr=`, and a
+  "copy link" button next to each result copies a direct link to it.
 
 An interactive demo of the continuous Pascal's triangle (slider on `n`,
 curve of `C(n, k)` vs. `k`) is available in `docs/pascal-continuous.html` -
