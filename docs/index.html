@@ -1030,7 +1030,7 @@ table.value-table tr:last-child td { border-bottom: none; }
       pinToCompare: "pin to compare",
       removeFromComparison: "Remove {expr} from comparison",
       complexNote: "Complex result — curve plotting is only available for real inputs.",
-      plotHint: "Scroll to zoom, drag to pan, hover for exact values, double-click to reset.",
+      plotHint: "Scroll or pinch to zoom, drag to pan, hover for exact values, double-click to reset.",
       resetZoom: "reset zoom",
       showTable: "show table",
       hideTable: "hide table",
@@ -1093,7 +1093,7 @@ table.value-table tr:last-child td { border-bottom: none; }
       pinToCompare: "épingler pour comparer",
       removeFromComparison: "Retirer {expr} de la comparaison",
       complexNote: "Résultat complexe — le tracé de courbe n'est disponible que pour les entrées réelles.",
-      plotHint: "Molette pour zoomer, glisser pour déplacer, survoler pour les valeurs exactes, double-clic pour réinitialiser.",
+      plotHint: "Molette ou pincement pour zoomer, glisser pour déplacer, survoler pour les valeurs exactes, double-clic pour réinitialiser.",
       resetZoom: "réinitialiser le zoom",
       showTable: "afficher le tableau",
       hideTable: "masquer le tableau",
@@ -1156,7 +1156,7 @@ table.value-table tr:last-child td { border-bottom: none; }
       pinToCompare: "zum Vergleich anheften",
       removeFromComparison: "{expr} aus dem Vergleich entfernen",
       complexNote: "Komplexes Ergebnis — Kurvendarstellung ist nur für reelle Eingaben verfügbar.",
-      plotHint: "Scrollen zum Zoomen, Ziehen zum Verschieben, Hover für genaue Werte, Doppelklick zum Zurücksetzen.",
+      plotHint: "Scrollen oder Zusammenziehen (Pinch) zum Zoomen, Ziehen zum Verschieben, Hover für genaue Werte, Doppelklick zum Zurücksetzen.",
       resetZoom: "Zoom zurücksetzen",
       showTable: "Tabelle anzeigen",
       hideTable: "Tabelle ausblenden",
@@ -1558,6 +1558,12 @@ table.value-table tr:last-child td { border-bottom: none; }
   const MIN_ZOOM_SPAN = 0.5;
 
   let viewportRange = null; // [xLo, xHi] or null for auto-fit
+  // Drag/pinch state lives here (not per-draw) because drawPlot rebuilds the
+  // SVG on every pointer move; keeping it module-scoped makes panning and
+  // pinch-zoom continuous across those rebuilds.
+  let dragState = null;
+  let pinchState = null;
+  const activePointers = new Map();
 
   // series: array of { plot, resultValue, pinned }. The first entry is the
   // current (active) result; the rest are pinned curves shown for comparison.
@@ -1795,14 +1801,46 @@ table.value-table tr:last-child td { border-bottom: none; }
       drawPlot(container, series, true);
     }, { passive: false });
 
-    let dragState = null;
     svg.addEventListener("pointerdown", (event) => {
       svg.setPointerCapture(event.pointerId);
       svg.style.cursor = "grabbing";
-      dragState = { startClientX: event.clientX, startRange: [xMin, xMax] };
+      activePointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+      if (activePointers.size >= 2) {
+        const [a, b] = [...activePointers.values()];
+        pinchState = {
+          startDist: Math.max(1, Math.hypot(a.x - b.x, a.y - b.y)),
+          startRange: [xMin, xMax],
+        };
+        dragState = null;
+      } else {
+        dragState = { startClientX: event.clientX, startRange: [xMin, xMax] };
+      }
       hideHover();
     });
     svg.addEventListener("pointermove", (event) => {
+      if (activePointers.has(event.pointerId)) {
+        activePointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+      }
+      if (pinchState && activePointers.size >= 2) {
+        const [a, b] = [...activePointers.values()];
+        const dist = Math.hypot(a.x - b.x, a.y - b.y);
+        const factor = dist / pinchState.startDist;
+        const mid = (pinchState.startRange[0] + pinchState.startRange[1]) / 2;
+        let newLo = mid - (mid - pinchState.startRange[0]) * factor;
+        let newHi = mid + (pinchState.startRange[1] - mid) * factor;
+        if (newHi - newLo < MIN_ZOOM_SPAN) {
+          const m = (newLo + newHi) / 2;
+          newLo = m - MIN_ZOOM_SPAN / 2;
+          newHi = m + MIN_ZOOM_SPAN / 2;
+        }
+        if (newHi - newLo >= dataXMax - dataXMin) {
+          viewportRange = null;
+        } else {
+          viewportRange = [newLo, newHi];
+        }
+        drawPlot(container, series, true);
+        return;
+      }
       const rect = svg.getBoundingClientRect();
       const px = ((event.clientX - rect.left) / rect.width) * PLOT_W;
       if (dragState) {
@@ -1818,12 +1856,27 @@ table.value-table tr:last-child td { border-bottom: none; }
       }
     });
     svg.addEventListener("pointerup", (event) => {
-      svg.releasePointerCapture(event.pointerId);
-      svg.style.cursor = "grab";
+      activePointers.delete(event.pointerId);
+      if (svg.hasPointerCapture(event.pointerId)) svg.releasePointerCapture(event.pointerId);
+      if (activePointers.size === 0) {
+        dragState = null;
+        pinchState = null;
+        svg.style.cursor = "grab";
+      } else if (activePointers.size === 1) {
+        // One finger remains after a pinch: resume panning from its position.
+        const [p] = [...activePointers.values()];
+        dragState = { startClientX: p.x, startRange: [xMin, xMax] };
+        pinchState = null;
+      }
+    });
+    svg.addEventListener("pointercancel", (event) => {
+      activePointers.delete(event.pointerId);
+      pinchState = null;
       dragState = null;
+      svg.style.cursor = "grab";
     });
     svg.addEventListener("pointerleave", () => {
-      if (!dragState) hideHover();
+      if (!dragState && !pinchState) hideHover();
     });
     svg.addEventListener("dblclick", () => {
       viewportRange = null;
