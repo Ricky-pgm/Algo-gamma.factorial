@@ -3,84 +3,125 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>gamma-factorial</title>
+<title>Γ — gamma-factorial calculator</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.85em%27 font-size=%2790%27 fill=%27%234f46e5%27%3EΓ%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#eef1f7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0a0d13" media="(prefers-color-scheme: dark)">
 <meta name="description" content="Evaluate the generalized factorial and binomial coefficient for any real number, with a live curve around every result.">
 <style>
 :root {
-  --bg: #f7f8fa;
+  --bg: #eef1f7;
   --surface: #ffffff;
-  --surface-sunken: #eef0f3;
-  --ink: #14181f;
-  --ink-soft: #5c6472;
-  --ink-faint: #8a919d;
-  --rule: #dde1e7;
-  --accent: #2563a8;
-  --accent-soft: #dbe8f6;
-  --curve: #2563a8;
-  --series-2: #1f8a70;
-  --series-3: #8a4fbe;
-  --series-4: #c17a1f;
-  --point: #14181f;
-  --err: #b3372c;
-  --err-soft: #f7e3e0;
+  --surface-sunken: #f2f4fa;
+  --ink: #101828;
+  --ink-soft: #475467;
+  --ink-faint: #98a2b3;
+  --rule: #e4e8f0;
+  --rule-strong: #cdd5e3;
+  --accent: #4f46e5;
+  --accent-strong: #3730a3;
+  --accent-soft: #eef2ff;
+  --curve: #4f46e5;
+  --series-2: #0e9f7c;
+  --series-3: #8b5cf6;
+  --series-4: #d97706;
+  --point: #101828;
+  --err: #dc2626;
+  --err-soft: #fdecec;
+  --glow: rgba(79, 70, 229, 0.10);
+  --grad: linear-gradient(135deg, #4f46e5 0%, #7c3aed 52%, #db2777 100%);
+  --shadow-card: 0 1px 2px rgba(16, 24, 40, 0.05), 0 14px 40px -18px rgba(16, 24, 40, 0.28);
+  --k-factorial: #4f46e5; --k-factorial-bg: #eef2ff;
+  --k-gamma: #7c3aed; --k-gamma-bg: #f5eefe;
+  --k-double: #0e9f7c; --k-double-bg: #e7f7f2;
+  --k-binomial: #b45309; --k-binomial-bg: #fef4e2;
+  --k-beta: #db2777; --k-beta-bg: #fdebf3;
+  --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, "Liberation Mono", monospace;
+  --font-serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0f1216;
-    --surface: #171b21;
-    --surface-sunken: #101317;
-    --ink: #e7eaef;
-    --ink-soft: #9aa2b1;
-    --ink-faint: #6b7280;
-    --rule: #2a3038;
-    --accent: #6ea8dc;
-    --accent-soft: #1c2c3d;
-    --curve: #6ea8dc;
-    --series-2: #5cc4a3;
-    --series-3: #b592e0;
-    --series-4: #e0ab5c;
-    --point: #e7eaef;
-    --err: #e2857b;
-    --err-soft: #2e1c1a;
+    --bg: #0a0d13;
+    --surface: #12161f;
+    --surface-sunken: #0e121b;
+    --ink: #e6e9f0;
+    --ink-soft: #a0aabd;
+    --ink-faint: #66708a;
+    --rule: #20263a;
+    --rule-strong: #2c3350;
+    --accent: #818cf8;
+    --accent-strong: #c7d2fe;
+    --accent-soft: #1d1b45;
+    --curve: #818cf8;
+    --series-2: #2fbf93;
+    --series-3: #a78bfa;
+    --series-4: #f0a24a;
+    --point: #e6e9f0;
+    --err: #f87171;
+    --err-soft: #3a1418;
+    --glow: rgba(129, 140, 248, 0.12);
+    --grad: linear-gradient(135deg, #6366f1 0%, #8b5cf6 52%, #ec4899 100%);
+    --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3), 0 18px 48px -20px rgba(0, 0, 0, 0.6);
+    --k-factorial: #a5b4fc; --k-factorial-bg: #1e2340;
+    --k-gamma: #c4b5fd; --k-gamma-bg: #2a2140;
+    --k-double: #5eead4; --k-double-bg: #12332d;
+    --k-binomial: #fcd34d; --k-binomial-bg: #3a2f12;
+    --k-beta: #f9a8d4; --k-beta-bg: #3a1530;
   }
 }
 
 :root[data-theme="dark"] {
-  --bg: #0f1216;
-  --surface: #171b21;
-  --surface-sunken: #101317;
-  --ink: #e7eaef;
-  --ink-soft: #9aa2b1;
-  --ink-faint: #6b7280;
-  --rule: #2a3038;
-  --accent: #6ea8dc;
-  --accent-soft: #1c2c3d;
-  --curve: #6ea8dc;
-  --series-2: #5cc4a3;
-  --series-3: #b592e0;
-  --series-4: #e0ab5c;
-  --point: #e7eaef;
-  --err: #e2857b;
-  --err-soft: #2e1c1a;
+  --bg: #0a0d13;
+  --surface: #12161f;
+  --surface-sunken: #0e121b;
+  --ink: #e6e9f0;
+  --ink-soft: #a0aabd;
+  --ink-faint: #66708a;
+  --rule: #20263a;
+  --rule-strong: #2c3350;
+  --accent: #818cf8;
+  --accent-strong: #c7d2fe;
+  --accent-soft: #1d1b45;
+  --curve: #818cf8;
+  --series-2: #2fbf93;
+  --series-3: #a78bfa;
+  --series-4: #f0a24a;
+  --point: #e6e9f0;
+  --err: #f87171;
+  --err-soft: #3a1418;
+  --glow: rgba(129, 140, 248, 0.12);
+  --grad: linear-gradient(135deg, #6366f1 0%, #8b5cf6 52%, #ec4899 100%);
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3), 0 18px 48px -20px rgba(0, 0, 0, 0.6);
+  --k-factorial: #a5b4fc; --k-factorial-bg: #1e2340;
+  --k-gamma: #c4b5fd; --k-gamma-bg: #2a2140;
+  --k-double: #5eead4; --k-double-bg: #12332d;
+  --k-binomial: #fcd34d; --k-binomial-bg: #3a2f12;
+  --k-beta: #f9a8d4; --k-beta-bg: #3a1530;
 }
 
 * { box-sizing: border-box; }
 
-html, body {
+html {
   background: var(--bg);
-  margin: 0;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
   color: var(--ink);
-  font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  font-family: var(--font-ui);
   padding: 3rem 1.25rem 4rem;
-  line-height: 1.5;
+  line-height: 1.55;
+  margin: 0;
+  background-color: var(--bg);
+  background-image: radial-gradient(120% 55% at 50% -12%, var(--glow), transparent 70%);
+  background-attachment: fixed;
+  min-height: 100vh;
 }
 
 .page {
-  max-width: 640px;
+  max-width: 680px;
   margin: 0 auto;
 }
 
@@ -89,16 +130,33 @@ body {
   align-items: flex-start;
   justify-content: space-between;
   gap: 1rem;
+  margin-bottom: 2.4rem;
 }
 
 .eyebrow {
-  font-size: 0.7rem;
-  letter-spacing: 0.1em;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--ink-faint);
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  padding: 0.32rem 0.75rem;
+  margin: 0;
   font-weight: 600;
-  margin: 0 0 0.5rem;
-  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.eyebrow::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--grad);
+  flex-shrink: 0;
 }
 
 .lang-switch {
@@ -110,14 +168,15 @@ body {
   display: flex;
   align-items: center;
   gap: 0.35rem;
-  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-family: var(--font-mono);
   font-size: 0.78rem;
   background: var(--surface);
   border: 1px solid var(--rule);
   color: var(--ink-soft);
   border-radius: 999px;
-  padding: 0.35rem 0.7rem;
+  padding: 0.4rem 0.8rem;
   cursor: pointer;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
 }
 .lang-btn:hover {
   border-color: var(--accent);
@@ -134,14 +193,14 @@ body {
 
 .lang-menu {
   position: absolute;
-  top: calc(100% + 0.4rem);
+  top: calc(100% + 0.45rem);
   right: 0;
   background: var(--surface);
   border: 1px solid var(--rule);
-  border-radius: 8px;
-  box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.25);
-  padding: 0.3rem;
-  min-width: 140px;
+  border-radius: 12px;
+  box-shadow: var(--shadow-card);
+  padding: 0.35rem;
+  min-width: 150px;
   z-index: 10;
 }
 .lang-menu[hidden] { display: none; }
@@ -152,13 +211,13 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: 0.5rem;
-  font-family: ui-monospace, "SF Mono", Menlo, monospace;
-  font-size: 0.82rem;
+  font-family: var(--font-mono);
+  font-size: 0.84rem;
   background: none;
   border: none;
   color: var(--ink);
-  padding: 0.4rem 0.6rem;
-  border-radius: 5px;
+  padding: 0.5rem 0.65rem;
+  border-radius: 8px;
   cursor: pointer;
   text-align: left;
 }
@@ -171,46 +230,76 @@ body {
 }
 
 h1 {
-  font-size: clamp(1.4rem, 4vw, 1.7rem);
+  font-family: var(--font-serif);
+  font-size: clamp(1.85rem, 5.2vw, 2.35rem);
   font-weight: 700;
-  margin: 0 0 0.6rem;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
+  line-height: 1.12;
+  margin: 0 0 0.75rem;
 }
 
 .lede {
-  font-size: 0.95rem;
+  font-size: 1rem;
   color: var(--ink-soft);
-  max-width: 58ch;
+  max-width: 60ch;
   margin: 0 0 2rem;
 }
 
 .lede code {
-  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-family: var(--font-mono);
   font-size: 0.9em;
+  color: var(--ink);
+  background: var(--accent-soft);
+  border-radius: 4px;
+  padding: 0.05em 0.3em;
 }
 
 .calc {
+  position: relative;
   background: var(--surface);
   border: 1px solid var(--rule);
-  border-radius: 10px;
-  padding: 1.5rem;
+  border-radius: 18px;
+  padding: 1.7rem;
+  box-shadow: var(--shadow-card);
+}
+
+.calc::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  border-radius: 17px 17px 0 0;
+  background: var(--grad);
 }
 
 .input-row {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: 0.65rem;
   background: var(--surface-sunken);
   border: 1px solid var(--rule);
-  border-radius: 8px;
-  padding: 0.7rem 0.9rem;
+  border-radius: 12px;
+  padding: 0.75rem 0.95rem;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.input-row:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
 }
 
 .input-row .prefix {
-  font-family: ui-monospace, "SF Mono", Menlo, monospace;
-  color: var(--ink-faint);
-  font-size: 0.95rem;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  background: var(--grad);
   user-select: none;
+  flex-shrink: 0;
 }
 
 #exprInput {
@@ -220,8 +309,8 @@ h1 {
   border: none;
   outline: none;
   color: var(--ink);
-  font-family: ui-monospace, "SF Mono", Menlo, monospace;
-  font-size: 1rem;
+  font-family: var(--font-mono);
+  font-size: 1.05rem;
   caret-color: var(--accent);
 }
 
@@ -230,16 +319,17 @@ h1 {
 }
 
 .evaluate-btn {
-  font-family: ui-monospace, "SF Mono", Menlo, monospace;
-  font-size: 0.82rem;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
   font-weight: 600;
-  background: var(--accent);
+  background: var(--grad);
   color: #fff;
   border: none;
-  border-radius: 6px;
-  padding: 0.4rem 0.8rem;
+  border-radius: 10px;
+  padding: 0.55rem 1.05rem;
   cursor: pointer;
   flex-shrink: 0;
+  box-shadow: 0 4px 14px -6px rgba(79, 70, 229, 0.55);
 }
 .evaluate-btn:hover { filter: brightness(1.08); }
 .evaluate-btn:active { transform: scale(0.97); }
@@ -248,24 +338,26 @@ h1 {
 .keypad {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem;
-  margin-top: 0.6rem;
+  gap: 0.45rem;
+  margin-top: 0.7rem;
 }
 
 .key-btn {
-  font-family: ui-monospace, "SF Mono", Menlo, monospace;
-  font-size: 0.85rem;
+  font-family: var(--font-mono);
+  font-size: 0.86rem;
   background: var(--surface-sunken);
   border: 1px solid var(--rule);
   color: var(--ink-soft);
-  border-radius: 6px;
-  padding: 0.3rem 0.6rem;
+  border-radius: 8px;
+  padding: 0.38rem 0.65rem;
   cursor: pointer;
-  min-width: 2.4rem;
+  min-width: 2.6rem;
+  transition: transform 0.05s ease, border-color 0.15s ease, color 0.15s ease;
 }
 .key-btn:hover {
   border-color: var(--accent);
   color: var(--ink);
+  transform: translateY(-1px);
 }
 .key-btn:focus-visible {
   outline: 2px solid var(--accent);
@@ -273,31 +365,37 @@ h1 {
 }
 
 .result-area {
-  margin-top: 1.25rem;
+  margin-top: 1.4rem;
   min-height: 3.5rem;
 }
 
 .function-badge {
   display: inline-block;
-  font-family: ui-monospace, "SF Mono", Menlo, monospace;
-  font-size: 0.68rem;
-  letter-spacing: 0.05em;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  font-weight: 600;
-  color: var(--accent);
-  background: var(--accent-soft);
-  border-radius: 4px;
-  padding: 0.15rem 0.45rem;
-  margin: 0 0 0.5rem;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 0.26rem 0.65rem;
+  margin: 0 0 0.7rem;
+  border: 1px solid transparent;
 }
+.function-badge[data-kind="factorial"] { color: var(--k-factorial); background: var(--k-factorial-bg); }
+.function-badge[data-kind="gamma"] { color: var(--k-gamma); background: var(--k-gamma-bg); }
+.function-badge[data-kind="doubleFactorial"] { color: var(--k-double); background: var(--k-double-bg); }
+.function-badge[data-kind="binomial"] { color: var(--k-binomial); background: var(--k-binomial-bg); }
+.function-badge[data-kind="beta"] { color: var(--k-beta); background: var(--k-beta-bg); }
 
 .result-value {
-  font-family: ui-monospace, "SF Mono", Menlo, monospace;
-  font-size: 1.9rem;
+  font-family: var(--font-mono);
+  font-size: clamp(1.55rem, 5vw, 2rem);
   font-weight: 600;
   font-variant-numeric: tabular-nums;
   color: var(--ink);
   word-break: break-all;
+  letter-spacing: -0.015em;
+  margin: 0;
 }
 
 .result-expr-row {
@@ -306,34 +404,36 @@ h1 {
   flex-wrap: wrap;
   justify-content: space-between;
   gap: 0.4rem 0.6rem;
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.4rem;
 }
 
 .result-expr {
-  font-family: ui-monospace, "SF Mono", Menlo, monospace;
-  font-size: 0.82rem;
+  font-family: var(--font-mono);
+  font-size: 0.84rem;
   color: var(--ink-faint);
+  margin: 0;
 }
 
 .action-btns {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.3rem;
+  gap: 0.35rem;
 }
 
 .text-btn {
-  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-family: var(--font-mono);
   font-size: 0.75rem;
   background: none;
-  border: none;
+  border: 1px solid transparent;
   color: var(--ink-faint);
   cursor: pointer;
-  padding: 0.1rem 0.3rem;
-  border-radius: 4px;
+  padding: 0.18rem 0.4rem;
+  border-radius: 6px;
   flex-shrink: 0;
 }
 .text-btn:hover {
   color: var(--accent);
+  border-color: var(--rule);
 }
 .text-btn:focus-visible {
   outline: 2px solid var(--accent);
@@ -344,24 +444,31 @@ h1 {
 }
 
 .result-error {
-  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-family: var(--font-mono);
   font-size: 0.92rem;
   color: var(--err);
   background: var(--err-soft);
-  border-radius: 6px;
-  padding: 0.6rem 0.8rem;
+  border: 1px solid color-mix(in srgb, var(--err) 30%, transparent);
+  border-radius: 10px;
+  padding: 0.7rem 0.9rem;
 }
 
 .result-empty {
   color: var(--ink-faint);
   font-size: 0.88rem;
   padding-top: 0.6rem;
+  margin: 0;
 }
 
 .plot-wrap {
-  margin-top: 1.1rem;
-  overflow-x: auto;
+  margin-top: 1.15rem;
   position: relative;
+  overflow: hidden;
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  background-color: var(--surface);
+  background-image: radial-gradient(var(--rule) 0.6px, transparent 0.6px);
+  background-size: 14px 14px;
 }
 
 svg#plot {
@@ -372,30 +479,32 @@ svg#plot {
 }
 
 .plot-caption {
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   color: var(--ink-faint);
-  margin-top: 0.5rem;
-  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  margin: 0;
+  font-family: var(--font-mono);
 }
 
 .plot-hint {
   font-size: 0.72rem;
   color: var(--ink-faint);
-  margin-top: 0.35rem;
+  margin: 0.4rem 0 0;
 }
 
 .reset-zoom-btn {
   position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  top: 0.55rem;
+  right: 0.55rem;
+  font-family: var(--font-mono);
   font-size: 0.72rem;
   background: var(--surface);
   border: 1px solid var(--rule);
   color: var(--ink-soft);
   border-radius: 999px;
-  padding: 0.2rem 0.6rem;
+  padding: 0.28rem 0.65rem;
   cursor: pointer;
+  box-shadow: 0 2px 8px -3px rgba(16, 24, 40, 0.25);
+  z-index: 1;
 }
 .reset-zoom-btn:hover {
   border-color: var(--accent);
@@ -410,21 +519,21 @@ svg#plot {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  margin-top: 0.8rem;
+  margin-top: 0.85rem;
 }
 
 .tool-btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  gap: 0.45rem;
+  font-family: var(--font-mono);
   font-size: 0.78rem;
   font-weight: 600;
   background: var(--surface);
   border: 1px solid var(--rule);
   color: var(--ink-soft);
-  border-radius: 6px;
-  padding: 0.35rem 0.7rem;
+  border-radius: 9px;
+  padding: 0.42rem 0.7rem;
   cursor: pointer;
 }
 .tool-btn:hover {
@@ -437,36 +546,43 @@ svg#plot {
   outline-offset: 1px;
 }
 .tool-btn-icon {
-  font-size: 0.85rem;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 0.8rem;
   line-height: 1;
 }
 
 .value-table-wrap {
-  margin-top: 0.7rem;
+  margin-top: 0.75rem;
   overflow-x: auto;
   border: 1px solid var(--rule);
-  border-radius: 8px;
+  border-radius: 10px;
 }
 
 table.value-table {
   border-collapse: collapse;
   width: 100%;
-  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
-  font-size: 0.82rem;
+  font-size: 0.84rem;
   min-width: 320px;
 }
 table.value-table th, table.value-table td {
-  padding: 0.4rem 0.7rem;
+  padding: 0.42rem 0.75rem;
   text-align: right;
   border-bottom: 1px solid var(--rule);
   white-space: nowrap;
 }
 table.value-table th:first-child, table.value-table td:first-child { text-align: left; }
 table.value-table th {
-  font-family: -apple-system, sans-serif;
+  font-family: var(--font-ui);
   font-size: 0.68rem;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--ink-faint);
   font-weight: 600;
@@ -475,45 +591,49 @@ table.value-table th {
 table.value-table tr:last-child td { border-bottom: none; }
 
 .reasoning {
-  margin-top: 1.1rem;
-  padding-top: 0.9rem;
-  border-top: 1px solid var(--rule);
+  margin-top: 1.2rem;
+  background: var(--surface-sunken);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--accent);
+  border-radius: 12px;
+  padding: 1rem 1.1rem;
 }
 
 .reasoning-title {
   font-size: 0.7rem;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.09em;
   text-transform: uppercase;
   color: var(--ink-faint);
-  font-weight: 600;
-  margin: 0 0 0.5rem;
+  font-weight: 700;
+  margin: 0 0 0.65rem;
 }
 
 .reasoning-grid {
   display: grid;
   grid-template-columns: auto auto 1fr auto;
-  column-gap: 0.5rem;
-  row-gap: 0.4rem;
+  column-gap: 0.55rem;
+  row-gap: 0.42rem;
   align-items: baseline;
 }
 
 .reasoning-lhs {
-  font-family: ui-monospace, "SF Mono", Menlo, monospace;
-  font-size: 0.85rem;
-  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--accent-strong);
   text-align: right;
   white-space: nowrap;
 }
 
 .reasoning-eq {
-  font-family: ui-monospace, "SF Mono", Menlo, monospace;
-  font-size: 0.85rem;
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
   color: var(--ink-faint);
 }
 
 .reasoning-rhs {
-  font-family: ui-monospace, "SF Mono", Menlo, monospace;
-  font-size: 0.85rem;
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
   color: var(--ink-soft);
   word-break: break-word;
 }
@@ -525,39 +645,29 @@ table.value-table tr:last-child td { border-bottom: none; }
   font-style: italic;
 }
 
-@media (max-width: 480px) {
-  .reasoning-grid {
-    grid-template-columns: auto auto 1fr;
-  }
-  .reasoning-note {
-    grid-column: 1 / -1;
-    white-space: normal;
-    padding-left: 0;
-    margin-top: -0.2rem;
-  }
-}
-
 .examples {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: 1.5rem;
+  gap: 0.55rem;
+  margin-top: 1.6rem;
 }
 
 .example-chip {
-  font-family: ui-monospace, "SF Mono", Menlo, monospace;
-  font-size: 0.78rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
   background: var(--surface);
   border: 1px solid var(--rule);
   color: var(--ink-soft);
   border-radius: 999px;
-  padding: 0.3rem 0.75rem;
+  padding: 0.38rem 0.85rem;
   cursor: pointer;
-  transition: border-color 0.15s ease, color 0.15s ease;
+  transition: border-color 0.15s ease, color 0.15s ease, transform 0.05s ease;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
 }
 .example-chip:hover {
   border-color: var(--accent);
-  color: var(--ink);
+  color: var(--accent);
+  transform: translateY(-1px);
 }
 .example-chip:focus-visible {
   outline: 2px solid var(--accent);
@@ -565,18 +675,18 @@ table.value-table tr:last-child td { border-bottom: none; }
 }
 
 .pinned-section {
-  margin-top: 1.1rem;
-  padding-top: 1rem;
-  border-top: 1px dashed var(--rule);
+  margin-top: 1.2rem;
+  padding-top: 1.1rem;
+  border-top: 1px dashed var(--rule-strong);
 }
 
 .pinned-title {
   font-size: 0.7rem;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.09em;
   text-transform: uppercase;
   color: var(--ink-faint);
-  font-weight: 600;
-  margin: 0 0 0.55rem;
+  font-weight: 700;
+  margin: 0 0 0.6rem;
 }
 
 .pinned-list {
@@ -588,32 +698,33 @@ table.value-table tr:last-child td { border-bottom: none; }
 .pinned-chip {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
-  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  gap: 0.45rem;
+  font-family: var(--font-mono);
   font-size: 0.78rem;
   background: var(--surface-sunken);
   border: 1px solid var(--rule);
   border-radius: 999px;
-  padding: 0.25rem 0.4rem 0.25rem 0.65rem;
+  padding: 0.3rem 0.45rem 0.3rem 0.75rem;
   color: var(--ink-soft);
 }
 
 .pinned-swatch {
-  width: 8px;
-  height: 8px;
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
   flex-shrink: 0;
 }
 
 .pinned-remove {
-  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-family: var(--font-mono);
   background: none;
   border: none;
   color: var(--ink-faint);
   cursor: pointer;
   font-size: 0.95rem;
   line-height: 1;
-  padding: 0 0.15rem;
+  padding: 0.1rem 0.2rem;
+  border-radius: 4px;
 }
 .pinned-remove:hover {
   color: var(--err);
@@ -624,7 +735,7 @@ table.value-table tr:last-child td { border-bottom: none; }
 }
 
 .history {
-  margin-top: 2rem;
+  margin-top: 2.2rem;
 }
 
 .history-head {
@@ -637,20 +748,22 @@ table.value-table tr:last-child td { border-bottom: none; }
 
 .history-title {
   font-size: 0.7rem;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.09em;
   text-transform: uppercase;
   color: var(--ink-faint);
-  font-weight: 600;
+  font-weight: 700;
+  margin: 0;
 }
 
 .history-clear-btn {
-  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-family: var(--font-mono);
   font-size: 0.72rem;
   background: none;
   border: none;
   color: var(--ink-faint);
   cursor: pointer;
-  padding: 0;
+  padding: 0.15rem 0.3rem;
+  border-radius: 5px;
 }
 .history-clear-btn:hover {
   color: var(--err);
@@ -666,7 +779,7 @@ table.value-table tr:last-child td { border-bottom: none; }
   gap: 1px;
   background: var(--rule);
   border: 1px solid var(--rule);
-  border-radius: 8px;
+  border-radius: 12px;
   overflow: hidden;
 }
 
@@ -675,7 +788,7 @@ table.value-table tr:last-child td { border-bottom: none; }
   align-items: center;
   gap: 0.75rem;
   background: var(--surface);
-  padding: 0.55rem 0.85rem;
+  padding: 0.6rem 0.9rem;
   cursor: pointer;
   border: none;
   width: 100%;
@@ -703,15 +816,15 @@ table.value-table tr:last-child td { border-bottom: none; }
   gap: 0.1rem;
 }
 .history-item .h-expr {
-  font-family: ui-monospace, "SF Mono", Menlo, monospace;
-  font-size: 0.85rem;
+  font-family: var(--font-mono);
+  font-size: 0.86rem;
   color: var(--ink);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 .history-item .h-value {
-  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
   font-size: 0.76rem;
   color: var(--ink-soft);
@@ -723,50 +836,67 @@ table.value-table tr:last-child td { border-bottom: none; }
   color: var(--err);
 }
 .history-item .h-time {
-  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-family: var(--font-mono);
   font-size: 0.7rem;
   color: var(--ink-faint);
   flex-shrink: 0;
 }
 
+.page-foot {
+  margin-top: 2.4rem;
+}
+
 .note {
-  font-size: 0.8rem;
+  font-size: 0.82rem;
   color: var(--ink-faint);
-  margin-top: 1.75rem;
+  margin: 0 0 0.6rem;
 }
 .note code {
-  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-family: var(--font-mono);
+  color: var(--ink-soft);
 }
 
 .links {
-  margin-top: 0.9rem;
-  font-size: 0.85rem;
+  font-size: 0.86rem;
+  margin: 0;
 }
 .links a {
   color: var(--accent);
   text-decoration: none;
-  border-bottom: 1px solid transparent;
+  border-bottom: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
 }
 .links a:hover {
   border-bottom-color: currentColor;
 }
+.links code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+}
 
 @media (max-width: 480px) {
   body {
-    padding: 1.5rem 0.85rem 3rem;
+    padding: 1.3rem 0.9rem calc(3rem + env(safe-area-inset-bottom));
+  }
+  .top-row {
+    margin-bottom: 1.8rem;
   }
   .calc {
-    padding: 1.1rem;
+    padding: 1.15rem;
+    border-radius: 14px;
+  }
+  .calc::before {
+    border-radius: 13px 13px 0 0;
   }
   .result-value {
-    font-size: 1.5rem;
+    font-size: 1.45rem;
   }
   .input-row {
     flex-wrap: wrap;
+    padding: 0.7rem 0.8rem;
   }
   .evaluate-btn {
     width: 100%;
-    padding: 0.55rem 0.8rem;
+    padding: 0.6rem 0.8rem;
   }
   .keypad {
     justify-content: space-between;
@@ -774,21 +904,39 @@ table.value-table tr:last-child td { border-bottom: none; }
   .key-btn {
     flex: 1;
     text-align: center;
+    padding: 0.5rem 0.4rem;
+    min-height: 40px;
+  }
+  .reasoning-grid {
+    grid-template-columns: auto auto 1fr;
+  }
+  .reasoning-note {
+    grid-column: 1 / -1;
+    white-space: normal;
+    margin-top: -0.1rem;
   }
   .lang-menu {
-    right: 0;
-    left: auto;
+    position: fixed;
+    bottom: calc(0.9rem + env(safe-area-inset-bottom));
+    right: 0.9rem;
+    left: 0.9rem;
+    min-width: 0;
+  }
+  .lang-option {
+    padding: 0.7rem 0.8rem;
+    font-size: 0.9rem;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; }
 }
+
 </style>
 </head>
 <body>
 <div class="page">
-  <div class="top-row">
+  <header class="top-row">
     <p class="eyebrow" id="eyebrow">gamma-factorial</p>
     <div class="lang-switch">
       <button class="lang-btn" id="langBtn" type="button" aria-haspopup="true" aria-expanded="false">
@@ -801,7 +949,7 @@ table.value-table tr:last-child td { border-bottom: none; }
         <button class="lang-option" type="button" role="menuitem" data-lang="de">Deutsch</button>
       </div>
     </div>
-  </div>
+  </header>
 
   <h1 id="pageTitle">Generalized factorial calculator</h1>
   <p class="lede" id="pageLede">
@@ -849,9 +997,12 @@ table.value-table tr:last-child td { border-bottom: none; }
     <div class="history-list" id="historyList"></div>
   </div>
 
-  <p class="note" id="noteText"></p>
-  <p class="links" id="linksText"></p>
+  <footer class="page-foot">
+    <p class="note" id="noteText"></p>
+    <p class="links" id="linksText"></p>
+  </footer>
 </div>
+
 
 <script>
 (function () {
@@ -897,8 +1048,7 @@ table.value-table tr:last-child td { border-bottom: none; }
       errGammaNotDefined: "Gamma is not defined at {z} (NaN or infinity)",
       errGammaPole: "Gamma has a pole at {z} (infinite)",
       errGammaOverflow: "Gamma({z}) overflows the range of a float",
-      errBinomialPoleK: "binomial({n}, {k}) is undefined: k={k} is a pole of Gamma (k+1 integer <= 0)",
-      errBinomialPoleNK: "binomial({n}, {k}) is undefined: n-k={nk} is a pole of Gamma (n-k+1 integer <= 0)",
+      errBinomialPoleN: "binomial({n}, {k}) is undefined: n={n} is a pole of Gamma (n+1 integer <= 0)",
       errUnrecognized: "unrecognized expression '{expr}' (try 5!, gamma(2.5), C(10,3), 1+2i)",
       errDoubleFactorialNonInt: "n!! is only supported for non-negative integers here",
       error: "error",
@@ -961,8 +1111,7 @@ table.value-table tr:last-child td { border-bottom: none; }
       errGammaNotDefined: "Gamma n'est pas définie en {z} (NaN ou infini)",
       errGammaPole: "Gamma a un pôle en {z} (infini)",
       errGammaOverflow: "Gamma({z}) dépasse la plage d'un flottant",
-      errBinomialPoleK: "binomial({n}, {k}) est indéfini : k={k} est un pôle de Gamma (k+1 entier <= 0)",
-      errBinomialPoleNK: "binomial({n}, {k}) est indéfini : n-k={nk} est un pôle de Gamma (n-k+1 entier <= 0)",
+      errBinomialPoleN: "binomial({n}, {k}) est indéfini : n={n} est un pôle de Gamma (n+1 entier <= 0)",
       errUnrecognized: "expression non reconnue « {expr} » (essaie 5!, gamma(2.5), C(10,3), 1+2i)",
       errDoubleFactorialNonInt: "n!! n'est pris en charge ici que pour les entiers positifs",
       error: "erreur",
@@ -1025,8 +1174,7 @@ table.value-table tr:last-child td { border-bottom: none; }
       errGammaNotDefined: "Gamma ist bei {z} nicht definiert (NaN oder unendlich)",
       errGammaPole: "Gamma hat bei {z} einen Pol (unendlich)",
       errGammaOverflow: "Gamma({z}) überschreitet den Wertebereich einer Gleitkommazahl",
-      errBinomialPoleK: "binomial({n}, {k}) ist undefiniert: k={k} ist ein Pol von Gamma (k+1 ganzzahlig <= 0)",
-      errBinomialPoleNK: "binomial({n}, {k}) ist undefiniert: n-k={nk} ist ein Pol von Gamma (n-k+1 ganzzahlig <= 0)",
+      errBinomialPoleN: "binomial({n}, {k}) ist undefiniert: n={n} ist ein Pol von Gamma (n+1 ganzzahlig <= 0)",
       errUnrecognized: "unbekannter Ausdruck „{expr}“ (versuche 5!, gamma(2.5), C(10,3), 1+2i)",
       errDoubleFactorialNonInt: "n!! wird hier nur für nicht-negative ganze Zahlen unterstützt",
       error: "Fehler",
@@ -1137,7 +1285,10 @@ table.value-table tr:last-child td { border-bottom: none; }
     toString() {
       if (this.isReal) return formatFloat(this.re);
       const sign = this.im >= 0 ? "+" : "-";
-      return `${formatFloat(this.re)}${sign}${formatFloat(Math.abs(this.im))}i`;
+      const reStr = formatFloat(this.re);
+      const imStr = formatFloat(Math.abs(this.im));
+      if (this.re === 0) return `${sign === "-" ? "-" : ""}${imStr}i`;
+      return `${reStr}${sign}${imStr}i`;
     }
   }
 
@@ -1213,23 +1364,17 @@ table.value-table tr:last-child td { border-bottom: none; }
   function binomial(n, k) {
     n = Complex.from(n);
     k = Complex.from(k);
-    let gk1;
-    try {
-      gk1 = gamma(k.add(1));
-    } catch (e) {
+    if (isNonpositiveInteger(n.add(1))) {
       throw new GammaError(
-        t("errBinomialPoleK", { n: n.toString(), k: k.toString() })
+        t("errBinomialPoleN", { n: n.toString(), k: k.toString() })
       );
     }
-    let gnk1;
-    try {
-      gnk1 = gamma(n.sub(k).add(1));
-    } catch (e) {
-      throw new GammaError(
-        t("errBinomialPoleNK", { n: n.toString(), k: k.toString(), nk: n.sub(k).toString() })
-      );
-    }
-    return gamma(n.add(1)).div(gk1.mul(gnk1));
+    // A pole in Gamma(k+1) or Gamma(n-k+1) makes the denominator infinite;
+    // by the Gamma-ratio definition that makes C(n, k) = 0, matching the
+    // classic convention (and math.comb): 0 for k < 0 or k > n.
+    if (isNonpositiveInteger(k.add(1))) return new Complex(0, 0);
+    if (isNonpositiveInteger(n.sub(k).add(1))) return new Complex(0, 0);
+    return gamma(n.add(1)).div(gamma(k.add(1)).mul(gamma(n.sub(k).add(1))));
   }
 
   // B(a, b) = Gamma(a) Gamma(b) / Gamma(a + b)
@@ -1437,11 +1582,36 @@ table.value-table tr:last-child td { border-bottom: none; }
     svg.style.cursor = "grab";
     svg.style.touchAction = "none";
 
+    // Auto-scale the y axis while ignoring near-pole artifacts: isolated
+    // samples whose magnitude is >50x their neighbours (the finite samples
+    // that flank a pole) and the extreme ~2% tails are excluded from the
+    // range (still drawn, just clipped), so the actual curve isn't crushed
+    // by a handful of huge pole-spike values.
+    const isSpike = (pts, i) => {
+      const y = Math.abs(pts[i][1]);
+      const prev = i > 0 ? Math.abs(pts[i - 1][1]) : Infinity;
+      const next = i < pts.length - 1 ? Math.abs(pts[i + 1][1]) : Infinity;
+      const base = Math.min(prev, next);
+      return Number.isFinite(base) && base > 0 && y > base * 50;
+    };
+
     const allXs = curves.flatMap((c) => c.points.map((p) => p[0]));
-    const allYs = curves.flatMap((c) => c.points.map((p) => p[1]));
+    const cleanYs = [];
+    for (const c of curves) {
+      for (let i = 0; i < c.points.length; i++) {
+        if (!isSpike(c.points, i)) cleanYs.push(c.points[i][1]);
+      }
+    }
+    const yPool = cleanYs.length >= 2
+      ? cleanYs
+      : curves.flatMap((c) => c.points.map((p) => p[1]));
+    const sortedYs = [...yPool].sort((a, b) => a - b);
+    const trim = Math.max(0, Math.floor(sortedYs.length * 0.02));
+    const yLo = sortedYs[trim] ?? sortedYs[0];
+    const yHi = sortedYs[sortedYs.length - 1 - trim] ?? sortedYs[sortedYs.length - 1];
     const xMin = Math.min(...allXs), xMax = Math.max(...allXs);
-    const yMin = Math.min(0, Math.min(...allYs));
-    const yMax = Math.max(...allYs) * 1.1 || 1;
+    const yMin = Math.min(0, yLo);
+    const yMax = yHi * 1.1 || 1;
 
     const plotW = PLOT_W - PAD.left - PAD.right;
     const plotH = PLOT_H - PAD.top - PAD.bottom;
@@ -2087,6 +2257,13 @@ table.value-table tr:last-child td { border-bottom: none; }
     return section;
   }
 
+  function pushHistory(expr, display, isError) {
+    // Deduplicate consecutive entries (the same expression is re-evaluated
+    // when the language changes, to re-render translated labels).
+    if (history[0] && history[0].expr === expr && history[0].isError === isError) return;
+    history.unshift({ expr, display, isError, ts: Date.now() });
+  }
+
   function runEval() {
     const expr = exprInput.value.trim();
     if (!expr) return;
@@ -2102,6 +2279,7 @@ table.value-table tr:last-child td { border-bottom: none; }
       if (kind !== "number") {
         const badge = document.createElement("p");
         badge.className = "function-badge";
+        badge.dataset.kind = kind;
         badge.textContent = functionBadgeText(kind);
         resultArea.appendChild(badge);
       }
@@ -2169,7 +2347,7 @@ table.value-table tr:last-child td { border-bottom: none; }
         resultArea.appendChild(caption);
       }
 
-      history.unshift({ expr, display, isError: false, ts: Date.now() });
+      pushHistory(expr, display, false);
       updateUrl(expr);
     } catch (e) {
       const errBox = document.createElement("p");
@@ -2177,7 +2355,7 @@ table.value-table tr:last-child td { border-bottom: none; }
       errBox.textContent = t("error") + ": " + e.message;
       resultArea.appendChild(errBox);
 
-      history.unshift({ expr, display: t("error"), isError: true, ts: Date.now() });
+      pushHistory(expr, t("error"), true);
       updateUrl(expr);
     }
 
