@@ -17,6 +17,9 @@
   --accent: #2563a8;
   --accent-soft: #dbe8f6;
   --curve: #2563a8;
+  --series-2: #1f8a70;
+  --series-3: #8a4fbe;
+  --series-4: #c17a1f;
   --point: #14181f;
   --err: #b3372c;
   --err-soft: #f7e3e0;
@@ -34,6 +37,9 @@
     --accent: #6ea8dc;
     --accent-soft: #1c2c3d;
     --curve: #6ea8dc;
+    --series-2: #5cc4a3;
+    --series-3: #b592e0;
+    --series-4: #e0ab5c;
     --point: #e7eaef;
     --err: #e2857b;
     --err-soft: #2e1c1a;
@@ -51,6 +57,9 @@
   --accent: #6ea8dc;
   --accent-soft: #1c2c3d;
   --curve: #6ea8dc;
+  --series-2: #5cc4a3;
+  --series-3: #b592e0;
+  --series-4: #e0ab5c;
   --point: #e7eaef;
   --err: #e2857b;
   --err-soft: #2e1c1a;
@@ -269,6 +278,65 @@ svg#plot {
   outline-offset: 2px;
 }
 
+.pinned-section {
+  margin-top: 1.1rem;
+  padding-top: 1rem;
+  border-top: 1px dashed var(--rule);
+}
+
+.pinned-title {
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  font-weight: 600;
+  margin: 0 0 0.55rem;
+}
+
+.pinned-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.pinned-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 0.78rem;
+  background: var(--surface-sunken);
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  padding: 0.25rem 0.4rem 0.25rem 0.65rem;
+  color: var(--ink-soft);
+}
+
+.pinned-swatch {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.pinned-remove {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  background: none;
+  border: none;
+  color: var(--ink-faint);
+  cursor: pointer;
+  font-size: 0.95rem;
+  line-height: 1;
+  padding: 0 0.15rem;
+}
+.pinned-remove:hover {
+  color: var(--err);
+}
+.pinned-remove:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
 .history {
   margin-top: 2rem;
 }
@@ -369,6 +437,11 @@ svg#plot {
 
     <div class="result-area" id="resultArea">
       <p class="result-empty">Try <code>5!</code>, <code>gamma(2.5)</code>, or <code>C(10, 3)</code> below.</p>
+    </div>
+
+    <div class="pinned-section" id="pinnedSection" hidden>
+      <p class="pinned-title">Comparing</p>
+      <div class="pinned-list" id="pinnedList"></div>
     </div>
   </div>
 
@@ -680,10 +753,16 @@ svg#plot {
     return markers;
   }
 
-  function drawPlot(container, plot, resultValue) {
+  const SERIES_COLORS = ["--curve", "--series-2", "--series-3", "--series-4"];
+
+  // series: array of { plot, resultValue, pinned }. The first entry is the
+  // current (active) result; the rest are pinned curves shown for comparison.
+  function drawPlot(container, series) {
     container.innerHTML = "";
-    const points = sampleCurve(plot);
-    if (points.length < 2) return;
+    const curves = series
+      .map((s) => ({ ...s, points: sampleCurve(s.plot) }))
+      .filter((s) => s.points.length >= 2);
+    if (curves.length === 0) return;
 
     const svg = document.createElementNS(NS, "svg");
     svg.setAttribute("id", "plot");
@@ -691,11 +770,11 @@ svg#plot {
     svg.setAttribute("role", "img");
     svg.setAttribute("aria-label", "Curve of the function around the computed value");
 
-    const xs = points.map((p) => p[0]);
-    const ys = points.map((p) => p[1]);
-    const xMin = Math.min(...xs), xMax = Math.max(...xs);
-    const yMin = Math.min(0, Math.min(...ys));
-    const yMax = Math.max(...ys) * 1.1 || 1;
+    const allXs = curves.flatMap((c) => c.points.map((p) => p[0]));
+    const allYs = curves.flatMap((c) => c.points.map((p) => p[1]));
+    const xMin = Math.min(...allXs), xMax = Math.max(...allXs);
+    const yMin = Math.min(0, Math.min(...allYs));
+    const yMax = Math.max(...allYs) * 1.1 || 1;
 
     const plotW = PLOT_W - PAD.left - PAD.right;
     const plotH = PLOT_H - PAD.top - PAD.bottom;
@@ -705,9 +784,9 @@ svg#plot {
     const style = getComputedStyle(document.documentElement);
     const ruleColor = style.getPropertyValue("--rule").trim();
     const inkFaint = style.getPropertyValue("--ink-faint").trim();
-    const curveColor = style.getPropertyValue("--curve").trim();
     const pointColor = style.getPropertyValue("--point").trim();
     const surfaceColor = style.getPropertyValue("--surface").trim();
+    const seriesColors = SERIES_COLORS.map((v) => style.getPropertyValue(v).trim());
 
     // zero line
     if (yMin < 0 && yMax > 0) {
@@ -739,45 +818,47 @@ svg#plot {
       svg.appendChild(tick);
     }
 
-    // curve
-    const pathD = points
-      .map((p, i) => `${i === 0 ? "M" : "L"}${xFor(p[0]).toFixed(2)},${yFor(p[1]).toFixed(2)}`)
-      .join(" ");
-    const path = document.createElementNS(NS, "path");
-    path.setAttribute("d", pathD);
-    path.setAttribute("fill", "none");
-    path.setAttribute("stroke", curveColor);
-    path.setAttribute("stroke-width", "2");
-    path.setAttribute("stroke-linejoin", "round");
-    svg.appendChild(path);
+    curves.forEach((curve, i) => {
+      const curveColor = seriesColors[i % seriesColors.length];
 
-    // integer markers
-    for (const [mx, my] of integerMarkers(plot, points)) {
-      const c = document.createElementNS(NS, "circle");
-      c.setAttribute("cx", xFor(mx));
-      c.setAttribute("cy", yFor(my));
-      c.setAttribute("r", "2.5");
-      c.setAttribute("fill", surfaceColor);
-      c.setAttribute("stroke", curveColor);
-      c.setAttribute("stroke-width", "1.5");
-      svg.appendChild(c);
-    }
+      const pathD = curve.points
+        .map((p, j) => `${j === 0 ? "M" : "L"}${xFor(p[0]).toFixed(2)},${yFor(p[1]).toFixed(2)}`)
+        .join(" ");
+      const path = document.createElementNS(NS, "path");
+      path.setAttribute("d", pathD);
+      path.setAttribute("fill", "none");
+      path.setAttribute("stroke", curveColor);
+      path.setAttribute("stroke-width", "2");
+      path.setAttribute("stroke-linejoin", "round");
+      if (curve.pinned) path.setAttribute("stroke-dasharray", "5 3");
+      svg.appendChild(path);
 
-    // highlighted result point
-    const cx = plot.center;
-    const cy = resultValue.isReal ? resultValue.re : null;
-    if (cy !== null && Number.isFinite(cy)) {
-      const hx = xFor(cx);
-      const hy = yFor(cy);
-      const ring = document.createElementNS(NS, "circle");
-      ring.setAttribute("cx", hx);
-      ring.setAttribute("cy", hy);
-      ring.setAttribute("r", "5");
-      ring.setAttribute("fill", pointColor);
-      ring.setAttribute("stroke", surfaceColor);
-      ring.setAttribute("stroke-width", "2");
-      svg.appendChild(ring);
-    }
+      for (const [mx, my] of integerMarkers(curve.plot, curve.points)) {
+        const c = document.createElementNS(NS, "circle");
+        c.setAttribute("cx", xFor(mx));
+        c.setAttribute("cy", yFor(my));
+        c.setAttribute("r", "2.5");
+        c.setAttribute("fill", surfaceColor);
+        c.setAttribute("stroke", curveColor);
+        c.setAttribute("stroke-width", "1.5");
+        svg.appendChild(c);
+      }
+
+      const cx = curve.plot.center;
+      const cy = curve.resultValue.isReal ? curve.resultValue.re : null;
+      if (cy !== null && Number.isFinite(cy)) {
+        const hx = xFor(cx);
+        const hy = yFor(cy);
+        const ring = document.createElementNS(NS, "circle");
+        ring.setAttribute("cx", hx);
+        ring.setAttribute("cy", hy);
+        ring.setAttribute("r", "5");
+        ring.setAttribute("fill", curve.pinned ? curveColor : pointColor);
+        ring.setAttribute("stroke", surfaceColor);
+        ring.setAttribute("stroke-width", "2");
+        svg.appendChild(ring);
+      }
+    });
 
     container.appendChild(svg);
   }
@@ -789,6 +870,8 @@ svg#plot {
   const resultArea = document.getElementById("resultArea");
   const historySection = document.getElementById("historySection");
   const historyList = document.getElementById("historyList");
+  const pinnedSection = document.getElementById("pinnedSection");
+  const pinnedList = document.getElementById("pinnedList");
   const history = [];
 
   function plotCaption(plot) {
@@ -851,15 +934,78 @@ svg#plot {
     }
   }
 
+  let currentResult = null; // { expr, value, plot }
+  const pinnedCurves = []; // [{ expr, value, plot }]
+  const MAX_PINS = 3;
+
+  function renderPinnedList() {
+    pinnedList.innerHTML = "";
+    if (pinnedCurves.length === 0) {
+      pinnedSection.hidden = true;
+      return;
+    }
+    pinnedSection.hidden = false;
+    pinnedCurves.forEach((pin, i) => {
+      const chip = document.createElement("span");
+      chip.className = "pinned-chip";
+      const swatch = document.createElement("span");
+      swatch.className = "pinned-swatch";
+      swatch.style.background = `var(${SERIES_COLORS[(i + 1) % SERIES_COLORS.length]})`;
+      const label = document.createElement("span");
+      label.textContent = pin.expr;
+      const remove = document.createElement("button");
+      remove.type = "button";
+      remove.className = "pinned-remove";
+      remove.setAttribute("aria-label", `Remove ${pin.expr} from comparison`);
+      remove.textContent = "×";
+      remove.addEventListener("click", () => {
+        pinnedCurves.splice(i, 1);
+        renderPinnedList();
+        rerenderPlot();
+      });
+      chip.appendChild(swatch);
+      chip.appendChild(label);
+      chip.appendChild(remove);
+      pinnedList.appendChild(chip);
+    });
+  }
+
+  function rerenderPlot() {
+    if (!currentResult || !currentResult.plot) return;
+    const series = [{ plot: currentResult.plot, resultValue: currentResult.value, pinned: false }];
+    for (const pin of pinnedCurves) {
+      if (pin.plot) series.push({ plot: pin.plot, resultValue: pin.value, pinned: true });
+    }
+    const plotWrap = resultArea.querySelector(".plot-wrap");
+    if (plotWrap) drawPlot(plotWrap, series);
+  }
+
+  function makePinButton(expr, value, plot) {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "copy-link-btn";
+    btn.textContent = "pin to compare";
+    btn.addEventListener("click", () => {
+      if (pinnedCurves.some((p) => p.expr === expr)) return;
+      if (pinnedCurves.length >= MAX_PINS) pinnedCurves.shift();
+      pinnedCurves.push({ expr, value, plot });
+      renderPinnedList();
+      rerenderPlot();
+    });
+    return btn;
+  }
+
   function runEval() {
     const expr = exprInput.value.trim();
     if (!expr) return;
 
     resultArea.innerHTML = "";
+    currentResult = null;
 
     try {
       const { value, plot } = evalExpression(expr);
       const display = formatResult(value);
+      currentResult = { expr, value, plot };
 
       const exprRow = document.createElement("div");
       exprRow.className = "result-expr-row";
@@ -879,12 +1025,16 @@ svg#plot {
         const plotWrap = document.createElement("div");
         plotWrap.className = "plot-wrap";
         resultArea.appendChild(plotWrap);
-        drawPlot(plotWrap, plot, value);
+        rerenderPlot();
 
+        const captionRow = document.createElement("div");
+        captionRow.className = "result-expr-row";
         const caption = document.createElement("p");
         caption.className = "plot-caption";
         caption.textContent = plotCaption(plot);
-        resultArea.appendChild(caption);
+        captionRow.appendChild(caption);
+        captionRow.appendChild(makePinButton(expr, value, plot));
+        resultArea.appendChild(captionRow);
       } else {
         const caption = document.createElement("p");
         caption.className = "plot-caption";
