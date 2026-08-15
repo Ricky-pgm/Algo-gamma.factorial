@@ -59,6 +59,7 @@ gamma-factorial 5 -0.5 0.5 -2.5 "1+2j"
 gamma-factorial binomial 5 2      # C(5, 2) = 10.0
 gamma-factorial binomial 4.5 2    # C(4.5, 2) = 7.875 (continuous interpolation)
 gamma-factorial binomial 10 0 1 2 3   # several values of k at once
+gamma-factorial binomial 5 6      # C(5, 6) = 0.0 (k > n, classic convention)
 ```
 
 ### Interactive mode
@@ -119,7 +120,11 @@ mypy gamma_factorial               # type checking (strict mode)
 - `binomial(n, k)` (in `gamma_factorial.binomial`) generalizes the
   binomial coefficient `C(n, k) = n! / (k!(n-k)!)` to real `n`, `k` via
   Gamma — this lets you "interpolate" between rows/columns of Pascal's
-  triangle, as shown in `docs/pascal-continuous.html`.
+  triangle, as shown in `docs/pascal-continuous.html`. Following the
+  classic convention, it returns `0` when `k < 0` or `k > n` (the Gamma
+  pole in the denominator makes the ratio `0`, matching `math.comb`), and
+  raises `ValueError` only when `n` itself is a non-positive integer,
+  where the ratio is genuinely indeterminate:
 
 ## License
 
