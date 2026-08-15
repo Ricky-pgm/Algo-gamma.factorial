@@ -2294,7 +2294,7 @@ table.value-table tr:last-child td { border-bottom: none; }
       lhs.textContent = step.lhs;
       const eq = document.createElement("span");
       eq.className = "reasoning-eq";
-      eq.textContent = step.lhs || step.rhs.startsWith("≈") ? "=" : "";
+      eq.textContent = step.lhs ? "=" : step.rhs.startsWith("≈") ? "≈" : "";
       const rhs = document.createElement("span");
       rhs.className = "reasoning-rhs";
       rhs.textContent = step.rhs;
