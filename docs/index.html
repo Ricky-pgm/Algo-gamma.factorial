@@ -4,935 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Γ — gamma-factorial calculator</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.85em%27 font-size=%2790%27 fill=%27%234f46e5%27%3EΓ%3C/text%3E%3C/svg%3E">
-<meta name="theme-color" content="#eef1f7" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0a0d13" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.85em%27 font-size=%2790%27 fill=%27%23b0402a%27%3EΓ%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#f7f0df" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1b1610" media="(prefers-color-scheme: dark)">
 <meta name="description" content="Evaluate the generalized factorial and binomial coefficient for any real number, with a live curve around every result.">
-<style>
-:root {
-  --bg: #eef1f7;
-  --surface: #ffffff;
-  --surface-sunken: #f2f4fa;
-  --ink: #101828;
-  --ink-soft: #475467;
-  --ink-faint: #98a2b3;
-  --rule: #e4e8f0;
-  --rule-strong: #cdd5e3;
-  --accent: #4f46e5;
-  --accent-strong: #3730a3;
-  --accent-soft: #eef2ff;
-  --curve: #4f46e5;
-  --series-2: #0e9f7c;
-  --series-3: #8b5cf6;
-  --series-4: #d97706;
-  --point: #101828;
-  --err: #dc2626;
-  --err-soft: #fdecec;
-  --glow: rgba(79, 70, 229, 0.10);
-  --grad: linear-gradient(135deg, #4f46e5 0%, #7c3aed 52%, #db2777 100%);
-  --shadow-card: 0 1px 2px rgba(16, 24, 40, 0.05), 0 14px 40px -18px rgba(16, 24, 40, 0.28);
-  --k-factorial: #4f46e5; --k-factorial-bg: #eef2ff;
-  --k-gamma: #7c3aed; --k-gamma-bg: #f5eefe;
-  --k-double: #0e9f7c; --k-double-bg: #e7f7f2;
-  --k-binomial: #b45309; --k-binomial-bg: #fef4e2;
-  --k-beta: #db2777; --k-beta-bg: #fdebf3;
-  --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, "Liberation Mono", monospace;
-  --font-serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #0a0d13;
-    --surface: #12161f;
-    --surface-sunken: #0e121b;
-    --ink: #e6e9f0;
-    --ink-soft: #a0aabd;
-    --ink-faint: #66708a;
-    --rule: #20263a;
-    --rule-strong: #2c3350;
-    --accent: #818cf8;
-    --accent-strong: #c7d2fe;
-    --accent-soft: #1d1b45;
-    --curve: #818cf8;
-    --series-2: #2fbf93;
-    --series-3: #a78bfa;
-    --series-4: #f0a24a;
-    --point: #e6e9f0;
-    --err: #f87171;
-    --err-soft: #3a1418;
-    --glow: rgba(129, 140, 248, 0.12);
-    --grad: linear-gradient(135deg, #6366f1 0%, #8b5cf6 52%, #ec4899 100%);
-    --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3), 0 18px 48px -20px rgba(0, 0, 0, 0.6);
-    --k-factorial: #a5b4fc; --k-factorial-bg: #1e2340;
-    --k-gamma: #c4b5fd; --k-gamma-bg: #2a2140;
-    --k-double: #5eead4; --k-double-bg: #12332d;
-    --k-binomial: #fcd34d; --k-binomial-bg: #3a2f12;
-    --k-beta: #f9a8d4; --k-beta-bg: #3a1530;
-  }
-}
-
-:root[data-theme="dark"] {
-  --bg: #0a0d13;
-  --surface: #12161f;
-  --surface-sunken: #0e121b;
-  --ink: #e6e9f0;
-  --ink-soft: #a0aabd;
-  --ink-faint: #66708a;
-  --rule: #20263a;
-  --rule-strong: #2c3350;
-  --accent: #818cf8;
-  --accent-strong: #c7d2fe;
-  --accent-soft: #1d1b45;
-  --curve: #818cf8;
-  --series-2: #2fbf93;
-  --series-3: #a78bfa;
-  --series-4: #f0a24a;
-  --point: #e6e9f0;
-  --err: #f87171;
-  --err-soft: #3a1418;
-  --glow: rgba(129, 140, 248, 0.12);
-  --grad: linear-gradient(135deg, #6366f1 0%, #8b5cf6 52%, #ec4899 100%);
-  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3), 0 18px 48px -20px rgba(0, 0, 0, 0.6);
-  --k-factorial: #a5b4fc; --k-factorial-bg: #1e2340;
-  --k-gamma: #c4b5fd; --k-gamma-bg: #2a2140;
-  --k-double: #5eead4; --k-double-bg: #12332d;
-  --k-binomial: #fcd34d; --k-binomial-bg: #3a2f12;
-  --k-beta: #f9a8d4; --k-beta-bg: #3a1530;
-}
-
-* { box-sizing: border-box; }
-
-html {
-  background: var(--bg);
-  -webkit-text-size-adjust: 100%;
-}
-
-body {
-  color: var(--ink);
-  font-family: var(--font-ui);
-  padding: 3rem 1.25rem 4rem;
-  line-height: 1.55;
-  margin: 0;
-  background-color: var(--bg);
-  background-image: radial-gradient(120% 55% at 50% -12%, var(--glow), transparent 70%);
-  background-attachment: fixed;
-  min-height: 100vh;
-}
-
-.page {
-  max-width: 680px;
-  margin: 0 auto;
-}
-
-.top-row {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 2.4rem;
-}
-
-.eyebrow {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--accent);
-  background: var(--accent-soft);
-  border: 1px solid var(--rule);
-  border-radius: 999px;
-  padding: 0.32rem 0.75rem;
-  margin: 0;
-  font-weight: 600;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-}
-
-.eyebrow::before {
-  content: "";
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--grad);
-  flex-shrink: 0;
-}
-
-.lang-switch {
-  position: relative;
-  flex-shrink: 0;
-}
-
-.lang-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  background: var(--surface);
-  border: 1px solid var(--rule);
-  color: var(--ink-soft);
-  border-radius: 999px;
-  padding: 0.4rem 0.8rem;
-  cursor: pointer;
-  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
-}
-.lang-btn:hover {
-  border-color: var(--accent);
-  color: var(--ink);
-}
-.lang-btn:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-.lang-globe {
-  font-size: 0.95rem;
-  line-height: 1;
-}
-
-.lang-menu {
-  position: absolute;
-  top: calc(100% + 0.45rem);
-  right: 0;
-  background: var(--surface);
-  border: 1px solid var(--rule);
-  border-radius: 12px;
-  box-shadow: var(--shadow-card);
-  padding: 0.35rem;
-  min-width: 150px;
-  z-index: 10;
-}
-.lang-menu[hidden] { display: none; }
-
-.lang-option {
-  display: flex;
-  width: 100%;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-  font-family: var(--font-mono);
-  font-size: 0.84rem;
-  background: none;
-  border: none;
-  color: var(--ink);
-  padding: 0.5rem 0.65rem;
-  border-radius: 8px;
-  cursor: pointer;
-  text-align: left;
-}
-.lang-option:hover {
-  background: var(--surface-sunken);
-}
-.lang-option[aria-current="true"] {
-  color: var(--accent);
-  font-weight: 600;
-}
-
-h1 {
-  font-family: var(--font-serif);
-  font-size: clamp(1.85rem, 5.2vw, 2.35rem);
-  font-weight: 700;
-  letter-spacing: -0.015em;
-  line-height: 1.12;
-  margin: 0 0 0.75rem;
-}
-
-.lede {
-  font-size: 1rem;
-  color: var(--ink-soft);
-  max-width: 60ch;
-  margin: 0 0 2rem;
-}
-
-.lede code {
-  font-family: var(--font-mono);
-  font-size: 0.9em;
-  color: var(--ink);
-  background: var(--accent-soft);
-  border-radius: 4px;
-  padding: 0.05em 0.3em;
-}
-
-.calc {
-  position: relative;
-  background: var(--surface);
-  border: 1px solid var(--rule);
-  border-radius: 18px;
-  padding: 1.7rem;
-  box-shadow: var(--shadow-card);
-}
-
-.calc::before {
-  content: "";
-  position: absolute;
-  inset: 0 0 auto 0;
-  height: 3px;
-  border-radius: 17px 17px 0 0;
-  background: var(--grad);
-}
-
-.input-row {
-  display: flex;
-  align-items: center;
-  gap: 0.65rem;
-  background: var(--surface-sunken);
-  border: 1px solid var(--rule);
-  border-radius: 12px;
-  padding: 0.75rem 0.95rem;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
-}
-.input-row:focus-within {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-soft);
-}
-
-.input-row .prefix {
-  display: grid;
-  place-items: center;
-  width: 30px;
-  height: 30px;
-  border-radius: 8px;
-  font-family: var(--font-mono);
-  font-size: 1rem;
-  font-weight: 700;
-  color: #fff;
-  background: var(--grad);
-  user-select: none;
-  flex-shrink: 0;
-}
-
-#exprInput {
-  flex: 1;
-  min-width: 0;
-  background: transparent;
-  border: none;
-  outline: none;
-  color: var(--ink);
-  font-family: var(--font-mono);
-  font-size: 1.05rem;
-  caret-color: var(--accent);
-}
-
-#exprInput::placeholder {
-  color: var(--ink-faint);
-}
-
-.evaluate-btn {
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  font-weight: 600;
-  background: var(--grad);
-  color: #fff;
-  border: none;
-  border-radius: 10px;
-  padding: 0.55rem 1.05rem;
-  cursor: pointer;
-  flex-shrink: 0;
-  box-shadow: 0 4px 14px -6px rgba(79, 70, 229, 0.55);
-}
-.evaluate-btn:hover { filter: brightness(1.08); }
-.evaluate-btn:active { transform: scale(0.97); }
-.evaluate-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-
-.keypad {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.45rem;
-  margin-top: 0.7rem;
-}
-
-.key-btn {
-  font-family: var(--font-mono);
-  font-size: 0.86rem;
-  background: var(--surface-sunken);
-  border: 1px solid var(--rule);
-  color: var(--ink-soft);
-  border-radius: 8px;
-  padding: 0.38rem 0.65rem;
-  cursor: pointer;
-  min-width: 2.6rem;
-  transition: transform 0.05s ease, border-color 0.15s ease, color 0.15s ease;
-}
-.key-btn:hover {
-  border-color: var(--accent);
-  color: var(--ink);
-  transform: translateY(-1px);
-}
-.key-btn:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 1px;
-}
-
-.result-area {
-  margin-top: 1.4rem;
-  min-height: 3.5rem;
-}
-
-.function-badge {
-  display: inline-block;
-  font-family: var(--font-mono);
-  font-size: 0.66rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  font-weight: 700;
-  border-radius: 999px;
-  padding: 0.26rem 0.65rem;
-  margin: 0 0 0.7rem;
-  border: 1px solid transparent;
-}
-.function-badge[data-kind="factorial"] { color: var(--k-factorial); background: var(--k-factorial-bg); }
-.function-badge[data-kind="gamma"] { color: var(--k-gamma); background: var(--k-gamma-bg); }
-.function-badge[data-kind="doubleFactorial"] { color: var(--k-double); background: var(--k-double-bg); }
-.function-badge[data-kind="binomial"] { color: var(--k-binomial); background: var(--k-binomial-bg); }
-.function-badge[data-kind="beta"] { color: var(--k-beta); background: var(--k-beta-bg); }
-
-.result-value {
-  font-family: var(--font-mono);
-  font-size: clamp(1.55rem, 5vw, 2rem);
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-  color: var(--ink);
-  word-break: break-all;
-  letter-spacing: -0.015em;
-  margin: 0;
-}
-
-.result-expr-row {
-  display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 0.4rem 0.6rem;
-  margin-bottom: 0.4rem;
-}
-
-.result-expr {
-  font-family: var(--font-mono);
-  font-size: 0.84rem;
-  color: var(--ink-faint);
-  margin: 0;
-}
-
-.action-btns {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
-}
-
-.text-btn {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  background: none;
-  border: 1px solid transparent;
-  color: var(--ink-faint);
-  cursor: pointer;
-  padding: 0.18rem 0.4rem;
-  border-radius: 6px;
-  flex-shrink: 0;
-}
-.text-btn:hover {
-  color: var(--accent);
-  border-color: var(--rule);
-}
-.text-btn:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 1px;
-}
-.text-btn.copied {
-  color: var(--curve);
-}
-
-.result-error {
-  font-family: var(--font-mono);
-  font-size: 0.92rem;
-  color: var(--err);
-  background: var(--err-soft);
-  border: 1px solid color-mix(in srgb, var(--err) 30%, transparent);
-  border-radius: 10px;
-  padding: 0.7rem 0.9rem;
-}
-
-.result-empty {
-  color: var(--ink-faint);
-  font-size: 0.88rem;
-  padding-top: 0.6rem;
-  margin: 0;
-}
-
-.plot-wrap {
-  margin-top: 1.15rem;
-  position: relative;
-  overflow: hidden;
-  border: 1px solid var(--rule);
-  border-radius: 12px;
-  background-color: var(--surface);
-  background-image: radial-gradient(var(--rule) 0.6px, transparent 0.6px);
-  background-size: 14px 14px;
-}
-
-svg#plot {
-  display: block;
-  width: 100%;
-  height: auto;
-  user-select: none;
-}
-
-.plot-caption {
-  font-size: 0.8rem;
-  color: var(--ink-faint);
-  margin: 0;
-  font-family: var(--font-mono);
-}
-
-.plot-hint {
-  font-size: 0.72rem;
-  color: var(--ink-faint);
-  margin: 0.4rem 0 0;
-}
-
-.reset-zoom-btn {
-  position: absolute;
-  top: 0.55rem;
-  right: 0.55rem;
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  background: var(--surface);
-  border: 1px solid var(--rule);
-  color: var(--ink-soft);
-  border-radius: 999px;
-  padding: 0.28rem 0.65rem;
-  cursor: pointer;
-  box-shadow: 0 2px 8px -3px rgba(16, 24, 40, 0.25);
-  z-index: 1;
-}
-.reset-zoom-btn:hover {
-  border-color: var(--accent);
-  color: var(--ink);
-}
-.reset-zoom-btn:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 1px;
-}
-
-.table-toggle-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: 0.85rem;
-}
-
-.tool-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  font-weight: 600;
-  background: var(--surface);
-  border: 1px solid var(--rule);
-  color: var(--ink-soft);
-  border-radius: 9px;
-  padding: 0.42rem 0.7rem;
-  cursor: pointer;
-}
-.tool-btn:hover {
-  border-color: var(--accent);
-  color: var(--ink);
-  background: var(--accent-soft);
-}
-.tool-btn:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 1px;
-}
-.tool-btn-icon {
-  display: grid;
-  place-items: center;
-  width: 20px;
-  height: 20px;
-  border-radius: 6px;
-  background: var(--accent-soft);
-  color: var(--accent);
-  font-size: 0.8rem;
-  line-height: 1;
-}
-
-.value-table-wrap {
-  margin-top: 0.75rem;
-  overflow-x: auto;
-  border: 1px solid var(--rule);
-  border-radius: 10px;
-}
-
-table.value-table {
-  border-collapse: collapse;
-  width: 100%;
-  font-family: var(--font-mono);
-  font-variant-numeric: tabular-nums;
-  font-size: 0.84rem;
-  min-width: 320px;
-}
-table.value-table th, table.value-table td {
-  padding: 0.42rem 0.75rem;
-  text-align: right;
-  border-bottom: 1px solid var(--rule);
-  white-space: nowrap;
-}
-table.value-table th:first-child, table.value-table td:first-child { text-align: left; }
-table.value-table th {
-  font-family: var(--font-ui);
-  font-size: 0.68rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: var(--ink-faint);
-  font-weight: 600;
-  background: var(--surface-sunken);
-}
-table.value-table tr:last-child td { border-bottom: none; }
-
-.reasoning {
-  margin-top: 1.2rem;
-  background: var(--surface-sunken);
-  border: 1px solid var(--rule);
-  border-left: 3px solid var(--accent);
-  border-radius: 12px;
-  padding: 1rem 1.1rem;
-}
-
-.reasoning-title {
-  font-size: 0.7rem;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  color: var(--ink-faint);
-  font-weight: 700;
-  margin: 0 0 0.65rem;
-}
-
-.reasoning-grid {
-  display: grid;
-  grid-template-columns: auto auto 1fr auto;
-  column-gap: 0.55rem;
-  row-gap: 0.42rem;
-  align-items: baseline;
-}
-
-.reasoning-lhs {
-  font-family: var(--font-mono);
-  font-size: 0.88rem;
-  font-weight: 600;
-  color: var(--accent-strong);
-  text-align: right;
-  white-space: nowrap;
-}
-
-.reasoning-eq {
-  font-family: var(--font-mono);
-  font-size: 0.88rem;
-  color: var(--ink-faint);
-}
-
-.reasoning-rhs {
-  font-family: var(--font-mono);
-  font-size: 0.88rem;
-  color: var(--ink-soft);
-  word-break: break-word;
-}
-
-.reasoning-note {
-  font-size: 0.72rem;
-  color: var(--ink-faint);
-  white-space: nowrap;
-  font-style: italic;
-}
-
-.examples {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.55rem;
-  margin-top: 1.6rem;
-}
-
-.example-chip {
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  background: var(--surface);
-  border: 1px solid var(--rule);
-  color: var(--ink-soft);
-  border-radius: 999px;
-  padding: 0.38rem 0.85rem;
-  cursor: pointer;
-  transition: border-color 0.15s ease, color 0.15s ease, transform 0.05s ease;
-  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
-}
-.example-chip:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-  transform: translateY(-1px);
-}
-.example-chip:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-.pinned-section {
-  margin-top: 1.2rem;
-  padding-top: 1.1rem;
-  border-top: 1px dashed var(--rule-strong);
-}
-
-.pinned-title {
-  font-size: 0.7rem;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  color: var(--ink-faint);
-  font-weight: 700;
-  margin: 0 0 0.6rem;
-}
-
-.pinned-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.pinned-chip {
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  background: var(--surface-sunken);
-  border: 1px solid var(--rule);
-  border-radius: 999px;
-  padding: 0.3rem 0.45rem 0.3rem 0.75rem;
-  color: var(--ink-soft);
-}
-
-.pinned-swatch {
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.pinned-remove {
-  font-family: var(--font-mono);
-  background: none;
-  border: none;
-  color: var(--ink-faint);
-  cursor: pointer;
-  font-size: 0.95rem;
-  line-height: 1;
-  padding: 0.1rem 0.2rem;
-  border-radius: 4px;
-}
-.pinned-remove:hover {
-  color: var(--err);
-}
-.pinned-remove:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 1px;
-}
-
-.history {
-  margin-top: 2.2rem;
-}
-
-.history-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 0.6rem;
-  margin: 0 0 0.6rem;
-}
-
-.history-title {
-  font-size: 0.7rem;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  color: var(--ink-faint);
-  font-weight: 700;
-  margin: 0;
-}
-
-.history-clear-btn {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  background: none;
-  border: none;
-  color: var(--ink-faint);
-  cursor: pointer;
-  padding: 0.15rem 0.3rem;
-  border-radius: 5px;
-}
-.history-clear-btn:hover {
-  color: var(--err);
-}
-.history-clear-btn:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 1px;
-}
-
-.history-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  background: var(--rule);
-  border: 1px solid var(--rule);
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-.history-item {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  background: var(--surface);
-  padding: 0.6rem 0.9rem;
-  cursor: pointer;
-  border: none;
-  width: 100%;
-  text-align: left;
-  color: var(--ink);
-}
-.history-item:hover {
-  background: var(--surface-sunken);
-}
-.history-item .h-status {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--curve);
-  flex-shrink: 0;
-}
-.history-item.is-error .h-status {
-  background: var(--err);
-}
-.history-item .h-main {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.1rem;
-}
-.history-item .h-expr {
-  font-family: var(--font-mono);
-  font-size: 0.86rem;
-  color: var(--ink);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.history-item .h-value {
-  font-family: var(--font-mono);
-  font-variant-numeric: tabular-nums;
-  font-size: 0.76rem;
-  color: var(--ink-soft);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.history-item.is-error .h-value {
-  color: var(--err);
-}
-.history-item .h-time {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  color: var(--ink-faint);
-  flex-shrink: 0;
-}
-
-.page-foot {
-  margin-top: 2.4rem;
-}
-
-.note {
-  font-size: 0.82rem;
-  color: var(--ink-faint);
-  margin: 0 0 0.6rem;
-}
-.note code {
-  font-family: var(--font-mono);
-  color: var(--ink-soft);
-}
-
-.links {
-  font-size: 0.86rem;
-  margin: 0;
-}
-.links a {
-  color: var(--accent);
-  text-decoration: none;
-  border-bottom: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
-}
-.links a:hover {
-  border-bottom-color: currentColor;
-}
-.links code {
-  font-family: var(--font-mono);
-  font-size: 0.85em;
-}
-
-@media (max-width: 480px) {
-  body {
-    padding: 1.3rem 0.9rem calc(3rem + env(safe-area-inset-bottom));
-  }
-  .top-row {
-    margin-bottom: 1.8rem;
-  }
-  .calc {
-    padding: 1.15rem;
-    border-radius: 14px;
-  }
-  .calc::before {
-    border-radius: 13px 13px 0 0;
-  }
-  .result-value {
-    font-size: 1.45rem;
-  }
-  .input-row {
-    flex-wrap: wrap;
-    padding: 0.7rem 0.8rem;
-  }
-  .evaluate-btn {
-    width: 100%;
-    padding: 0.6rem 0.8rem;
-  }
-  .keypad {
-    justify-content: space-between;
-  }
-  .key-btn {
-    flex: 1;
-    text-align: center;
-    padding: 0.5rem 0.4rem;
-    min-height: 40px;
-  }
-  .reasoning-grid {
-    grid-template-columns: auto auto 1fr;
-  }
-  .reasoning-note {
-    grid-column: 1 / -1;
-    white-space: normal;
-    margin-top: -0.1rem;
-  }
-  .lang-menu {
-    position: fixed;
-    bottom: calc(0.9rem + env(safe-area-inset-bottom));
-    right: 0.9rem;
-    left: 0.9rem;
-    min-width: 0;
-  }
-  .lang-option {
-    padding: 0.7rem 0.8rem;
-    font-size: 0.9rem;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  * { transition: none !important; }
-}
-
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="page">
@@ -950,6 +26,8 @@ table.value-table tr:last-child td { border-bottom: none; }
       </div>
     </div>
   </header>
+
+  <nav class="sub-nav" id="subNav" aria-label="Sections"></nav>
 
   <h1 id="pageTitle">Generalized factorial calculator</h1>
   <p class="lede" id="pageLede">
@@ -1004,516 +82,12 @@ table.value-table tr:last-child td { border-bottom: none; }
 </div>
 
 
+<script src="js/shared.js"></script>
 <script>
 (function () {
   "use strict";
 
-  // ===================== i18n =====================
-
-  const I18N = {
-    en: {
-      eyebrow: "gamma-factorial",
-      pageTitle: "Generalized factorial calculator",
-      pageLede: "Factorial and related functions, extended to work on any real number — not just whole numbers. Type an expression to see the result, the curve around it, and how it was computed.",
-      inputPlaceholder: "5!  gamma(2.5)  C(10,3)",
-      evaluate: "Evaluate",
-      resultEmpty: "Try {ex1}, {ex2}, or {ex3} below.",
-      comparing: "Comparing",
-      history: "History",
-      historyClear: "Clear",
-      note: "Complex numbers are supported ({c1} or {c2}), same as the Python CLI — curve plotting is only shown for real inputs. Same Gamma function, same reflection formula, same pole/overflow errors as the package.",
-      links: "See also: {link} — a dedicated explorer for {code}.",
-      linkText: "the continuous Pascal's triangle",
-      copyLink: "copy link",
-      copied: "copied",
-      copyFailed: "copy failed",
-      pinToCompare: "pin to compare",
-      removeFromComparison: "Remove {expr} from comparison",
-      complexNote: "Complex result — curve plotting is only available for real inputs.",
-      plotHint: "Scroll or pinch to zoom, drag to pan, hover for exact values, double-click to reset.",
-      resetZoom: "reset zoom",
-      showTable: "show table",
-      hideTable: "hide table",
-      exportPng: "export PNG",
-      exportCsv: "export CSV",
-      tableK: "k",
-      tableN: "n",
-      tableValue: "value",
-      plotCaptionGamma: "Γ(z) around z = {v}",
-      plotCaptionFactorial: "n! around n = {v}",
-      plotCaptionDoubleFactorial: "n!! around n = {v}",
-      plotCaptionBinomial: "C({n}, k) around k = {v}",
-      plotCaptionBeta: "B(a, {b}) around a = {v}",
-      errNotValidNumber: "'{raw}' is not a valid number",
-      errGammaNotDefined: "Gamma is not defined at {z} (NaN or infinity)",
-      errGammaPole: "Gamma has a pole at {z} (infinite)",
-      errGammaOverflow: "Gamma({z}) overflows the range of a float",
-      errBinomialPoleN: "binomial({n}, {k}) is undefined: n={n} is a pole of Gamma (n+1 integer <= 0)",
-      errUnrecognized: "unrecognized expression '{expr}' (try 5!, gamma(2.5), C(10,3), 1+2i)",
-      errDoubleFactorialNonInt: "n!! is only supported for non-negative integers here",
-      error: "error",
-      justNow: "just now",
-      minutesAgo: "{n}m ago",
-      hoursAgo: "{n}h ago",
-      badgeFactorial: "Factorial",
-      badgeDoubleFactorial: "Double factorial",
-      badgeGamma: "Gamma function",
-      badgeBinomial: "Binomial coefficient",
-      badgeBeta: "Beta function",
-      badgeNumber: "Number",
-      reasoningTitle: "How this was computed",
-      noteDefinition: "definition",
-      noteIntegerN: "n is a whole number",
-      noteDirect: "Re(z) ≥ 0.5, Lanczos series",
-      noteReflection: "Re(z) < 0.5, reflection formula",
-      noteReflectionFormula: "Γ(z)Γ(1−z) = π/sin(πz)",
-      noteCheck: "check: Γ(z+1) = zΓ(z)",
-      noteStepDown: "n!! steps down by 2",
-      noteChooseKFromN: "ways to choose k from n",
-      notePascalRow: "classic Pascal's-triangle value",
-      noteInterpolated: "k is not a whole number: continuous interpolation",
-      noteBetaGamma: "B(a,b) = Γ(a)Γ(b)/Γ(a+b)",
-    },
-    fr: {
-      eyebrow: "gamma-factorial",
-      pageTitle: "Calculatrice de factorielle généralisée",
-      pageLede: "La factorielle et ses fonctions proches, étendues à tout nombre réel — pas seulement les entiers. Tape une expression pour voir le résultat, la courbe autour, et comment c'est calculé.",
-      inputPlaceholder: "5!  gamma(2.5)  C(10,3)",
-      evaluate: "Calculer",
-      resultEmpty: "Essaie {ex1}, {ex2}, ou {ex3} ci-dessous.",
-      comparing: "Comparaison",
-      history: "Historique",
-      historyClear: "Effacer",
-      note: "Les nombres complexes sont pris en charge ({c1} ou {c2}), comme dans la CLI Python — le tracé de courbe n'est affiché que pour les entrées réelles. Même fonction Gamma, même formule de réflexion, mêmes erreurs de pôle/dépassement que le paquet.",
-      links: "Voir aussi : {link} — un explorateur dédié à {code}.",
-      linkText: "le triangle de Pascal continu",
-      copyLink: "copier le lien",
-      copied: "copié",
-      copyFailed: "échec de la copie",
-      pinToCompare: "épingler pour comparer",
-      removeFromComparison: "Retirer {expr} de la comparaison",
-      complexNote: "Résultat complexe — le tracé de courbe n'est disponible que pour les entrées réelles.",
-      plotHint: "Molette ou pincement pour zoomer, glisser pour déplacer, survoler pour les valeurs exactes, double-clic pour réinitialiser.",
-      resetZoom: "réinitialiser le zoom",
-      showTable: "afficher le tableau",
-      hideTable: "masquer le tableau",
-      exportPng: "exporter en PNG",
-      exportCsv: "exporter en CSV",
-      tableK: "k",
-      tableN: "n",
-      tableValue: "valeur",
-      plotCaptionGamma: "Γ(z) autour de z = {v}",
-      plotCaptionFactorial: "n! autour de n = {v}",
-      plotCaptionDoubleFactorial: "n!! autour de n = {v}",
-      plotCaptionBinomial: "C({n}, k) autour de k = {v}",
-      plotCaptionBeta: "B(a, {b}) autour de a = {v}",
-      errNotValidNumber: "« {raw} » n'est pas un nombre valide",
-      errGammaNotDefined: "Gamma n'est pas définie en {z} (NaN ou infini)",
-      errGammaPole: "Gamma a un pôle en {z} (infini)",
-      errGammaOverflow: "Gamma({z}) dépasse la plage d'un flottant",
-      errBinomialPoleN: "binomial({n}, {k}) est indéfini : n={n} est un pôle de Gamma (n+1 entier <= 0)",
-      errUnrecognized: "expression non reconnue « {expr} » (essaie 5!, gamma(2.5), C(10,3), 1+2i)",
-      errDoubleFactorialNonInt: "n!! n'est pris en charge ici que pour les entiers positifs",
-      error: "erreur",
-      justNow: "à l'instant",
-      minutesAgo: "il y a {n}min",
-      hoursAgo: "il y a {n}h",
-      badgeFactorial: "Factorielle",
-      badgeDoubleFactorial: "Factorielle double",
-      badgeGamma: "Fonction Gamma",
-      badgeBinomial: "Coefficient binomial",
-      badgeBeta: "Fonction Beta",
-      badgeNumber: "Nombre",
-      reasoningTitle: "Comment c'est calculé",
-      noteDefinition: "définition",
-      noteIntegerN: "n est un entier",
-      noteDirect: "Re(z) ≥ 0.5, série de Lanczos",
-      noteReflection: "Re(z) < 0.5, formule de réflexion",
-      noteReflectionFormula: "Γ(z)Γ(1−z) = π/sin(πz)",
-      noteCheck: "vérif. : Γ(z+1) = zΓ(z)",
-      noteStepDown: "n!! descend de 2 en 2",
-      noteChooseKFromN: "façons de choisir k parmi n",
-      notePascalRow: "valeur classique du triangle de Pascal",
-      noteInterpolated: "k n'est pas entier : interpolation continue",
-      noteBetaGamma: "B(a,b) = Γ(a)Γ(b)/Γ(a+b)",
-    },
-    de: {
-      eyebrow: "gamma-factorial",
-      pageTitle: "Rechner für die verallgemeinerte Fakultät",
-      pageLede: "Die Fakultät und verwandte Funktionen, erweitert auf jede reelle Zahl — nicht nur ganze Zahlen. Gib einen Ausdruck ein, um das Ergebnis, die Kurve darum und die Berechnung zu sehen.",
-      inputPlaceholder: "5!  gamma(2.5)  C(10,3)",
-      evaluate: "Berechnen",
-      resultEmpty: "Probiere {ex1}, {ex2} oder {ex3} unten aus.",
-      comparing: "Vergleich",
-      history: "Verlauf",
-      historyClear: "Leeren",
-      note: "Komplexe Zahlen werden unterstützt ({c1} oder {c2}), genau wie in der Python-CLI — die Kurvendarstellung wird nur für reelle Eingaben angezeigt. Gleiche Gammafunktion, gleiche Reflexionsformel, gleiche Pol-/Überlauf-Fehler wie im Paket.",
-      links: "Siehe auch: {link} — ein eigener Explorer für {code}.",
-      linkText: "das kontinuierliche Pascalsche Dreieck",
-      copyLink: "Link kopieren",
-      copied: "kopiert",
-      copyFailed: "Kopieren fehlgeschlagen",
-      pinToCompare: "zum Vergleich anheften",
-      removeFromComparison: "{expr} aus dem Vergleich entfernen",
-      complexNote: "Komplexes Ergebnis — Kurvendarstellung ist nur für reelle Eingaben verfügbar.",
-      plotHint: "Scrollen oder Zusammenziehen (Pinch) zum Zoomen, Ziehen zum Verschieben, Hover für genaue Werte, Doppelklick zum Zurücksetzen.",
-      resetZoom: "Zoom zurücksetzen",
-      showTable: "Tabelle anzeigen",
-      hideTable: "Tabelle ausblenden",
-      exportPng: "als PNG exportieren",
-      exportCsv: "als CSV exportieren",
-      tableK: "k",
-      tableN: "n",
-      tableValue: "Wert",
-      plotCaptionGamma: "Γ(z) um z = {v}",
-      plotCaptionFactorial: "n! um n = {v}",
-      plotCaptionDoubleFactorial: "n!! um n = {v}",
-      plotCaptionBinomial: "C({n}, k) um k = {v}",
-      plotCaptionBeta: "B(a, {b}) um a = {v}",
-      errNotValidNumber: "„{raw}“ ist keine gültige Zahl",
-      errGammaNotDefined: "Gamma ist bei {z} nicht definiert (NaN oder unendlich)",
-      errGammaPole: "Gamma hat bei {z} einen Pol (unendlich)",
-      errGammaOverflow: "Gamma({z}) überschreitet den Wertebereich einer Gleitkommazahl",
-      errBinomialPoleN: "binomial({n}, {k}) ist undefiniert: n={n} ist ein Pol von Gamma (n+1 ganzzahlig <= 0)",
-      errUnrecognized: "unbekannter Ausdruck „{expr}“ (versuche 5!, gamma(2.5), C(10,3), 1+2i)",
-      errDoubleFactorialNonInt: "n!! wird hier nur für nicht-negative ganze Zahlen unterstützt",
-      error: "Fehler",
-      justNow: "gerade eben",
-      minutesAgo: "vor {n}min",
-      hoursAgo: "vor {n}h",
-      badgeFactorial: "Fakultät",
-      badgeDoubleFactorial: "Doppelfakultät",
-      badgeGamma: "Gammafunktion",
-      badgeBinomial: "Binomialkoeffizient",
-      badgeBeta: "Betafunktion",
-      badgeNumber: "Zahl",
-      reasoningTitle: "So wurde gerechnet",
-      noteDefinition: "Definition",
-      noteIntegerN: "n ist eine ganze Zahl",
-      noteDirect: "Re(z) ≥ 0.5, Lanczos-Reihe",
-      noteReflection: "Re(z) < 0.5, Reflexionsformel",
-      noteReflectionFormula: "Γ(z)Γ(1−z) = π/sin(πz)",
-      noteCheck: "Kontrolle: Γ(z+1) = zΓ(z)",
-      noteStepDown: "n!! geht in 2er-Schritten",
-      noteChooseKFromN: "Möglichkeiten, k aus n zu wählen",
-      notePascalRow: "klassischer Wert aus dem Pascalschen Dreieck",
-      noteInterpolated: "k ist keine ganze Zahl: glatte Interpolation",
-      noteBetaGamma: "B(a,b) = Γ(a)Γ(b)/Γ(a+b)",
-    },
-  };
-
-  const LANG_LABELS = { en: "EN", fr: "FR", de: "DE" };
-  let currentLang = "en";
-
-  function t(key, vars) {
-    const dict = I18N[currentLang] || I18N.en;
-    let str = dict[key] !== undefined ? dict[key] : I18N.en[key] || key;
-    if (vars) {
-      for (const k of Object.keys(vars)) {
-        str = str.split(`{${k}}`).join(vars[k]);
-      }
-    }
-    return str;
-  }
-
-  function detectInitialLang() {
-    try {
-      const saved = window.localStorage.getItem("gf-lang");
-      if (saved && I18N[saved]) return saved;
-    } catch (e) { /* localStorage unavailable */ }
-    const nav = (navigator.language || "en").slice(0, 2).toLowerCase();
-    return I18N[nav] ? nav : "en";
-  }
-
-  // ===================== math engine =====================
-
-  const G = 7;
-  const LANCZOS_COEF = [
-    0.99999999999980993,
-    676.5203681218851,
-    -1259.1392167224028,
-    771.32342877765313,
-    -176.61502916214059,
-    12.507343278686905,
-    -0.13857109526572012,
-    9.9843695780195716e-6,
-    1.5056327351493116e-7,
-  ];
-
-  class GammaError extends Error {}
-
-  class Complex {
-    constructor(re, im = 0) {
-      this.re = re;
-      this.im = im;
-    }
-    static from(x) {
-      return x instanceof Complex ? x : new Complex(x, 0);
-    }
-    get isReal() {
-      return this.im === 0;
-    }
-    add(o) { o = Complex.from(o); return new Complex(this.re + o.re, this.im + o.im); }
-    sub(o) { o = Complex.from(o); return new Complex(this.re - o.re, this.im - o.im); }
-    mul(o) {
-      o = Complex.from(o);
-      return new Complex(this.re * o.re - this.im * o.im, this.re * o.im + this.im * o.re);
-    }
-    div(o) {
-      o = Complex.from(o);
-      const denom = o.re * o.re + o.im * o.im;
-      return new Complex(
-        (this.re * o.re + this.im * o.im) / denom,
-        (this.im * o.re - this.re * o.im) / denom
-      );
-    }
-    isFinite() { return Number.isFinite(this.re) && Number.isFinite(this.im); }
-    static sin(z) {
-      return new Complex(
-        Math.sin(z.re) * Math.cosh(z.im),
-        Math.cos(z.re) * Math.sinh(z.im)
-      );
-    }
-    static exp(z) {
-      const r = Math.exp(z.re);
-      return new Complex(r * Math.cos(z.im), r * Math.sin(z.im));
-    }
-    static log(z) {
-      const r = Math.hypot(z.re, z.im);
-      return new Complex(Math.log(r), Math.atan2(z.im, z.re));
-    }
-    toString() {
-      if (this.isReal) return formatFloat(this.re);
-      const sign = this.im >= 0 ? "+" : "-";
-      const reStr = formatFloat(this.re);
-      const imStr = formatFloat(Math.abs(this.im));
-      if (this.re === 0) return `${sign === "-" ? "-" : ""}${imStr}i`;
-      return `${reStr}${sign}${imStr}i`;
-    }
-  }
-
-  function formatFloat(x) {
-    if (Object.is(x, -0)) x = 0;
-    return String(x);
-  }
-
-  function isNonpositiveInteger(z) {
-    return z.isReal && Number.isInteger(z.re) && z.re <= 0;
-  }
-
-  function gamma(z) {
-    z = Complex.from(z);
-    if (!z.isFinite()) {
-      throw new GammaError(t("errGammaNotDefined", { z: z.toString() }));
-    }
-    if (isNonpositiveInteger(z)) {
-      throw new GammaError(t("errGammaPole", { z: z.toString() }));
-    }
-    if (z.re < 0.5) {
-      const oneMinusZ = new Complex(1 - z.re, -z.im);
-      const denom = Complex.sin(new Complex(Math.PI * z.re, Math.PI * z.im)).mul(gamma(oneMinusZ));
-      const result = new Complex(Math.PI, 0).div(denom);
-      if (!result.isFinite()) {
-        throw new GammaError(t("errGammaOverflow", { z: z.toString() }));
-      }
-      return result;
-    }
-    const zc = new Complex(z.re - 1, z.im);
-    let acc = new Complex(LANCZOS_COEF[0], 0);
-    for (let i = 1; i < G + 2; i++) {
-      acc = acc.add(new Complex(LANCZOS_COEF[i], 0).div(zc.add(i)));
-    }
-    const tt = zc.add(G + 0.5);
-    const logT = Complex.log(tt);
-    const logResult = zc.add(0.5).mul(logT).sub(tt);
-    const result = new Complex(Math.sqrt(2 * Math.PI), 0).mul(Complex.exp(logResult)).mul(acc);
-    if (!result.isFinite()) {
-      throw new GammaError(t("errGammaOverflow", { z: z.toString() }));
-    }
-    return result;
-  }
-
-  function gammaSafe(z) {
-    try {
-      const r = gamma(z);
-      return r.isReal ? r.re : null;
-    } catch (e) {
-      return null;
-    }
-  }
-
-  function factorial(n) {
-    return gamma(Complex.from(n).add(1));
-  }
-
-  // n!! = n(n-2)(n-4)... — only defined here for real non-negative integers
-  // (and -1, by convention (-1)!! = 1), computed directly rather than via
-  // Gamma (the n!! generalization to reals needs 2^(n/2) Gamma(n/2+1)-style
-  // formulas that differ for even/odd n; the integer case covers the
-  // examples people actually type).
-  function doubleFactorial(n) {
-    n = Complex.from(n);
-    if (!n.isReal || !Number.isInteger(n.re) || n.re < -1) {
-      throw new GammaError(t("errDoubleFactorialNonInt"));
-    }
-    let result = 1;
-    for (let i = n.re; i > 1; i -= 2) result *= i;
-    return new Complex(result, 0);
-  }
-
-  function binomial(n, k) {
-    n = Complex.from(n);
-    k = Complex.from(k);
-    if (isNonpositiveInteger(n.add(1))) {
-      throw new GammaError(
-        t("errBinomialPoleN", { n: n.toString(), k: k.toString() })
-      );
-    }
-    // A pole in Gamma(k+1) or Gamma(n-k+1) makes the denominator infinite;
-    // by the Gamma-ratio definition that makes C(n, k) = 0, matching the
-    // classic convention (and math.comb): 0 for k < 0 or k > n.
-    if (isNonpositiveInteger(k.add(1))) return new Complex(0, 0);
-    if (isNonpositiveInteger(n.sub(k).add(1))) return new Complex(0, 0);
-    return gamma(n.add(1)).div(gamma(k.add(1)).mul(gamma(n.sub(k).add(1))));
-  }
-
-  // B(a, b) = Gamma(a) Gamma(b) / Gamma(a + b)
-  function beta(a, b) {
-    a = Complex.from(a);
-    b = Complex.from(b);
-    return gamma(a).mul(gamma(b)).div(gamma(a.add(b)));
-  }
-
-  const COMPLEX_RE = /^([+-]?\d*\.?\d+(?:e[+-]?\d+)?)?([+-]\d*\.?\d+(?:e[+-]?\d+)?)?[ij]$/i;
-  const PURE_IMAG_RE = /^([+-]?\d*\.?\d*(?:e[+-]?\d+)?)[ij]$/i;
-
-  function parseNumber(raw) {
-    const trimmed = raw.trim().replace(/\s+/g, "");
-    if (trimmed === "") {
-      throw new GammaError(t("errNotValidNumber", { raw }));
-    }
-    if (!/[ij]/i.test(trimmed)) {
-      if (Number.isNaN(Number(trimmed))) {
-        throw new GammaError(t("errNotValidNumber", { raw }));
-      }
-      return new Complex(Number(trimmed), 0);
-    }
-    const pureMatch = PURE_IMAG_RE.exec(trimmed);
-    if (pureMatch) {
-      const imStr = pureMatch[1];
-      const im = imStr === "" || imStr === "+" ? 1 : imStr === "-" ? -1 : Number(imStr);
-      return new Complex(0, im);
-    }
-    const fullMatch = COMPLEX_RE.exec(trimmed);
-    if (fullMatch && (fullMatch[1] !== undefined || fullMatch[2] !== undefined)) {
-      const re = fullMatch[1] ? Number(fullMatch[1]) : 0;
-      const imStr = fullMatch[2];
-      const im = imStr === undefined ? 0 : imStr === "+" ? 1 : imStr === "-" ? -1 : Number(imStr);
-      return new Complex(re, im);
-    }
-    throw new GammaError(t("errNotValidNumber", { raw }));
-  }
-
-  const DOUBLE_FACTORIAL_SUFFIX_RE = /^(.+?)!!$/;
-  const FACTORIAL_SUFFIX_RE = /^(.+?)!$/;
-  const CALL_RE = /^([A-Za-z_]+)\((.*)\)$/;
-
-  function formatResult(value) {
-    return value.toString();
-  }
-
-  // Returns { value, plot } where plot describes how to draw a curve
-  // around the result: { kind, center, n?, b? }. plot is null for complex
-  // (non-real) results, which aren't plotted.
-  function evalExpression(expr) {
-    const trimmed = expr.trim();
-
-    function plotFor(kind, center, extra) {
-      if (!center.isReal) return null;
-      if (extra && Object.values(extra).some((v) => v instanceof Complex && !v.isReal)) return null;
-      const out = { kind, center: center.re };
-      if (extra) {
-        for (const k of Object.keys(extra)) out[k] = extra[k].re;
-      }
-      return out;
-    }
-
-    const dfactMatch = DOUBLE_FACTORIAL_SUFFIX_RE.exec(trimmed);
-    if (dfactMatch) {
-      const n = parseNumber(dfactMatch[1]);
-      return { value: doubleFactorial(n), plot: plotFor("doubleFactorial", n), kind: "doubleFactorial" };
-    }
-
-    const factMatch = FACTORIAL_SUFFIX_RE.exec(trimmed);
-    if (factMatch) {
-      const n = parseNumber(factMatch[1]);
-      return { value: factorial(n), plot: plotFor("factorial", n), kind: "factorial" };
-    }
-
-    const callMatch = CALL_RE.exec(trimmed);
-    if (callMatch) {
-      const func = callMatch[1].toLowerCase();
-      const rawArgs = callMatch[2].split(",").map((a) => a.trim()).filter(Boolean);
-
-      if (func === "factorial" && rawArgs.length === 1) {
-        const n = parseNumber(rawArgs[0]);
-        return { value: factorial(n), plot: plotFor("factorial", n), kind: "factorial" };
-      }
-      if (func === "doublefactorial" && rawArgs.length === 1) {
-        const n = parseNumber(rawArgs[0]);
-        return { value: doubleFactorial(n), plot: plotFor("doubleFactorial", n), kind: "doubleFactorial" };
-      }
-      if (func === "gamma" && rawArgs.length === 1) {
-        const z = parseNumber(rawArgs[0]);
-        return { value: gamma(z), plot: plotFor("gamma", z), kind: "gamma" };
-      }
-      if ((func === "c" || func === "binomial") && rawArgs.length === 2) {
-        const n = parseNumber(rawArgs[0]);
-        const k = parseNumber(rawArgs[1]);
-        return { value: binomial(n, k), plot: plotFor("binomial", k, { n }), kind: "binomial" };
-      }
-      if (func === "beta" && rawArgs.length === 2) {
-        const a = parseNumber(rawArgs[0]);
-        const b = parseNumber(rawArgs[1]);
-        return { value: beta(a, b), plot: plotFor("beta", a, { b }), kind: "beta" };
-      }
-      throw new GammaError(t("errUnrecognized", { expr }));
-    }
-
-    // A bare number (real or complex), typed with no function around it:
-    // just echo it back, like a plain calculator would.
-    try {
-      const n = parseNumber(trimmed);
-      return { value: n, plot: null, kind: "number", isBareNumber: true };
-    } catch (e) {
-      throw new GammaError(t("errUnrecognized", { expr }));
-    }
-  }
-
-  function evalAt(kind, x, extra) {
-    try {
-      if (kind === "gamma") return gammaSafe(x);
-      if (kind === "factorial") return gammaSafe(x + 1);
-      if (kind === "doubleFactorial") {
-        if (!Number.isInteger(x) || x < -1) return null;
-        const r = doubleFactorial(new Complex(x, 0));
-        return r.isReal ? r.re : null;
-      }
-      if (kind === "binomial") {
-        const r = binomial(new Complex(extra.n, 0), new Complex(x, 0));
-        return r.isReal && Number.isFinite(r.re) ? r.re : null;
-      }
-      if (kind === "beta") {
-        const r = beta(new Complex(x, 0), new Complex(extra.b, 0));
-        return r.isReal && Number.isFinite(r.re) ? r.re : null;
-      }
-    } catch (e) {
-      return null;
-    }
-    return null;
-  }
-
-  // ===================== plotting =====================
+  const { t, evalExpression, formatResult, makeAnswerContext, evalAt } = GF;
 
   const NS = "http://www.w3.org/2000/svg";
   const PLOT_W = 560;
@@ -1626,13 +200,30 @@ table.value-table tr:last-child td { border-bottom: none; }
     const xInv = (px) => xMin + ((px - PAD.left) / plotW) * (xMax - xMin);
 
     const style = getComputedStyle(document.documentElement);
-    const ruleColor = style.getPropertyValue("--rule").trim();
+    const gridColor = style.getPropertyValue("--grid-line").trim();
+    const ruleStrongColor = style.getPropertyValue("--rule-strong").trim();
     const inkFaint = style.getPropertyValue("--ink-faint").trim();
     const inkColor = style.getPropertyValue("--ink").trim();
     const pointColor = style.getPropertyValue("--point").trim();
     const surfaceColor = style.getPropertyValue("--surface").trim();
-    const surfaceSunkenColor = style.getPropertyValue("--surface-sunken").trim();
     const seriesColors = SERIES_COLORS.map((v) => style.getPropertyValue(v).trim());
+
+    const gridFont = "ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+
+    const yRawStep = (yMax - yMin) / 5;
+    const yNiceStep = yRawStep <= 0 ? 1 : Math.pow(10, Math.floor(Math.log10(yRawStep)));
+    const yTickStep = Math.max(yNiceStep, (yMax - yMin) / 12 || 1);
+    for (let y = Math.ceil(yMin / yTickStep) * yTickStep; y <= yMax; y += yTickStep) {
+      const gy = yFor(y);
+      const g = document.createElementNS(NS, "line");
+      g.setAttribute("x1", PAD.left);
+      g.setAttribute("x2", PLOT_W - PAD.right);
+      g.setAttribute("y1", gy);
+      g.setAttribute("y2", gy);
+      g.setAttribute("stroke", gridColor);
+      g.setAttribute("stroke-width", "1");
+      svg.appendChild(g);
+    }
 
     if (yMin < 0 && yMax > 0) {
       const zeroLine = document.createElementNS(NS, "line");
@@ -1640,7 +231,7 @@ table.value-table tr:last-child td { border-bottom: none; }
       zeroLine.setAttribute("x2", PLOT_W - PAD.right);
       zeroLine.setAttribute("y1", yFor(0));
       zeroLine.setAttribute("y2", yFor(0));
-      zeroLine.setAttribute("stroke", ruleColor);
+      zeroLine.setAttribute("stroke", ruleStrongColor);
       zeroLine.setAttribute("stroke-width", "1");
       svg.appendChild(zeroLine);
     }
@@ -1651,12 +242,20 @@ table.value-table tr:last-child td { border-bottom: none; }
     const xTickLo = Math.ceil(xMin / tickStep) * tickStep;
     for (let x = xTickLo; x <= xMax; x += tickStep) {
       const tx = xFor(x);
+      const grid = document.createElementNS(NS, "line");
+      grid.setAttribute("x1", tx);
+      grid.setAttribute("x2", tx);
+      grid.setAttribute("y1", PAD.top);
+      grid.setAttribute("y2", PAD.top + plotH);
+      grid.setAttribute("stroke", gridColor);
+      grid.setAttribute("stroke-width", "1");
+      svg.appendChild(grid);
       const tick = document.createElementNS(NS, "text");
       tick.setAttribute("x", tx);
       tick.setAttribute("y", PLOT_H - 8);
       tick.setAttribute("text-anchor", "middle");
       tick.setAttribute("font-size", "10");
-      tick.setAttribute("font-family", "ui-monospace, SF Mono, Menlo, monospace");
+      tick.setAttribute("font-family", gridFont);
       tick.setAttribute("fill", inkFaint);
       tick.textContent = Number(x.toFixed(2)).toString();
       svg.appendChild(tick);
@@ -1721,15 +320,15 @@ table.value-table tr:last-child td { border-bottom: none; }
     svg.appendChild(hoverDot);
 
     const hoverLabelBg = document.createElementNS(NS, "rect");
-    hoverLabelBg.setAttribute("fill", surfaceSunkenColor);
-    hoverLabelBg.setAttribute("rx", "3");
+    hoverLabelBg.setAttribute("fill", inkColor);
+    hoverLabelBg.setAttribute("rx", "8");
     hoverLabelBg.style.display = "none";
     svg.appendChild(hoverLabelBg);
 
     const hoverLabel = document.createElementNS(NS, "text");
     hoverLabel.setAttribute("font-size", "10");
-    hoverLabel.setAttribute("font-family", "ui-monospace, SF Mono, Menlo, monospace");
-    hoverLabel.setAttribute("fill", inkColor);
+    hoverLabel.setAttribute("font-family", gridFont);
+    hoverLabel.setAttribute("fill", surfaceColor);
     hoverLabel.style.display = "none";
     svg.appendChild(hoverLabel);
 
@@ -1966,36 +565,6 @@ table.value-table tr:last-child td { border-bottom: none; }
   const langBtnLabel = document.getElementById("langBtnLabel");
   const langMenu = document.getElementById("langMenu");
 
-  const KEYPAD_KEYS = ["!", "!!", "Γ()", "C(,)", "π", "i"];
-
-  function insertAtCursor(text) {
-    const cursorMatch = text.indexOf("|");
-    const clean = text.replace("|", "");
-    const start = exprInput.selectionStart ?? exprInput.value.length;
-    const end = exprInput.selectionEnd ?? exprInput.value.length;
-    exprInput.value = exprInput.value.slice(0, start) + clean + exprInput.value.slice(end);
-    const newPos = start + (cursorMatch === -1 ? clean.length : cursorMatch);
-    exprInput.focus();
-    exprInput.setSelectionRange(newPos, newPos);
-  }
-
-  function renderKeypad() {
-    keypad.innerHTML = "";
-    const inserts = { "Γ()": "gamma(|)", "C(,)": "C(|,)" };
-    for (const key of KEYPAD_KEYS) {
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.className = "key-btn";
-      btn.textContent = key;
-      btn.addEventListener("click", () => insertAtCursor(inserts[key] || key));
-      keypad.appendChild(btn);
-    }
-  }
-
-  // HISTORY_STORE_KEY intentionally omitted: history is per-session only
-  // (kept in memory), so results computed by one visitor never appear for
-  // another and nothing personal is written to localStorage besides the
-  // chosen language.
   const history = [];
   const HISTORY_LIMIT = 8;
 
@@ -2199,102 +768,164 @@ table.value-table tr:last-child td { border-bottom: none; }
     return Number(x.toFixed(digits));
   }
 
-  // Builds a short worked-equation trail: an array of { lhs, rhs, note }
-  // steps, rendered as an aligned "=" chain with a short justification per
-  // step (like a chalkboard derivation), not narrative prose.
+  // ===================== worked reasoning =====================
+
+  // Builds a logical, step-by-step derivation that adapts to the input:
+  // a narrative lead, an aligned "=" chain of steps, and a short check.
+  // Each step is { lhs, eq, rhs, note }.
   function buildReasoning(plot, value) {
+    if (!value.isReal) return null;
     const steps = [];
-    if (!value.isReal) return steps;
 
     if (plot.kind === "factorial") {
       const n = plot.center;
-      steps.push({ lhs: `${n}!`, rhs: `Γ(${round(n + 1, 6)})`, note: t("noteDefinition") });
       if (Number.isInteger(n) && n >= 0 && n <= 12) {
         const terms = [];
         for (let i = n; i >= 1; i--) terms.push(i);
-        steps.push({ lhs: "", rhs: terms.length ? terms.join(" × ") : "1", note: t("noteIntegerN") });
-      } else if (n < -0.5) {
-        steps.push({ lhs: "", rhs: t("noteReflectionFormula"), note: t("noteReflection") });
+        steps.push({ lhs: `${n}!`, eq: "=", rhs: terms.length ? terms.join(" × ") : "1", note: t("noteIntegerN") });
+        let acc = terms.length ? terms[0] : 1;
+        for (let i = 1; i < terms.length; i++) {
+          const prod = acc * terms[i];
+          steps.push({ lhs: "", eq: "", rhs: `${acc} × ${terms[i]} = ${prod}`, note: "" });
+          acc = prod;
+        }
+        steps.push({ lhs: `${n}!`, eq: "=", rhs: String(acc), note: "" });
+        return { lead: t("reasoningLeadFactorialInt", { n }), steps, tail: t("reasoningTailFactorial") };
       }
-      steps.push({ lhs: "", rhs: `≈ ${round(value.re, 6)}`, note: "" });
-      return steps;
+      const g = n + 1;
+      if (g >= 0.5) {
+        steps.push({ lhs: `${n}!`, eq: "=", rhs: `Γ(${round(g, 6)})`, note: t("noteDefinition") });
+        steps.push({ lhs: "", eq: "", rhs: t("noteDirect"), note: "" });
+        steps.push({ lhs: `${n}!`, eq: "≈", rhs: String(round(value.re, 6)), note: "" });
+        if (n > 0) {
+          const gz = gammaSafe(g);
+          if (gz !== null) {
+            steps.push({ lhs: `Γ(${round(g + 1, 6)})`, eq: "≈", rhs: `${round(g, 6)} × Γ(${round(g, 6)}) ≈ ${round(g * gz, 6)}`, note: t("noteCheck") });
+          }
+        }
+        return { lead: t("reasoningLeadFactorialGamma", { g: round(g, 6) }), steps, tail: t("reasoningTailFactorial") };
+      }
+      steps.push({ lhs: `${n}!`, eq: "=", rhs: `Γ(${round(g, 6)})`, note: t("noteDefinition") });
+      steps.push({ lhs: "", eq: "=", rhs: `π / (sin(π·${round(g, 6)}) · Γ(${round(1 - g, 6)}))`, note: t("noteReflectionFormula") });
+      const gOne = gammaSafe(1 - g);
+      if (gOne !== null) {
+        steps.push({ lhs: "", eq: "", rhs: `Γ(${round(1 - g, 6)}) = ${round(gOne, 6)}`, note: "" });
+      }
+      steps.push({ lhs: "", eq: "", rhs: `sin(π·${round(g, 6)}) = ${round(Math.sin(Math.PI * g), 6)}`, note: "" });
+      steps.push({ lhs: `${n}!`, eq: "≈", rhs: String(round(value.re, 6)), note: "" });
+      return { lead: t("reasoningLeadFactorialReflect", { g: round(g, 6) }), steps, tail: t("reasoningTailFactorial") };
     }
 
     if (plot.kind === "gamma") {
       const z = plot.center;
-      steps.push({ lhs: `Γ(${z})`, rhs: "", note: z < 0.5 ? t("noteReflection") : t("noteDirect") });
+      steps.push({ lhs: `Γ(${z})`, eq: "", rhs: "", note: t("noteDefinition") });
       if (z < 0.5) {
-        steps.push({
-          lhs: "",
-          rhs: `π / (sin(π·${z}) · Γ(${round(1 - z, 6)}))`,
-          note: t("noteReflectionFormula"),
-        });
+        steps.push({ lhs: "", eq: "=", rhs: `π / (sin(π·${z}) · Γ(${round(1 - z, 6)}))`, note: t("noteReflectionFormula") });
+        const gOne = gammaSafe(1 - z);
+        if (gOne !== null) {
+          steps.push({ lhs: "", eq: "", rhs: `Γ(${round(1 - z, 6)}) = ${round(gOne, 6)}`, note: t("noteDirect") });
+        }
+        steps.push({ lhs: "", eq: "", rhs: `sin(π·${z}) = ${round(Math.sin(Math.PI * z), 6)}`, note: "" });
+        steps.push({ lhs: `Γ(${z})`, eq: "≈", rhs: String(round(value.re, 6)), note: "" });
+        return { lead: t("reasoningLeadGammaReflect", { z }), steps, tail: t("reasoningTailGamma") };
       }
-      const zp1 = round(z + 1, 6);
-      const gz1 = gammaSafe(z + 1);
-      if (gz1 !== null) {
-        steps.push({ lhs: `Γ(${zp1})`, rhs: `${z} × Γ(${z})`, note: t("noteCheck") });
+      steps.push({ lhs: "", eq: "", rhs: t("noteDirect"), note: "" });
+      steps.push({ lhs: `Γ(${z})`, eq: "≈", rhs: String(round(value.re, 6)), note: "" });
+      if (z > 0) {
+        steps.push({ lhs: `Γ(${round(z + 1, 6)})`, eq: "≈", rhs: `${z} × Γ(${z}) ≈ ${round(z * value.re, 6)}`, note: t("noteCheck") });
       }
-      steps.push({ lhs: "", rhs: `≈ ${round(value.re, 6)}`, note: "" });
-      return steps;
+      return { lead: t("reasoningLeadGammaDirect"), steps, tail: t("reasoningTailGamma") };
     }
 
     if (plot.kind === "doubleFactorial") {
       const n = plot.center;
-      steps.push({ lhs: `${n}!!`, rhs: "", note: t("noteStepDown") });
       if (Number.isInteger(n) && n >= -1 && n <= 14) {
         const terms = [];
         for (let i = n; i >= 1; i -= 2) terms.push(i);
-        steps.push({ lhs: "", rhs: terms.length ? terms.join(" × ") : "1", note: "" });
+        steps.push({ lhs: `${n}!!`, eq: "=", rhs: terms.length ? terms.join(" × ") : "1", note: t("noteStepDown") });
+        let acc = terms.length ? terms[0] : 1;
+        for (let i = 1; i < terms.length; i++) {
+          const prod = acc * terms[i];
+          steps.push({ lhs: "", eq: "", rhs: `${acc} × ${terms[i]} = ${prod}`, note: "" });
+          acc = prod;
+        }
+        steps.push({ lhs: `${n}!!`, eq: "=", rhs: String(acc), note: "" });
+      } else {
+        steps.push({ lhs: `${n}!!`, eq: "≈", rhs: String(round(value.re, 6)), note: t("noteStepDown") });
       }
-      steps.push({ lhs: "", rhs: `≈ ${round(value.re, 6)}`, note: "" });
-      return steps;
+      return { lead: t("reasoningLeadDouble"), steps, tail: t("reasoningTailDouble") };
     }
 
     if (plot.kind === "binomial") {
       const n = plot.n, k = plot.center;
+      const isInt = Number.isInteger(n) && Number.isInteger(k);
       steps.push({
         lhs: `C(${n}, ${k})`,
+        eq: "=",
         rhs: `Γ(${round(n + 1, 6)}) / (Γ(${round(k + 1, 6)})·Γ(${round(n - k + 1, 6)}))`,
         note: t("noteChooseKFromN"),
       });
-      const isInt = Number.isInteger(n) && Number.isInteger(k);
-      steps.push({ lhs: "", rhs: `≈ ${round(value.re, 6)}`, note: isInt ? t("notePascalRow") : t("noteInterpolated") });
-      return steps;
+      if (isInt && n >= 0 && n <= 18 && k >= 0 && k <= n) {
+        let num = 1, d1 = 1, d2 = 1;
+        for (let i = 2; i <= n; i++) num *= i;
+        for (let i = 2; i <= k; i++) d1 *= i;
+        for (let i = 2; i <= n - k; i++) d2 *= i;
+        steps.push({ lhs: "", eq: "", rhs: `${num} / (${d1} × ${d2})`, note: t("noteIntegerN") });
+        steps.push({ lhs: "", eq: "", rhs: `${num} / ${d1 * d2} = ${Math.round(num / (d1 * d2))}`, note: "" });
+      }
+      steps.push({ lhs: `C(${n}, ${k})`, eq: isInt ? "=" : "≈", rhs: String(round(value.re, 6)), note: isInt ? t("notePascalRow") : t("noteInterpolated") });
+      return { lead: t("reasoningLeadBinomial"), steps, tail: t("reasoningTailBinomial") };
     }
 
     if (plot.kind === "beta") {
       const a = plot.center, b = plot.b;
       steps.push({
         lhs: `B(${a}, ${b})`,
+        eq: "=",
         rhs: `Γ(${a})·Γ(${b}) / Γ(${round(a + b, 6)})`,
         note: t("noteBetaGamma"),
       });
-      steps.push({ lhs: "", rhs: `≈ ${round(value.re, 6)}`, note: "" });
-      return steps;
+      if (Number.isInteger(a) && Number.isInteger(b) && a >= 1 && b >= 1) {
+        let ga = 1, gb = 1, gab = 1;
+        for (let i = 2; i < a; i++) ga *= i;
+        for (let i = 2; i < b; i++) gb *= i;
+        for (let i = 2; i < a + b; i++) gab *= i;
+        if (ga * gb > 0) {
+          steps.push({ lhs: "", eq: "", rhs: `${ga} × ${gb} / ${gab}`, note: t("noteIntegerN") });
+          steps.push({ lhs: "", eq: "", rhs: `= ${ga * gb} / ${gab} ≈ ${round((ga * gb) / gab, 6)}`, note: "" });
+        }
+      }
+      steps.push({ lhs: `B(${a}, ${b})`, eq: "≈", rhs: String(round(value.re, 6)), note: "" });
+      return { lead: t("reasoningLeadBeta"), steps, tail: t("reasoningTailBeta") };
     }
 
-    return steps;
+    return null;
   }
 
   function makeReasoningBlock(plot, value) {
-    const steps = buildReasoning(plot, value);
-    if (steps.length === 0) return null;
+    const reasoning = buildReasoning(plot, value);
+    if (!reasoning) return null;
     const section = document.createElement("div");
     section.className = "reasoning";
     const title = document.createElement("p");
     title.className = "reasoning-title";
     title.textContent = t("reasoningTitle");
     section.appendChild(title);
+    if (reasoning.lead) {
+      const lead = document.createElement("p");
+      lead.className = "reasoning-lead";
+      lead.textContent = reasoning.lead;
+      section.appendChild(lead);
+    }
     const grid = document.createElement("div");
     grid.className = "reasoning-grid";
-    for (const step of steps) {
+    for (const step of reasoning.steps) {
       const lhs = document.createElement("span");
       lhs.className = "reasoning-lhs";
       lhs.textContent = step.lhs;
       const eq = document.createElement("span");
       eq.className = "reasoning-eq";
-      eq.textContent = step.lhs ? "=" : step.rhs.startsWith("≈") ? "≈" : "";
+      eq.textContent = step.eq || "";
       const rhs = document.createElement("span");
       rhs.className = "reasoning-rhs";
       rhs.textContent = step.rhs;
@@ -2307,6 +938,117 @@ table.value-table tr:last-child td { border-bottom: none; }
       grid.appendChild(note);
     }
     section.appendChild(grid);
+    if (reasoning.tail) {
+      const tail = document.createElement("p");
+      tail.className = "reasoning-tail";
+      tail.textContent = reasoning.tail;
+      section.appendChild(tail);
+    }
+    return section;
+  }
+
+  // ===================== practical use =====================
+
+  // Builds a "what it's for" panel that adapts to the current input:
+  // what the object counts/computes, a concrete worked example, how to
+  // read the curve, and something to try next.
+  function buildPractical(plot, value, kind) {
+    const items = [];
+    const v = round(value.re, 6);
+
+    if (!value.isReal) {
+      if (kind === "factorial") items.push({ h: t("practWhat"), p: t("practFactorialWhat") });
+      else if (kind === "gamma") items.push({ h: t("practWhat"), p: t("practGammaWhat") });
+      else if (kind === "doubleFactorial") items.push({ h: t("practWhat"), p: t("practDoubleWhat") });
+      else if (kind === "binomial") items.push({ h: t("practWhat"), p: t("practBinomialWhat") });
+      else if (kind === "beta") items.push({ h: t("practWhat"), p: t("practBetaWhat") });
+      return items;
+    }
+
+    if (kind === "factorial") {
+      const n = plot.center;
+      items.push({ h: t("practWhat"), p: t("practFactorialWhat") });
+      if (Number.isInteger(n) && n >= 0) {
+        items.push({ h: t("practUse"), p: t("practFactorialUse", { n, v }) });
+      } else {
+        const d = Math.max(2, 2 * Math.round(n + 1));
+        const denom = gammaSafe(d / 2 + 1);
+        const vol = denom !== null ? Math.pow(Math.PI, d / 2) / denom : 0;
+        items.push({ h: t("practUse"), p: t("practFactorialGamma", { n, d, vol: round(vol, 4) }) });
+      }
+      items.push({ h: t("practCurve"), p: t("practFactorialCurve") });
+      items.push({ h: t("practTry"), p: t("practFactorialTry") });
+    } else if (kind === "gamma") {
+      items.push({ h: t("practWhat"), p: t("practGammaWhat") });
+      items.push({ h: t("practUse"), p: t("practGammaUse") });
+      items.push({ h: t("practCurve"), p: t("practGammaCurve") });
+      items.push({ h: t("practTry"), p: t("practGammaTry") });
+    } else if (kind === "doubleFactorial") {
+      const n = plot.center;
+      items.push({ h: t("practWhat"), p: t("practDoubleWhat") });
+      if (Number.isInteger(n) && n >= 0) {
+        if (n % 2 === 1) {
+          const k = (n + 1) / 2;
+          items.push({ h: t("practUse"), p: t("practDoubleUseOdd", { n, k, v }) });
+        } else {
+          const k = n / 2;
+          items.push({ h: t("practUse"), p: t("practDoubleUseEven", { n, k, v }) });
+        }
+      }
+      items.push({ h: t("practCurve"), p: t("practDoubleCurve") });
+      items.push({ h: t("practTry"), p: t("practDoubleTry") });
+    } else if (kind === "binomial") {
+      const n = plot.n, k = plot.center;
+      const isInt = Number.isInteger(n) && Number.isInteger(k);
+      items.push({ h: t("practWhat"), p: t("practBinomialWhat") });
+      if (isInt) {
+        items.push({ h: t("practUse"), p: t("practBinomialUse", { k, n, c: v }) });
+      } else {
+        const kWhole = Math.round(k);
+        const cWhole = evalAt("binomial", kWhole, plot);
+        items.push({ h: t("practUse"), p: t("practBinomialInterp", { k, c: v, cint: cWhole !== null ? round(cWhole, 6) : 0 }) });
+      }
+      items.push({ h: t("practCurve"), p: t("practBinomialCurve") });
+      items.push({ h: t("practTry"), p: t("practBinomialTry") });
+    } else if (kind === "beta") {
+      const a = plot.center, b = plot.b;
+      items.push({ h: t("practWhat"), p: t("practBetaWhat") });
+      if (a > 1 && b > 1) {
+        const peak = (a - 1) / (a + b - 2);
+        items.push({ h: t("practUse"), p: t("practBetaUsePeak", { peak: round(peak, 3) }) });
+      } else {
+        items.push({ h: t("practUse"), p: t("practBetaUse") });
+      }
+      items.push({ h: t("practCurve"), p: t("practBetaCurve") });
+      items.push({ h: t("practTry"), p: t("practBetaTry") });
+    }
+
+    return items;
+  }
+
+  function makePracticalBlock(plot, value, kind) {
+    const items = buildPractical(plot, value, kind);
+    if (items.length === 0) return null;
+    const section = document.createElement("div");
+    section.className = "practical";
+    const title = document.createElement("p");
+    title.className = "practical-title";
+    title.textContent = t("practTitle");
+    section.appendChild(title);
+    for (const item of items) {
+      const wrap = document.createElement("div");
+      wrap.className = "practical-item";
+      const h = document.createElement("h3");
+      h.textContent = item.h;
+      wrap.appendChild(h);
+      const paras = Array.isArray(item.p) ? item.p : [item.p];
+      for (const text of paras) {
+        const p = document.createElement("p");
+        p.textContent = text;
+        wrap.appendChild(p);
+      }
+      section.appendChild(wrap);
+    }
     return section;
   }
 
@@ -2315,6 +1057,25 @@ table.value-table tr:last-child td { border-bottom: none; }
     // when the language changes, to re-render translated labels).
     if (history[0] && history[0].expr === expr && history[0].isError === isError) return;
     history.unshift({ expr, display, isError, ts: Date.now() });
+  }
+
+  // ===================== evaluation =====================
+
+  function appendDetailLinks(container, expr) {
+    const links = document.createElement("div");
+    links.className = "detail-links";
+    const specs = [
+      ["comment-cest-calcule.html", "openReasoning"],
+      ["a-quoi-ca-sert.html", "openApps"],
+    ];
+    for (const [file, key] of specs) {
+      const a = document.createElement("a");
+      a.className = "detail-link";
+      a.href = file + "?expr=" + encodeURIComponent(expr);
+      a.textContent = t(key);
+      links.appendChild(a);
+    }
+    container.appendChild(links);
   }
 
   function runEval() {
@@ -2329,30 +1090,7 @@ table.value-table tr:last-child td { border-bottom: none; }
       const display = formatResult(value);
       currentResult = { expr, value, plot };
 
-      if (kind !== "number") {
-        const badge = document.createElement("p");
-        badge.className = "function-badge";
-        badge.dataset.kind = kind;
-        badge.textContent = functionBadgeText(kind);
-        resultArea.appendChild(badge);
-      }
-
-      const exprRow = document.createElement("div");
-      exprRow.className = "result-expr-row";
-      const exprLine = document.createElement("p");
-      exprLine.className = "result-expr";
-      exprLine.textContent = expr;
-      const actions = document.createElement("div");
-      actions.className = "action-btns";
-      actions.appendChild(makeCopyLinkButton(expr));
-      exprRow.appendChild(exprLine);
-      exprRow.appendChild(actions);
-      resultArea.appendChild(exprRow);
-
-      const valueLine = document.createElement("p");
-      valueLine.className = "result-value";
-      valueLine.textContent = display;
-      resultArea.appendChild(valueLine);
+      resultArea.appendChild(makeAnswerContext(expr, value, kind));
 
       if (plot) {
         const plotWrap = document.createElement("div");
@@ -2390,9 +1128,6 @@ table.value-table tr:last-child td { border-bottom: none; }
         toolRow.appendChild(makeToolButton("⇩", t("exportPng"), () => exportPng(plotWrap)));
         resultArea.appendChild(toolRow);
         resultArea.appendChild(tableWrap);
-
-        const reasoning = makeReasoningBlock(plot, value);
-        if (reasoning) resultArea.appendChild(reasoning);
       } else if (kind !== "number") {
         const caption = document.createElement("p");
         caption.className = "plot-caption";
@@ -2400,6 +1135,7 @@ table.value-table tr:last-child td { border-bottom: none; }
         resultArea.appendChild(caption);
       }
 
+      appendDetailLinks(resultArea, expr);
       pushHistory(expr, display, false);
       updateUrl(expr);
     } catch (e) {
@@ -2407,7 +1143,6 @@ table.value-table tr:last-child td { border-bottom: none; }
       errBox.className = "result-error";
       errBox.textContent = t("error") + ": " + e.message;
       resultArea.appendChild(errBox);
-
       pushHistory(expr, t("error"), true);
       updateUrl(expr);
     }
@@ -2416,40 +1151,11 @@ table.value-table tr:last-child td { border-bottom: none; }
   }
 
   function updateUrl(expr) {
-    window.history.replaceState(null, "", urlFor(expr));
+    window.history.replaceState(null, "", GF.urlFor(expr));
+    GF.renderNav("calc");
   }
-
-  evalBtn.addEventListener("click", runEval);
-  exprInput.addEventListener("keydown", (event) => {
-    if (event.key === "Enter") runEval();
-  });
-  document.getElementById("examples").addEventListener("click", (event) => {
-    const btn = event.target.closest(".example-chip");
-    if (!btn) return;
-    exprInput.value = btn.dataset.expr;
-    runEval();
-  });
 
   // ===================== language switching =====================
-
-  function setLang(lang) {
-    if (!I18N[lang]) lang = "en";
-    currentLang = lang;
-    try { window.localStorage.setItem("gf-lang", lang); } catch (e) { /* ignore */ }
-    document.documentElement.lang = lang;
-    langBtnLabel.textContent = LANG_LABELS[lang];
-    langMenu.querySelectorAll(".lang-option").forEach((opt) => {
-      opt.setAttribute("aria-current", opt.dataset.lang === lang ? "true" : "false");
-    });
-    applyStaticText();
-    renderKeypad();
-    if (history.length === 0) {
-      resultEmpty.textContent = t("resultEmpty", { ex1: "5!", ex2: "gamma(2.5)", ex3: "C(10, 3)" });
-    }
-    renderHistory();
-    renderPinnedList();
-    if (currentResult) runEval();
-  }
 
   function applyStaticText() {
     document.getElementById("eyebrow").textContent = t("eyebrow");
@@ -2481,43 +1187,42 @@ table.value-table tr:last-child td { border-bottom: none; }
     linkA.textContent = t("linkText");
     const codeEl = document.createElement("code");
     codeEl.textContent = "binomial(n, k)";
-    const linksTemplate = t("links", { link: " LINK ", code: " CODE " });
-    const linksParts = linksTemplate.split(/( LINK | CODE )/);
+    const linksTemplate = t("links", { link: "LINK", code: "CODE" });
+    const linksParts = linksTemplate.split(/(LINK|CODE)/);
     for (const part of linksParts) {
-      if (part === " LINK ") linksP.appendChild(linkA);
-      else if (part === " CODE ") linksP.appendChild(codeEl);
+      if (part === "LINK") linksP.appendChild(linkA);
+      else if (part === "CODE") linksP.appendChild(codeEl);
       else linksP.appendChild(document.createTextNode(part));
     }
   }
 
-  langBtn.addEventListener("click", () => {
-    const isOpen = !langMenu.hidden;
-    langMenu.hidden = isOpen;
-    langBtn.setAttribute("aria-expanded", String(!isOpen));
-  });
-  langMenu.addEventListener("click", (event) => {
-    const opt = event.target.closest(".lang-option");
-    if (!opt) return;
-    setLang(opt.dataset.lang);
-    langMenu.hidden = true;
-    langBtn.setAttribute("aria-expanded", "false");
-  });
-  document.addEventListener("click", (event) => {
-    if (!langBtn.contains(event.target) && !langMenu.contains(event.target)) {
-      langMenu.hidden = true;
-      langBtn.setAttribute("aria-expanded", "false");
+  GF.setLangHook(() => {
+    applyStaticText();
+    GF.renderKeypad();
+    GF.renderNav("calc");
+    renderHistory();
+    renderPinnedList();
+    if (history.length === 0) {
+      resultEmpty.textContent = t("resultEmpty", { ex1: "5!", ex2: "gamma(2.5)", ex3: "C(10, 3)" });
     }
+    if (currentResult) runEval();
   });
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") {
-      langMenu.hidden = true;
-      langBtn.setAttribute("aria-expanded", "false");
-    }
+
+  evalBtn.addEventListener("click", runEval);
+  exprInput.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") runEval();
+  });
+  document.getElementById("examples").addEventListener("click", (event) => {
+    const btn = event.target.closest(".example-chip");
+    if (!btn) return;
+    exprInput.value = btn.dataset.expr;
+    runEval();
   });
 
   // ===================== init =====================
 
-  setLang(detectInitialLang());
+  GF.initLangUI();
+  GF.setLang(GF.detectInitialLang());
 
   const urlExpr = new URL(window.location.href).searchParams.get("expr");
   if (urlExpr) {

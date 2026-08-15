@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What it's for — gamma-factorial</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.85em%27 font-size=%2790%27 fill=%27%23b0402a%27%3EΓ%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#f7f0df" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1b1610" media="(prefers-color-scheme: dark)">
+<meta name="description" content="What each generalized factorial, Gamma, double factorial, binomial and beta value means and how to use it in practice.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="page">
+  <header class="top-row">
+    <p class="eyebrow" id="eyebrow">gamma-factorial</p>
+    <div class="lang-switch">
+      <button class="lang-btn" id="langBtn" type="button" aria-haspopup="true" aria-expanded="false">
+        <span class="lang-globe" aria-hidden="true">🌐</span>
+        <span id="langBtnLabel">EN</span>
+      </button>
+      <div class="lang-menu" id="langMenu" role="menu" hidden>
+        <button class="lang-option" type="button" role="menuitem" data-lang="en">English</button>
+        <button class="lang-option" type="button" role="menuitem" data-lang="fr">Français</button>
+        <button class="lang-option" type="button" role="menuitem" data-lang="de">Deutsch</button>
+      </div>
+    </div>
+  </header>
+
+  <nav class="sub-nav" id="subNav" aria-label="Sections"></nav>
+
+  <h1 id="pageTitle">What it's for</h1>
+  <p class="lede" id="pageLede"></p>
+
+  <div class="calc">
+    <div class="input-row">
+      <span class="prefix">ƒ</span>
+      <input id="exprInput" type="text" autocomplete="off" autocapitalize="off" spellcheck="false">
+      <button class="evaluate-btn" id="evalBtn" type="button">Evaluate</button>
+    </div>
+
+    <div class="keypad" id="keypad"></div>
+
+    <div class="result-area" id="resultArea">
+      <p class="result-empty" id="resultEmpty"></p>
+    </div>
+  </div>
+
+  <div class="examples" id="examples">
+    <button class="example-chip" type="button" data-expr="5!">5!</button>
+    <button class="example-chip" type="button" data-expr="3.5!">3.5!</button>
+    <button class="example-chip" type="button" data-expr="gamma(1.46)">gamma(1.46)</button>
+    <button class="example-chip" type="button" data-expr="7!!">7!!</button>
+    <button class="example-chip" type="button" data-expr="8!!">8!!</button>
+    <button class="example-chip" type="button" data-expr="C(10, 3)">C(10, 3)</button>
+    <button class="example-chip" type="button" data-expr="beta(2, 3)">beta(2, 3)</button>
+  </div>
+
+  <footer class="page-foot">
+    <p class="note" id="noteText"></p>
+  </footer>
+</div>
+
+<script src="js/shared.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  const { t, evalExpression, formatResult, makeAnswerContext, makePracticalBlock } = GF;
+
+  const exprInput = document.getElementById("exprInput");
+  const evalBtn = document.getElementById("evalBtn");
+  const resultArea = document.getElementById("resultArea");
+  const resultEmpty = document.getElementById("resultEmpty");
+
+  let last = null; // { expr, value, plot, kind }
+
+  function render() {
+    resultArea.innerHTML = "";
+    if (!last) {
+      resultArea.appendChild(resultEmpty);
+      return;
+    }
+    const { expr, value, plot, kind } = last;
+    resultArea.appendChild(makeAnswerContext(expr, value, kind));
+    const practical = makePracticalBlock(plot, value, kind);
+    if (practical) resultArea.appendChild(practical);
+  }
+
+  function run() {
+    const expr = exprInput.value.trim();
+    if (!expr) return;
+    resultArea.innerHTML = "";
+    try {
+      const { value, plot, kind } = evalExpression(expr);
+      last = { expr, value, plot, kind };
+      render();
+      window.history.replaceState(null, "", GF.urlFor(expr));
+      GF.renderNav("apps");
+    } catch (e) {
+      const p = document.createElement("p");
+      p.className = "result-error";
+      p.textContent = t("error") + ": " + e.message;
+      resultArea.appendChild(p);
+    }
+  }
+
+  function applyStaticText() {
+    document.getElementById("eyebrow").textContent = t("eyebrow");
+    document.getElementById("pageTitle").textContent = t("appsPageTitle");
+    document.getElementById("pageLede").textContent = t("appsPageLede");
+    document.title = t("appsPageTitle") + " — gamma-factorial";
+    exprInput.placeholder = t("inputPlaceholder");
+    evalBtn.textContent = t("evaluate");
+    resultEmpty.textContent = t("appsEmpty");
+    const note = document.getElementById("noteText");
+    note.textContent = t("note", { c1: "1+2i", c2: "1+2j" });
+  }
+
+  GF.setLangHook(() => {
+    applyStaticText();
+    GF.renderKeypad();
+    GF.renderNav("apps");
+    render();
+  });
+
+  evalBtn.addEventListener("click", run);
+  exprInput.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") run();
+  });
+  document.getElementById("examples").addEventListener("click", (event) => {
+    const btn = event.target.closest(".example-chip");
+    if (!btn) return;
+    exprInput.value = btn.dataset.expr;
+    run();
+  });
+
+  GF.initLangUI();
+  GF.setLang(GF.detectInitialLang());
+
+  const urlExpr = new URL(window.location.href).searchParams.get("expr");
+  if (urlExpr) {
+    exprInput.value = urlExpr;
+    run();
+  } else {
+    render();
+  }
+
+  exprInput.focus();
+})();
+</script>
+</body>
+</html>
