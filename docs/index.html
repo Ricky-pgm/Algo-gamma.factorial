@@ -84,6 +84,13 @@ body {
   margin: 0 auto;
 }
 
+.top-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
 .eyebrow {
   font-size: 0.7rem;
   letter-spacing: 0.1em;
@@ -92,6 +99,75 @@ body {
   font-weight: 600;
   margin: 0 0 0.5rem;
   font-family: ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+.lang-switch {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.lang-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 0.78rem;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  color: var(--ink-soft);
+  border-radius: 999px;
+  padding: 0.35rem 0.7rem;
+  cursor: pointer;
+}
+.lang-btn:hover {
+  border-color: var(--accent);
+  color: var(--ink);
+}
+.lang-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.lang-globe {
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+.lang-menu {
+  position: absolute;
+  top: calc(100% + 0.4rem);
+  right: 0;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.25);
+  padding: 0.3rem;
+  min-width: 140px;
+  z-index: 10;
+}
+.lang-menu[hidden] { display: none; }
+
+.lang-option {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 0.82rem;
+  background: none;
+  border: none;
+  color: var(--ink);
+  padding: 0.4rem 0.6rem;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: left;
+}
+.lang-option:hover {
+  background: var(--surface-sunken);
+}
+.lang-option[aria-current="true"] {
+  color: var(--accent);
+  font-weight: 600;
 }
 
 h1 {
@@ -139,6 +215,7 @@ h1 {
 
 #exprInput {
   flex: 1;
+  min-width: 0;
   background: transparent;
   border: none;
   outline: none;
@@ -168,9 +245,50 @@ h1 {
 .evaluate-btn:active { transform: scale(0.97); }
 .evaluate-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
+.keypad {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+}
+
+.key-btn {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 0.85rem;
+  background: var(--surface-sunken);
+  border: 1px solid var(--rule);
+  color: var(--ink-soft);
+  border-radius: 6px;
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+  min-width: 2.4rem;
+}
+.key-btn:hover {
+  border-color: var(--accent);
+  color: var(--ink);
+}
+.key-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
 .result-area {
   margin-top: 1.25rem;
   min-height: 3.5rem;
+}
+
+.function-badge {
+  display: inline-block;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-radius: 4px;
+  padding: 0.15rem 0.45rem;
+  margin: 0 0 0.5rem;
 }
 
 .result-value {
@@ -185,8 +303,9 @@ h1 {
 .result-expr-row {
   display: flex;
   align-items: baseline;
+  flex-wrap: wrap;
   justify-content: space-between;
-  gap: 0.6rem;
+  gap: 0.4rem 0.6rem;
   margin-bottom: 0.3rem;
 }
 
@@ -196,7 +315,13 @@ h1 {
   color: var(--ink-faint);
 }
 
-.copy-link-btn {
+.action-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.text-btn {
   font-family: ui-monospace, "SF Mono", Menlo, monospace;
   font-size: 0.75rem;
   background: none;
@@ -207,14 +332,14 @@ h1 {
   border-radius: 4px;
   flex-shrink: 0;
 }
-.copy-link-btn:hover {
+.text-btn:hover {
   color: var(--accent);
 }
-.copy-link-btn:focus-visible {
+.text-btn:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 1px;
 }
-.copy-link-btn.copied {
+.text-btn.copied {
   color: var(--curve);
 }
 
@@ -279,6 +404,106 @@ svg#plot {
 .reset-zoom-btn:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 1px;
+}
+
+.table-toggle-row {
+  margin-top: 0.6rem;
+}
+
+.value-table-wrap {
+  margin-top: 0.7rem;
+  overflow-x: auto;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+}
+
+table.value-table {
+  border-collapse: collapse;
+  width: 100%;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.82rem;
+  min-width: 320px;
+}
+table.value-table th, table.value-table td {
+  padding: 0.4rem 0.7rem;
+  text-align: right;
+  border-bottom: 1px solid var(--rule);
+  white-space: nowrap;
+}
+table.value-table th:first-child, table.value-table td:first-child { text-align: left; }
+table.value-table th {
+  font-family: -apple-system, sans-serif;
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  font-weight: 600;
+  background: var(--surface-sunken);
+}
+table.value-table tr:last-child td { border-bottom: none; }
+
+.reasoning {
+  margin-top: 1.1rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--rule);
+}
+
+.reasoning-title {
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  font-weight: 600;
+  margin: 0 0 0.5rem;
+}
+
+.reasoning-grid {
+  display: grid;
+  grid-template-columns: auto auto 1fr auto;
+  column-gap: 0.5rem;
+  row-gap: 0.4rem;
+  align-items: baseline;
+}
+
+.reasoning-lhs {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 0.85rem;
+  color: var(--ink);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.reasoning-eq {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 0.85rem;
+  color: var(--ink-faint);
+}
+
+.reasoning-rhs {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  word-break: break-word;
+}
+
+.reasoning-note {
+  font-size: 0.72rem;
+  color: var(--ink-faint);
+  white-space: nowrap;
+  font-style: italic;
+}
+
+@media (max-width: 480px) {
+  .reasoning-grid {
+    grid-template-columns: auto auto 1fr;
+  }
+  .reasoning-note {
+    grid-column: 1 / -1;
+    white-space: normal;
+    padding-left: 0;
+    margin-top: -0.2rem;
+  }
 }
 
 .examples {
@@ -371,13 +596,37 @@ svg#plot {
   margin-top: 2rem;
 }
 
+.history-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.6rem;
+  margin: 0 0 0.6rem;
+}
+
 .history-title {
   font-size: 0.7rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--ink-faint);
   font-weight: 600;
-  margin: 0 0 0.6rem;
+}
+
+.history-clear-btn {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 0.72rem;
+  background: none;
+  border: none;
+  color: var(--ink-faint);
+  cursor: pointer;
+  padding: 0;
+}
+.history-clear-btn:hover {
+  color: var(--err);
+}
+.history-clear-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
 }
 
 .history-list {
@@ -392,12 +641,10 @@ svg#plot {
 
 .history-item {
   display: flex;
-  justify-content: space-between;
-  gap: 1rem;
+  align-items: center;
+  gap: 0.75rem;
   background: var(--surface);
   padding: 0.55rem 0.85rem;
-  font-family: ui-monospace, "SF Mono", Menlo, monospace;
-  font-size: 0.85rem;
   cursor: pointer;
   border: none;
   width: 100%;
@@ -407,16 +654,48 @@ svg#plot {
 .history-item:hover {
   background: var(--surface-sunken);
 }
+.history-item .h-status {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--curve);
+  flex-shrink: 0;
+}
+.history-item.is-error .h-status {
+  background: var(--err);
+}
+.history-item .h-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
 .history-item .h-expr {
-  color: var(--ink-soft);
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 0.85rem;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .history-item .h-value {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
   font-variant-numeric: tabular-nums;
-  color: var(--ink);
-  flex-shrink: 0;
+  font-size: 0.76rem;
+  color: var(--ink-soft);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .history-item.is-error .h-value {
   color: var(--err);
+}
+.history-item .h-time {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 0.7rem;
+  color: var(--ink-faint);
+  flex-shrink: 0;
 }
 
 .note {
@@ -441,6 +720,36 @@ svg#plot {
   border-bottom-color: currentColor;
 }
 
+@media (max-width: 480px) {
+  body {
+    padding: 1.5rem 0.85rem 3rem;
+  }
+  .calc {
+    padding: 1.1rem;
+  }
+  .result-value {
+    font-size: 1.5rem;
+  }
+  .input-row {
+    flex-wrap: wrap;
+  }
+  .evaluate-btn {
+    width: 100%;
+    padding: 0.55rem 0.8rem;
+  }
+  .keypad {
+    justify-content: space-between;
+  }
+  .key-btn {
+    flex: 1;
+    text-align: center;
+  }
+  .lang-menu {
+    right: 0;
+    left: auto;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; }
 }
@@ -448,9 +757,23 @@ svg#plot {
 </head>
 <body>
 <div class="page">
-  <p class="eyebrow">gamma-factorial</p>
-  <h1>Generalized factorial calculator</h1>
-  <p class="lede">
+  <div class="top-row">
+    <p class="eyebrow" id="eyebrow">gamma-factorial</p>
+    <div class="lang-switch">
+      <button class="lang-btn" id="langBtn" type="button" aria-haspopup="true" aria-expanded="false">
+        <span class="lang-globe" aria-hidden="true">🌐</span>
+        <span id="langBtnLabel">EN</span>
+      </button>
+      <div class="lang-menu" id="langMenu" role="menu" hidden>
+        <button class="lang-option" type="button" role="menuitem" data-lang="en">English</button>
+        <button class="lang-option" type="button" role="menuitem" data-lang="fr">Français</button>
+        <button class="lang-option" type="button" role="menuitem" data-lang="de">Deutsch</button>
+      </div>
+    </div>
+  </div>
+
+  <h1 id="pageTitle">Generalized factorial calculator</h1>
+  <p class="lede" id="pageLede">
     n! = Γ(n+1), extended to any real number via the Lanczos approximation
     — not just non-negative integers. Every result comes with a live curve
     of the function around it, so you can see the interpolation, not just
@@ -460,50 +783,270 @@ svg#plot {
   <div class="calc">
     <div class="input-row">
       <span class="prefix">ƒ</span>
-      <input id="exprInput" type="text" autocomplete="off" autocapitalize="off" spellcheck="false"
-             placeholder="5!  gamma(2.5)  C(10,3)" aria-label="Enter an expression">
+      <input id="exprInput" type="text" autocomplete="off" autocapitalize="off" spellcheck="false">
       <button class="evaluate-btn" id="evalBtn" type="button">Evaluate</button>
     </div>
 
+    <div class="keypad" id="keypad"></div>
+
     <div class="result-area" id="resultArea">
-      <p class="result-empty">Try <code>5!</code>, <code>gamma(2.5)</code>, or <code>C(10, 3)</code> below.</p>
+      <p class="result-empty" id="resultEmpty"></p>
     </div>
 
     <div class="pinned-section" id="pinnedSection" hidden>
-      <p class="pinned-title">Comparing</p>
+      <p class="pinned-title" id="pinnedTitle">Comparing</p>
       <div class="pinned-list" id="pinnedList"></div>
     </div>
   </div>
 
   <div class="examples" id="examples">
     <button class="example-chip" type="button" data-expr="5!">5!</button>
+    <button class="example-chip" type="button" data-expr="5!!">5!!</button>
     <button class="example-chip" type="button" data-expr="-0.5!">-0.5!</button>
     <button class="example-chip" type="button" data-expr="gamma(2.5)">gamma(2.5)</button>
     <button class="example-chip" type="button" data-expr="C(10, 3)">C(10, 3)</button>
     <button class="example-chip" type="button" data-expr="C(4.5, 2)">C(4.5, 2)</button>
+    <button class="example-chip" type="button" data-expr="beta(2, 3)">beta(2, 3)</button>
     <button class="example-chip" type="button" data-expr="factorial(1+2i)">factorial(1+2i)</button>
   </div>
 
   <div class="history" id="historySection" hidden>
-    <p class="history-title">History</p>
+    <div class="history-head">
+      <p class="history-title" id="historyTitle">History</p>
+      <button class="history-clear-btn" id="historyClearBtn" type="button">Clear</button>
+    </div>
     <div class="history-list" id="historyList"></div>
   </div>
 
-  <p class="note">
-    Complex numbers are supported (<code>1+2i</code> or <code>1+2j</code>),
-    same as the Python CLI — curve plotting is only shown for real inputs.
-    Same Gamma function, same reflection formula, same pole/overflow errors
-    as the package.
-  </p>
-  <p class="links">
-    See also: <a href="pascal-continuous.html">the continuous Pascal's triangle</a>
-    — a dedicated explorer for <code>binomial(n, k)</code>.
-  </p>
+  <p class="note" id="noteText"></p>
+  <p class="links" id="linksText"></p>
 </div>
 
 <script>
 (function () {
   "use strict";
+
+  // ===================== i18n =====================
+
+  const I18N = {
+    en: {
+      eyebrow: "gamma-factorial",
+      pageTitle: "Generalized factorial calculator",
+      pageLede: "Factorial and related functions, extended to work on any real number — not just whole numbers. Type an expression to see the result, the curve around it, and how it was computed.",
+      inputPlaceholder: "5!  gamma(2.5)  C(10,3)",
+      evaluate: "Evaluate",
+      resultEmpty: "Try {ex1}, {ex2}, or {ex3} below.",
+      comparing: "Comparing",
+      history: "History",
+      historyClear: "Clear",
+      note: "Complex numbers are supported ({c1} or {c2}), same as the Python CLI — curve plotting is only shown for real inputs. Same Gamma function, same reflection formula, same pole/overflow errors as the package.",
+      links: "See also: {link} — a dedicated explorer for {code}.",
+      linkText: "the continuous Pascal's triangle",
+      copyLink: "copy link",
+      copied: "copied",
+      copyFailed: "copy failed",
+      pinToCompare: "pin to compare",
+      removeFromComparison: "Remove {expr} from comparison",
+      complexNote: "Complex result — curve plotting is only available for real inputs.",
+      plotHint: "Scroll to zoom, drag to pan, hover for exact values, double-click to reset.",
+      resetZoom: "reset zoom",
+      showTable: "show table",
+      hideTable: "hide table",
+      exportPng: "export PNG",
+      exportCsv: "export CSV",
+      tableK: "k",
+      tableN: "n",
+      tableValue: "value",
+      plotCaptionGamma: "Γ(z) around z = {v}",
+      plotCaptionFactorial: "n! around n = {v}",
+      plotCaptionDoubleFactorial: "n!! around n = {v}",
+      plotCaptionBinomial: "C({n}, k) around k = {v}",
+      plotCaptionBeta: "B(a, {b}) around a = {v}",
+      errNotValidNumber: "'{raw}' is not a valid number",
+      errGammaNotDefined: "Gamma is not defined at {z} (NaN or infinity)",
+      errGammaPole: "Gamma has a pole at {z} (infinite)",
+      errGammaOverflow: "Gamma({z}) overflows the range of a float",
+      errBinomialPoleK: "binomial({n}, {k}) is undefined: k={k} is a pole of Gamma (k+1 integer <= 0)",
+      errBinomialPoleNK: "binomial({n}, {k}) is undefined: n-k={nk} is a pole of Gamma (n-k+1 integer <= 0)",
+      errUnrecognized: "unrecognized expression '{expr}' (try 5!, gamma(2.5), C(10,3), 1+2i)",
+      errDoubleFactorialNonInt: "n!! is only supported for non-negative integers here",
+      error: "error",
+      justNow: "just now",
+      minutesAgo: "{n}m ago",
+      hoursAgo: "{n}h ago",
+      badgeFactorial: "Factorial",
+      badgeDoubleFactorial: "Double factorial",
+      badgeGamma: "Gamma function",
+      badgeBinomial: "Binomial coefficient",
+      badgeBeta: "Beta function",
+      badgeNumber: "Number",
+      reasoningTitle: "How this was computed",
+      noteDefinition: "definition",
+      noteIntegerN: "n is a whole number",
+      noteDirect: "Re(z) ≥ 0.5, Lanczos series",
+      noteReflection: "Re(z) < 0.5, reflection formula",
+      noteReflectionFormula: "Γ(z)Γ(1−z) = π/sin(πz)",
+      noteCheck: "check: Γ(z+1) = zΓ(z)",
+      noteStepDown: "n!! steps down by 2",
+      noteChooseKFromN: "ways to choose k from n",
+      notePascalRow: "classic Pascal's-triangle value",
+      noteInterpolated: "k is not a whole number: continuous interpolation",
+      noteBetaGamma: "B(a,b) = Γ(a)Γ(b)/Γ(a+b)",
+    },
+    fr: {
+      eyebrow: "gamma-factorial",
+      pageTitle: "Calculatrice de factorielle généralisée",
+      pageLede: "La factorielle et ses fonctions proches, étendues à tout nombre réel — pas seulement les entiers. Tape une expression pour voir le résultat, la courbe autour, et comment c'est calculé.",
+      inputPlaceholder: "5!  gamma(2.5)  C(10,3)",
+      evaluate: "Calculer",
+      resultEmpty: "Essaie {ex1}, {ex2}, ou {ex3} ci-dessous.",
+      comparing: "Comparaison",
+      history: "Historique",
+      historyClear: "Effacer",
+      note: "Les nombres complexes sont pris en charge ({c1} ou {c2}), comme dans la CLI Python — le tracé de courbe n'est affiché que pour les entrées réelles. Même fonction Gamma, même formule de réflexion, mêmes erreurs de pôle/dépassement que le paquet.",
+      links: "Voir aussi : {link} — un explorateur dédié à {code}.",
+      linkText: "le triangle de Pascal continu",
+      copyLink: "copier le lien",
+      copied: "copié",
+      copyFailed: "échec de la copie",
+      pinToCompare: "épingler pour comparer",
+      removeFromComparison: "Retirer {expr} de la comparaison",
+      complexNote: "Résultat complexe — le tracé de courbe n'est disponible que pour les entrées réelles.",
+      plotHint: "Molette pour zoomer, glisser pour déplacer, survoler pour les valeurs exactes, double-clic pour réinitialiser.",
+      resetZoom: "réinitialiser le zoom",
+      showTable: "afficher le tableau",
+      hideTable: "masquer le tableau",
+      exportPng: "exporter en PNG",
+      exportCsv: "exporter en CSV",
+      tableK: "k",
+      tableN: "n",
+      tableValue: "valeur",
+      plotCaptionGamma: "Γ(z) autour de z = {v}",
+      plotCaptionFactorial: "n! autour de n = {v}",
+      plotCaptionDoubleFactorial: "n!! autour de n = {v}",
+      plotCaptionBinomial: "C({n}, k) autour de k = {v}",
+      plotCaptionBeta: "B(a, {b}) autour de a = {v}",
+      errNotValidNumber: "« {raw} » n'est pas un nombre valide",
+      errGammaNotDefined: "Gamma n'est pas définie en {z} (NaN ou infini)",
+      errGammaPole: "Gamma a un pôle en {z} (infini)",
+      errGammaOverflow: "Gamma({z}) dépasse la plage d'un flottant",
+      errBinomialPoleK: "binomial({n}, {k}) est indéfini : k={k} est un pôle de Gamma (k+1 entier <= 0)",
+      errBinomialPoleNK: "binomial({n}, {k}) est indéfini : n-k={nk} est un pôle de Gamma (n-k+1 entier <= 0)",
+      errUnrecognized: "expression non reconnue « {expr} » (essaie 5!, gamma(2.5), C(10,3), 1+2i)",
+      errDoubleFactorialNonInt: "n!! n'est pris en charge ici que pour les entiers positifs",
+      error: "erreur",
+      justNow: "à l'instant",
+      minutesAgo: "il y a {n}min",
+      hoursAgo: "il y a {n}h",
+      badgeFactorial: "Factorielle",
+      badgeDoubleFactorial: "Factorielle double",
+      badgeGamma: "Fonction Gamma",
+      badgeBinomial: "Coefficient binomial",
+      badgeBeta: "Fonction Beta",
+      badgeNumber: "Nombre",
+      reasoningTitle: "Comment c'est calculé",
+      noteDefinition: "définition",
+      noteIntegerN: "n est un entier",
+      noteDirect: "Re(z) ≥ 0.5, série de Lanczos",
+      noteReflection: "Re(z) < 0.5, formule de réflexion",
+      noteReflectionFormula: "Γ(z)Γ(1−z) = π/sin(πz)",
+      noteCheck: "vérif. : Γ(z+1) = zΓ(z)",
+      noteStepDown: "n!! descend de 2 en 2",
+      noteChooseKFromN: "façons de choisir k parmi n",
+      notePascalRow: "valeur classique du triangle de Pascal",
+      noteInterpolated: "k n'est pas entier : interpolation continue",
+      noteBetaGamma: "B(a,b) = Γ(a)Γ(b)/Γ(a+b)",
+    },
+    de: {
+      eyebrow: "gamma-factorial",
+      pageTitle: "Rechner für die verallgemeinerte Fakultät",
+      pageLede: "Die Fakultät und verwandte Funktionen, erweitert auf jede reelle Zahl — nicht nur ganze Zahlen. Gib einen Ausdruck ein, um das Ergebnis, die Kurve darum und die Berechnung zu sehen.",
+      inputPlaceholder: "5!  gamma(2.5)  C(10,3)",
+      evaluate: "Berechnen",
+      resultEmpty: "Probiere {ex1}, {ex2} oder {ex3} unten aus.",
+      comparing: "Vergleich",
+      history: "Verlauf",
+      historyClear: "Leeren",
+      note: "Komplexe Zahlen werden unterstützt ({c1} oder {c2}), genau wie in der Python-CLI — die Kurvendarstellung wird nur für reelle Eingaben angezeigt. Gleiche Gammafunktion, gleiche Reflexionsformel, gleiche Pol-/Überlauf-Fehler wie im Paket.",
+      links: "Siehe auch: {link} — ein eigener Explorer für {code}.",
+      linkText: "das kontinuierliche Pascalsche Dreieck",
+      copyLink: "Link kopieren",
+      copied: "kopiert",
+      copyFailed: "Kopieren fehlgeschlagen",
+      pinToCompare: "zum Vergleich anheften",
+      removeFromComparison: "{expr} aus dem Vergleich entfernen",
+      complexNote: "Komplexes Ergebnis — Kurvendarstellung ist nur für reelle Eingaben verfügbar.",
+      plotHint: "Scrollen zum Zoomen, Ziehen zum Verschieben, Hover für genaue Werte, Doppelklick zum Zurücksetzen.",
+      resetZoom: "Zoom zurücksetzen",
+      showTable: "Tabelle anzeigen",
+      hideTable: "Tabelle ausblenden",
+      exportPng: "als PNG exportieren",
+      exportCsv: "als CSV exportieren",
+      tableK: "k",
+      tableN: "n",
+      tableValue: "Wert",
+      plotCaptionGamma: "Γ(z) um z = {v}",
+      plotCaptionFactorial: "n! um n = {v}",
+      plotCaptionDoubleFactorial: "n!! um n = {v}",
+      plotCaptionBinomial: "C({n}, k) um k = {v}",
+      plotCaptionBeta: "B(a, {b}) um a = {v}",
+      errNotValidNumber: "„{raw}“ ist keine gültige Zahl",
+      errGammaNotDefined: "Gamma ist bei {z} nicht definiert (NaN oder unendlich)",
+      errGammaPole: "Gamma hat bei {z} einen Pol (unendlich)",
+      errGammaOverflow: "Gamma({z}) überschreitet den Wertebereich einer Gleitkommazahl",
+      errBinomialPoleK: "binomial({n}, {k}) ist undefiniert: k={k} ist ein Pol von Gamma (k+1 ganzzahlig <= 0)",
+      errBinomialPoleNK: "binomial({n}, {k}) ist undefiniert: n-k={nk} ist ein Pol von Gamma (n-k+1 ganzzahlig <= 0)",
+      errUnrecognized: "unbekannter Ausdruck „{expr}“ (versuche 5!, gamma(2.5), C(10,3), 1+2i)",
+      errDoubleFactorialNonInt: "n!! wird hier nur für nicht-negative ganze Zahlen unterstützt",
+      error: "Fehler",
+      justNow: "gerade eben",
+      minutesAgo: "vor {n}min",
+      hoursAgo: "vor {n}h",
+      badgeFactorial: "Fakultät",
+      badgeDoubleFactorial: "Doppelfakultät",
+      badgeGamma: "Gammafunktion",
+      badgeBinomial: "Binomialkoeffizient",
+      badgeBeta: "Betafunktion",
+      badgeNumber: "Zahl",
+      reasoningTitle: "So wurde gerechnet",
+      noteDefinition: "Definition",
+      noteIntegerN: "n ist eine ganze Zahl",
+      noteDirect: "Re(z) ≥ 0.5, Lanczos-Reihe",
+      noteReflection: "Re(z) < 0.5, Reflexionsformel",
+      noteReflectionFormula: "Γ(z)Γ(1−z) = π/sin(πz)",
+      noteCheck: "Kontrolle: Γ(z+1) = zΓ(z)",
+      noteStepDown: "n!! geht in 2er-Schritten",
+      noteChooseKFromN: "Möglichkeiten, k aus n zu wählen",
+      notePascalRow: "klassischer Wert aus dem Pascalschen Dreieck",
+      noteInterpolated: "k ist keine ganze Zahl: glatte Interpolation",
+      noteBetaGamma: "B(a,b) = Γ(a)Γ(b)/Γ(a+b)",
+    },
+  };
+
+  const LANG_LABELS = { en: "EN", fr: "FR", de: "DE" };
+  let currentLang = "en";
+
+  function t(key, vars) {
+    const dict = I18N[currentLang] || I18N.en;
+    let str = dict[key] !== undefined ? dict[key] : I18N.en[key] || key;
+    if (vars) {
+      for (const k of Object.keys(vars)) {
+        str = str.split(`{${k}}`).join(vars[k]);
+      }
+    }
+    return str;
+  }
+
+  function detectInitialLang() {
+    try {
+      const saved = window.localStorage.getItem("gf-lang");
+      if (saved && I18N[saved]) return saved;
+    } catch (e) { /* localStorage unavailable */ }
+    const nav = (navigator.language || "en").slice(0, 2).toLowerCase();
+    return I18N[nav] ? nav : "en";
+  }
+
+  // ===================== math engine =====================
 
   const G = 7;
   const LANCZOS_COEF = [
@@ -519,8 +1062,6 @@ svg#plot {
   ];
 
   class GammaError extends Error {}
-
-  // --- minimal complex number support ---
 
   class Complex {
     constructor(re, im = 0) {
@@ -549,7 +1090,6 @@ svg#plot {
     }
     isFinite() { return Number.isFinite(this.re) && Number.isFinite(this.im); }
     static sin(z) {
-      // sin(a+bi) = sin(a)cosh(b) + i cos(a)sinh(b)
       return new Complex(
         Math.sin(z.re) * Math.cosh(z.im),
         Math.cos(z.re) * Math.sinh(z.im)
@@ -560,7 +1100,6 @@ svg#plot {
       return new Complex(r * Math.cos(z.im), r * Math.sin(z.im));
     }
     static log(z) {
-      // principal branch: log(r) + i*theta
       const r = Math.hypot(z.re, z.im);
       return new Complex(Math.log(r), Math.atan2(z.im, z.re));
     }
@@ -583,17 +1122,17 @@ svg#plot {
   function gamma(z) {
     z = Complex.from(z);
     if (!z.isFinite()) {
-      throw new GammaError(`Gamma is not defined at ${z} (NaN or infinity)`);
+      throw new GammaError(t("errGammaNotDefined", { z: z.toString() }));
     }
     if (isNonpositiveInteger(z)) {
-      throw new GammaError(`Gamma has a pole at ${z} (infinite)`);
+      throw new GammaError(t("errGammaPole", { z: z.toString() }));
     }
     if (z.re < 0.5) {
       const oneMinusZ = new Complex(1 - z.re, -z.im);
       const denom = Complex.sin(new Complex(Math.PI * z.re, Math.PI * z.im)).mul(gamma(oneMinusZ));
       const result = new Complex(Math.PI, 0).div(denom);
       if (!result.isFinite()) {
-        throw new GammaError(`Gamma(${z}) overflows the range of a float`);
+        throw new GammaError(t("errGammaOverflow", { z: z.toString() }));
       }
       return result;
     }
@@ -602,12 +1141,12 @@ svg#plot {
     for (let i = 1; i < G + 2; i++) {
       acc = acc.add(new Complex(LANCZOS_COEF[i], 0).div(zc.add(i)));
     }
-    const t = zc.add(G + 0.5);
-    const logT = Complex.log(t);
-    const logResult = zc.add(0.5).mul(logT).sub(t);
+    const tt = zc.add(G + 0.5);
+    const logT = Complex.log(tt);
+    const logResult = zc.add(0.5).mul(logT).sub(tt);
     const result = new Complex(Math.sqrt(2 * Math.PI), 0).mul(Complex.exp(logResult)).mul(acc);
     if (!result.isFinite()) {
-      throw new GammaError(`Gamma(${z}) overflows the range of a float`);
+      throw new GammaError(t("errGammaOverflow", { z: z.toString() }));
     }
     return result;
   }
@@ -625,6 +1164,21 @@ svg#plot {
     return gamma(Complex.from(n).add(1));
   }
 
+  // n!! = n(n-2)(n-4)... — only defined here for real non-negative integers
+  // (and -1, by convention (-1)!! = 1), computed directly rather than via
+  // Gamma (the n!! generalization to reals needs 2^(n/2) Gamma(n/2+1)-style
+  // formulas that differ for even/odd n; the integer case covers the
+  // examples people actually type).
+  function doubleFactorial(n) {
+    n = Complex.from(n);
+    if (!n.isReal || !Number.isInteger(n.re) || n.re < -1) {
+      throw new GammaError(t("errDoubleFactorialNonInt"));
+    }
+    let result = 1;
+    for (let i = n.re; i > 1; i -= 2) result *= i;
+    return new Complex(result, 0);
+  }
+
   function binomial(n, k) {
     n = Complex.from(n);
     k = Complex.from(k);
@@ -633,7 +1187,7 @@ svg#plot {
       gk1 = gamma(k.add(1));
     } catch (e) {
       throw new GammaError(
-        `binomial(${n}, ${k}) is undefined: k=${k} is a pole of Gamma (k+1 integer <= 0)`
+        t("errBinomialPoleK", { n: n.toString(), k: k.toString() })
       );
     }
     let gnk1;
@@ -641,10 +1195,17 @@ svg#plot {
       gnk1 = gamma(n.sub(k).add(1));
     } catch (e) {
       throw new GammaError(
-        `binomial(${n}, ${k}) is undefined: n-k=${n.sub(k)} is a pole of Gamma (n-k+1 integer <= 0)`
+        t("errBinomialPoleNK", { n: n.toString(), k: k.toString(), nk: n.sub(k).toString() })
       );
     }
     return gamma(n.add(1)).div(gk1.mul(gnk1));
+  }
+
+  // B(a, b) = Gamma(a) Gamma(b) / Gamma(a + b)
+  function beta(a, b) {
+    a = Complex.from(a);
+    b = Complex.from(b);
+    return gamma(a).mul(gamma(b)).div(gamma(a.add(b)));
   }
 
   const COMPLEX_RE = /^([+-]?\d*\.?\d+(?:e[+-]?\d+)?)?([+-]\d*\.?\d+(?:e[+-]?\d+)?)?[ij]$/i;
@@ -653,15 +1214,14 @@ svg#plot {
   function parseNumber(raw) {
     const trimmed = raw.trim().replace(/\s+/g, "");
     if (trimmed === "") {
-      throw new GammaError(`'${raw}' is not a valid number`);
+      throw new GammaError(t("errNotValidNumber", { raw }));
     }
     if (!/[ij]/i.test(trimmed)) {
       if (Number.isNaN(Number(trimmed))) {
-        throw new GammaError(`'${raw}' is not a valid number`);
+        throw new GammaError(t("errNotValidNumber", { raw }));
       }
       return new Complex(Number(trimmed), 0);
     }
-    // complex literal: a+bi, a-bi, bi, -bi
     const pureMatch = PURE_IMAG_RE.exec(trimmed);
     if (pureMatch) {
       const imStr = pureMatch[1];
@@ -675,9 +1235,10 @@ svg#plot {
       const im = imStr === undefined ? 0 : imStr === "+" ? 1 : imStr === "-" ? -1 : Number(imStr);
       return new Complex(re, im);
     }
-    throw new GammaError(`'${raw}' is not a valid number`);
+    throw new GammaError(t("errNotValidNumber", { raw }));
   }
 
+  const DOUBLE_FACTORIAL_SUFFIX_RE = /^(.+?)!!$/;
   const FACTORIAL_SUFFIX_RE = /^(.+?)!$/;
   const CALL_RE = /^([A-Za-z_]+)\((.*)\)$/;
 
@@ -686,21 +1247,31 @@ svg#plot {
   }
 
   // Returns { value, plot } where plot describes how to draw a curve
-  // around the result: { kind: 'factorial'|'gamma'|'binomial', center, n? }
-  // plot is null for complex (non-real) results, which aren't plotted.
+  // around the result: { kind, center, n?, b? }. plot is null for complex
+  // (non-real) results, which aren't plotted.
   function evalExpression(expr) {
     const trimmed = expr.trim();
 
-    function plotFor(kind, center, n) {
-      return center.isReal && (n === undefined || n.isReal)
-        ? { kind, center: center.re, n: n !== undefined ? n.re : undefined }
-        : null;
+    function plotFor(kind, center, extra) {
+      if (!center.isReal) return null;
+      if (extra && Object.values(extra).some((v) => v instanceof Complex && !v.isReal)) return null;
+      const out = { kind, center: center.re };
+      if (extra) {
+        for (const k of Object.keys(extra)) out[k] = extra[k].re;
+      }
+      return out;
+    }
+
+    const dfactMatch = DOUBLE_FACTORIAL_SUFFIX_RE.exec(trimmed);
+    if (dfactMatch) {
+      const n = parseNumber(dfactMatch[1]);
+      return { value: doubleFactorial(n), plot: plotFor("doubleFactorial", n), kind: "doubleFactorial" };
     }
 
     const factMatch = FACTORIAL_SUFFIX_RE.exec(trimmed);
     if (factMatch) {
       const n = parseNumber(factMatch[1]);
-      return { value: factorial(n), plot: plotFor("factorial", n) };
+      return { value: factorial(n), plot: plotFor("factorial", n), kind: "factorial" };
     }
 
     const callMatch = CALL_RE.exec(trimmed);
@@ -710,78 +1281,98 @@ svg#plot {
 
       if (func === "factorial" && rawArgs.length === 1) {
         const n = parseNumber(rawArgs[0]);
-        return { value: factorial(n), plot: plotFor("factorial", n) };
+        return { value: factorial(n), plot: plotFor("factorial", n), kind: "factorial" };
+      }
+      if (func === "doublefactorial" && rawArgs.length === 1) {
+        const n = parseNumber(rawArgs[0]);
+        return { value: doubleFactorial(n), plot: plotFor("doubleFactorial", n), kind: "doubleFactorial" };
       }
       if (func === "gamma" && rawArgs.length === 1) {
         const z = parseNumber(rawArgs[0]);
-        return { value: gamma(z), plot: plotFor("gamma", z) };
+        return { value: gamma(z), plot: plotFor("gamma", z), kind: "gamma" };
       }
       if ((func === "c" || func === "binomial") && rawArgs.length === 2) {
         const n = parseNumber(rawArgs[0]);
         const k = parseNumber(rawArgs[1]);
-        return { value: binomial(n, k), plot: plotFor("binomial", k, n) };
+        return { value: binomial(n, k), plot: plotFor("binomial", k, { n }), kind: "binomial" };
       }
-      throw new GammaError(`unrecognized expression '${expr}' (try 5!, gamma(2.5), C(10,3), 1+2i)`);
+      if (func === "beta" && rawArgs.length === 2) {
+        const a = parseNumber(rawArgs[0]);
+        const b = parseNumber(rawArgs[1]);
+        return { value: beta(a, b), plot: plotFor("beta", a, { b }), kind: "beta" };
+      }
+      throw new GammaError(t("errUnrecognized", { expr }));
     }
 
-    throw new GammaError(`unrecognized expression '${expr}' (try 5!, gamma(2.5), C(10,3), 1+2i)`);
+    // A bare number (real or complex), typed with no function around it:
+    // just echo it back, like a plain calculator would.
+    try {
+      const n = parseNumber(trimmed);
+      return { value: n, plot: null, kind: "number", isBareNumber: true };
+    } catch (e) {
+      throw new GammaError(t("errUnrecognized", { expr }));
+    }
   }
 
-  // --- plotting ---
+  function evalAt(kind, x, extra) {
+    try {
+      if (kind === "gamma") return gammaSafe(x);
+      if (kind === "factorial") return gammaSafe(x + 1);
+      if (kind === "doubleFactorial") {
+        if (!Number.isInteger(x) || x < -1) return null;
+        const r = doubleFactorial(new Complex(x, 0));
+        return r.isReal ? r.re : null;
+      }
+      if (kind === "binomial") {
+        const r = binomial(new Complex(extra.n, 0), new Complex(x, 0));
+        return r.isReal && Number.isFinite(r.re) ? r.re : null;
+      }
+      if (kind === "beta") {
+        const r = beta(new Complex(x, 0), new Complex(extra.b, 0));
+        return r.isReal && Number.isFinite(r.re) ? r.re : null;
+      }
+    } catch (e) {
+      return null;
+    }
+    return null;
+  }
+
+  // ===================== plotting =====================
 
   const NS = "http://www.w3.org/2000/svg";
   const PLOT_W = 560;
   const PLOT_H = 200;
   const PAD = { left: 44, right: 16, top: 16, bottom: 28 };
 
-  function binomialSafe(n, k) {
-    try {
-      const r = binomial(new Complex(n, 0), new Complex(k, 0));
-      return r.isReal && Number.isFinite(r.re) ? r.re : null;
-    } catch (e) {
-      return null;
-    }
-  }
-
   function defaultRange(plot) {
     if (plot.kind === "binomial") return [-1, plot.n + 1];
+    if (plot.kind === "beta") return [Math.max(0.1, plot.center - 5), plot.center + 5];
+    if (plot.kind === "doubleFactorial") return [Math.max(-1, plot.center - 10), plot.center + 10];
     const span = Math.max(3, Math.abs(plot.center) * 0.6 + 2);
     return [plot.center - span, plot.center + span];
   }
 
   function sampleCurve(plot, range) {
     const points = [];
-    const [rangeLo, rangeHi] = range || defaultRange(plot);
-    if (plot.kind === "gamma" || plot.kind === "factorial") {
-      const offset = plot.kind === "factorial" ? 1 : 0;
-      const lo = rangeLo, hi = rangeHi;
-      const step = (hi - lo) / 200;
-      for (let x = lo; x <= hi; x += step) {
-        const y = gammaSafe(x + offset);
-        if (y !== null && Number.isFinite(y)) points.push([x, y]);
-      }
-    } else if (plot.kind === "binomial") {
-      const lo = rangeLo, hi = rangeHi;
-      const step = (hi - lo) / 200;
-      for (let x = lo; x <= hi; x += step) {
-        const y = binomialSafe(plot.n, x);
-        if (y !== null) points.push([x, y]);
-      }
+    const [lo, hi] = range || defaultRange(plot);
+    const isStepped = plot.kind === "doubleFactorial";
+    const step = isStepped ? 1 : (hi - lo) / 200;
+    for (let x = lo; x <= hi; x += step) {
+      const y = evalAt(plot.kind, x, plot);
+      if (y !== null && Number.isFinite(y)) points.push([x, y]);
     }
     return points;
   }
 
   function integerMarkers(plot, points) {
+    if (plot.kind === "doubleFactorial") return points; // already integer-stepped
     const markers = [];
     if (points.length === 0) return markers;
     const xs = points.map((p) => p[0]);
     const lo = Math.ceil(Math.min(...xs));
     const hi = Math.floor(Math.max(...xs));
     for (let x = lo; x <= hi; x++) {
-      let y = null;
-      if (plot.kind === "gamma") y = gammaSafe(x);
-      else if (plot.kind === "factorial") y = gammaSafe(x + 1);
-      else if (plot.kind === "binomial") y = binomialSafe(plot.n, x);
+      const y = evalAt(plot.kind, x, plot);
       if (y !== null && Number.isFinite(y)) markers.push([x, y]);
     }
     return markers;
@@ -790,9 +1381,6 @@ svg#plot {
   const SERIES_COLORS = ["--curve", "--series-2", "--series-3", "--series-4"];
   const MIN_ZOOM_SPAN = 0.5;
 
-  // Mutable per-plot viewport state, reset each time a fresh series list is
-  // drawn (i.e. on every new evaluation), but preserved across pin/unpin
-  // re-renders of the *same* result via rerenderPlot's `keepViewport` flag.
   let viewportRange = null; // [xLo, xHi] or null for auto-fit
 
   // series: array of { plot, resultValue, pinned }. The first entry is the
@@ -815,7 +1403,6 @@ svg#plot {
     svg.setAttribute("id", "plot");
     svg.setAttribute("viewBox", `0 0 ${PLOT_W} ${PLOT_H}`);
     svg.setAttribute("role", "img");
-    svg.setAttribute("aria-label", "Curve of the function around the computed value. Scroll to zoom, drag to pan.");
     svg.style.cursor = "grab";
     svg.style.touchAction = "none";
 
@@ -840,7 +1427,6 @@ svg#plot {
     const surfaceSunkenColor = style.getPropertyValue("--surface-sunken").trim();
     const seriesColors = SERIES_COLORS.map((v) => style.getPropertyValue(v).trim());
 
-    // zero line
     if (yMin < 0 && yMax > 0) {
       const zeroLine = document.createElementNS(NS, "line");
       zeroLine.setAttribute("x1", PAD.left);
@@ -852,7 +1438,6 @@ svg#plot {
       svg.appendChild(zeroLine);
     }
 
-    // x-axis ticks (sparse, adapts to zoomed range)
     const rawStep = (xMax - xMin) / 6;
     const niceStep = rawStep <= 0 ? 1 : Math.pow(10, Math.floor(Math.log10(rawStep)));
     const tickStep = Math.max(niceStep, (xMax - xMin) / 30 || 1);
@@ -912,7 +1497,6 @@ svg#plot {
       }
     });
 
-    // --- hover: crosshair + readout for the primary (first, non-pinned) curve ---
     const primary = curves[0];
     const hoverLine = document.createElementNS(NS, "line");
     hoverLine.setAttribute("y1", PAD.top);
@@ -989,7 +1573,6 @@ svg#plot {
       hoverLabel.style.display = "none";
     }
 
-    // --- zoom (wheel) ---
     svg.addEventListener("wheel", (event) => {
       event.preventDefault();
       const rect = svg.getBoundingClientRect();
@@ -1011,7 +1594,6 @@ svg#plot {
       drawPlot(container, series, true);
     }, { passive: false });
 
-    // --- pan (drag) ---
     let dragState = null;
     svg.addEventListener("pointerdown", (event) => {
       svg.setPointerCapture(event.pointerId);
@@ -1048,12 +1630,13 @@ svg#plot {
     });
 
     container.appendChild(svg);
+    container.__lastCurves = curves;
 
     if (viewportRange) {
       const resetBtn = document.createElement("button");
       resetBtn.type = "button";
       resetBtn.className = "reset-zoom-btn";
-      resetBtn.textContent = "reset zoom";
+      resetBtn.textContent = t("resetZoom");
       resetBtn.addEventListener("click", () => {
         viewportRange = null;
         drawPlot(container, series, true);
@@ -1062,48 +1645,112 @@ svg#plot {
     }
   }
 
-  // --- UI wiring ---
+  // ===================== export =====================
+
+  function exportCsv(plot, points) {
+    const rows = [["x", "value"]];
+    for (const [x, y] of points) rows.push([x, y]);
+    const csv = rows.map((r) => r.join(",")).join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "gamma-factorial-values.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function exportPng(container) {
+    const svgEl = container.querySelector("svg#plot");
+    if (!svgEl) return;
+    const style = getComputedStyle(document.documentElement);
+    const bg = style.getPropertyValue("--surface").trim();
+
+    const clone = svgEl.cloneNode(true);
+    clone.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+    const svgData = new XMLSerializer().serializeToString(clone);
+    const svgBlob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" });
+    const url = URL.createObjectURL(svgBlob);
+
+    const img = new Image();
+    img.onload = () => {
+      const scale = 2;
+      const canvas = document.createElement("canvas");
+      canvas.width = PLOT_W * scale;
+      canvas.height = PLOT_H * scale;
+      const ctx = canvas.getContext("2d");
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.scale(scale, scale);
+      ctx.drawImage(img, 0, 0);
+      URL.revokeObjectURL(url);
+      canvas.toBlob((blob) => {
+        const pngUrl = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = pngUrl;
+        a.download = "gamma-factorial-plot.png";
+        a.click();
+        URL.revokeObjectURL(pngUrl);
+      });
+    };
+    img.src = url;
+  }
+
+  // ===================== UI wiring =====================
 
   const exprInput = document.getElementById("exprInput");
   const evalBtn = document.getElementById("evalBtn");
+  const keypad = document.getElementById("keypad");
   const resultArea = document.getElementById("resultArea");
+  const resultEmpty = document.getElementById("resultEmpty");
   const historySection = document.getElementById("historySection");
   const historyList = document.getElementById("historyList");
+  const historyClearBtn = document.getElementById("historyClearBtn");
   const pinnedSection = document.getElementById("pinnedSection");
   const pinnedList = document.getElementById("pinnedList");
+  const langBtn = document.getElementById("langBtn");
+  const langBtnLabel = document.getElementById("langBtnLabel");
+  const langMenu = document.getElementById("langMenu");
+
+  const KEYPAD_KEYS = ["!", "!!", "Γ()", "C(,)", "π", "i"];
+
+  function insertAtCursor(text) {
+    const cursorMatch = text.indexOf("|");
+    const clean = text.replace("|", "");
+    const start = exprInput.selectionStart ?? exprInput.value.length;
+    const end = exprInput.selectionEnd ?? exprInput.value.length;
+    exprInput.value = exprInput.value.slice(0, start) + clean + exprInput.value.slice(end);
+    const newPos = start + (cursorMatch === -1 ? clean.length : cursorMatch);
+    exprInput.focus();
+    exprInput.setSelectionRange(newPos, newPos);
+  }
+
+  function renderKeypad() {
+    keypad.innerHTML = "";
+    const inserts = { "Γ()": "gamma(|)", "C(,)": "C(|,)" };
+    for (const key of KEYPAD_KEYS) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "key-btn";
+      btn.textContent = key;
+      btn.addEventListener("click", () => insertAtCursor(inserts[key] || key));
+      keypad.appendChild(btn);
+    }
+  }
+
+  // HISTORY_STORE_KEY intentionally omitted: history is per-session only
+  // (kept in memory), so results computed by one visitor never appear for
+  // another and nothing personal is written to localStorage besides the
+  // chosen language.
   const history = [];
+  const HISTORY_LIMIT = 8;
 
-  function plotCaption(plot) {
-    if (plot.kind === "gamma") return `Γ(z) around z = ${plot.center}`;
-    if (plot.kind === "factorial") return `n! around n = ${plot.center}`;
-    return `C(${plot.n}, k) around k = ${plot.center}`;
-  }
-
-  function urlFor(expr) {
-    const url = new URL(window.location.href);
-    url.searchParams.set("expr", expr);
-    return url;
-  }
-
-  function makeCopyLinkButton(expr) {
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "copy-link-btn";
-    btn.textContent = "copy link";
-    btn.addEventListener("click", async () => {
-      try {
-        await navigator.clipboard.writeText(urlFor(expr).toString());
-        btn.textContent = "copied";
-        btn.classList.add("copied");
-        setTimeout(() => {
-          btn.textContent = "copy link";
-          btn.classList.remove("copied");
-        }, 1500);
-      } catch (e) {
-        btn.textContent = "copy failed";
-      }
-    });
-    return btn;
+  function relativeTime(ts) {
+    const diffMs = Date.now() - ts;
+    const mins = Math.floor(diffMs / 60000);
+    if (mins < 1) return t("justNow");
+    if (mins < 60) return t("minutesAgo", { n: mins });
+    return t("hoursAgo", { n: Math.floor(mins / 60) });
   }
 
   function renderHistory() {
@@ -1113,18 +1760,28 @@ svg#plot {
     }
     historySection.hidden = false;
     historyList.innerHTML = "";
-    for (const entry of history.slice(0, 8)) {
+    for (const entry of history.slice(0, HISTORY_LIMIT)) {
       const btn = document.createElement("button");
       btn.className = "history-item" + (entry.isError ? " is-error" : "");
       btn.type = "button";
+      const status = document.createElement("span");
+      status.className = "h-status";
+      const main = document.createElement("span");
+      main.className = "h-main";
       const exprSpan = document.createElement("span");
       exprSpan.className = "h-expr";
       exprSpan.textContent = entry.expr;
       const valueSpan = document.createElement("span");
       valueSpan.className = "h-value";
       valueSpan.textContent = entry.display;
-      btn.appendChild(exprSpan);
-      btn.appendChild(valueSpan);
+      main.appendChild(exprSpan);
+      main.appendChild(valueSpan);
+      const time = document.createElement("span");
+      time.className = "h-time";
+      time.textContent = relativeTime(entry.ts);
+      btn.appendChild(status);
+      btn.appendChild(main);
+      btn.appendChild(time);
       btn.addEventListener("click", () => {
         exprInput.value = entry.expr;
         runEval();
@@ -1133,8 +1790,13 @@ svg#plot {
     }
   }
 
+  historyClearBtn.addEventListener("click", () => {
+    history.length = 0;
+    renderHistory();
+  });
+
   let currentResult = null; // { expr, value, plot }
-  const pinnedCurves = []; // [{ expr, value, plot }]
+  const pinnedCurves = [];
   const MAX_PINS = 3;
 
   function renderPinnedList() {
@@ -1155,7 +1817,7 @@ svg#plot {
       const remove = document.createElement("button");
       remove.type = "button";
       remove.className = "pinned-remove";
-      remove.setAttribute("aria-label", `Remove ${pin.expr} from comparison`);
+      remove.setAttribute("aria-label", t("removeFromComparison", { expr: pin.expr }));
       remove.textContent = "×";
       remove.addEventListener("click", () => {
         pinnedCurves.splice(i, 1);
@@ -1179,19 +1841,205 @@ svg#plot {
     if (plotWrap) drawPlot(plotWrap, series);
   }
 
-  function makePinButton(expr, value, plot) {
+  function makeTextButton(label, onClick) {
     const btn = document.createElement("button");
     btn.type = "button";
-    btn.className = "copy-link-btn";
-    btn.textContent = "pin to compare";
-    btn.addEventListener("click", () => {
+    btn.className = "text-btn";
+    btn.textContent = label;
+    btn.addEventListener("click", onClick);
+    return btn;
+  }
+
+  function urlFor(expr) {
+    const url = new URL(window.location.href);
+    url.searchParams.set("expr", expr);
+    return url;
+  }
+
+  function makeCopyLinkButton(expr) {
+    const btn = makeTextButton(t("copyLink"), async () => {
+      try {
+        await navigator.clipboard.writeText(urlFor(expr).toString());
+        btn.textContent = t("copied");
+        btn.classList.add("copied");
+        setTimeout(() => {
+          btn.textContent = t("copyLink");
+          btn.classList.remove("copied");
+        }, 1500);
+      } catch (e) {
+        btn.textContent = t("copyFailed");
+      }
+    });
+    return btn;
+  }
+
+  function makePinButton(expr, value, plot) {
+    return makeTextButton(t("pinToCompare"), () => {
       if (pinnedCurves.some((p) => p.expr === expr)) return;
       if (pinnedCurves.length >= MAX_PINS) pinnedCurves.shift();
       pinnedCurves.push({ expr, value, plot });
       renderPinnedList();
       rerenderPlot();
     });
-    return btn;
+  }
+
+  function plotCaptionText(plot) {
+    if (plot.kind === "gamma") return t("plotCaptionGamma", { v: plot.center });
+    if (plot.kind === "factorial") return t("plotCaptionFactorial", { v: plot.center });
+    if (plot.kind === "doubleFactorial") return t("plotCaptionDoubleFactorial", { v: plot.center });
+    if (plot.kind === "beta") return t("plotCaptionBeta", { b: plot.b, v: plot.center });
+    return t("plotCaptionBinomial", { n: plot.n, v: plot.center });
+  }
+
+  function functionBadgeText(kind) {
+    if (kind === "number") return t("badgeNumber");
+    if (kind === "gamma") return t("badgeGamma");
+    if (kind === "factorial") return t("badgeFactorial");
+    if (kind === "doubleFactorial") return t("badgeDoubleFactorial");
+    if (kind === "beta") return t("badgeBeta");
+    return t("badgeBinomial");
+  }
+
+  function makeValueTable(plot) {
+    const wrap = document.createElement("div");
+    wrap.className = "value-table-wrap";
+    wrap.hidden = true;
+    const table = document.createElement("table");
+    table.className = "value-table";
+    const isBinomial = plot.kind === "binomial";
+    const xLabel = isBinomial ? t("tableK") : t("tableN");
+    table.innerHTML = `<thead><tr><th>${xLabel}</th><th>${t("tableValue")}</th></tr></thead><tbody></tbody>`;
+    const tbody = table.querySelector("tbody");
+    const [lo, hi] = defaultRange(plot);
+    const xLo = Math.ceil(lo);
+    const xHi = Math.floor(hi);
+    const rows = [];
+    for (let x = xLo; x <= xHi; x++) {
+      const y = evalAt(plot.kind, x, plot);
+      if (y !== null && Number.isFinite(y)) rows.push([x, y]);
+    }
+    for (const [x, y] of rows.slice(0, 40)) {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td>${x}</td><td>${Number(y.toFixed(6))}</td>`;
+      tbody.appendChild(tr);
+    }
+    wrap.appendChild(table);
+    return { wrap, rows };
+  }
+
+  function round(x, digits) {
+    return Number(x.toFixed(digits));
+  }
+
+  // Builds a short worked-equation trail: an array of { lhs, rhs, note }
+  // steps, rendered as an aligned "=" chain with a short justification per
+  // step (like a chalkboard derivation), not narrative prose.
+  function buildReasoning(plot, value) {
+    const steps = [];
+    if (!value.isReal) return steps;
+
+    if (plot.kind === "factorial") {
+      const n = plot.center;
+      steps.push({ lhs: `${n}!`, rhs: `Γ(${round(n + 1, 6)})`, note: t("noteDefinition") });
+      if (Number.isInteger(n) && n >= 0 && n <= 12) {
+        const terms = [];
+        for (let i = n; i >= 1; i--) terms.push(i);
+        steps.push({ lhs: "", rhs: terms.length ? terms.join(" × ") : "1", note: t("noteIntegerN") });
+      } else if (n < -0.5) {
+        steps.push({ lhs: "", rhs: t("noteReflectionFormula"), note: t("noteReflection") });
+      }
+      steps.push({ lhs: "", rhs: `≈ ${round(value.re, 6)}`, note: "" });
+      return steps;
+    }
+
+    if (plot.kind === "gamma") {
+      const z = plot.center;
+      steps.push({ lhs: `Γ(${z})`, rhs: "", note: z < 0.5 ? t("noteReflection") : t("noteDirect") });
+      if (z < 0.5) {
+        steps.push({
+          lhs: "",
+          rhs: `π / (sin(π·${z}) · Γ(${round(1 - z, 6)}))`,
+          note: t("noteReflectionFormula"),
+        });
+      }
+      const zp1 = round(z + 1, 6);
+      const gz1 = gammaSafe(z + 1);
+      if (gz1 !== null) {
+        steps.push({ lhs: `Γ(${zp1})`, rhs: `${z} × Γ(${z})`, note: t("noteCheck") });
+      }
+      steps.push({ lhs: "", rhs: `≈ ${round(value.re, 6)}`, note: "" });
+      return steps;
+    }
+
+    if (plot.kind === "doubleFactorial") {
+      const n = plot.center;
+      steps.push({ lhs: `${n}!!`, rhs: "", note: t("noteStepDown") });
+      if (Number.isInteger(n) && n >= -1 && n <= 14) {
+        const terms = [];
+        for (let i = n; i >= 1; i -= 2) terms.push(i);
+        steps.push({ lhs: "", rhs: terms.length ? terms.join(" × ") : "1", note: "" });
+      }
+      steps.push({ lhs: "", rhs: `≈ ${round(value.re, 6)}`, note: "" });
+      return steps;
+    }
+
+    if (plot.kind === "binomial") {
+      const n = plot.n, k = plot.center;
+      steps.push({
+        lhs: `C(${n}, ${k})`,
+        rhs: `Γ(${round(n + 1, 6)}) / (Γ(${round(k + 1, 6)})·Γ(${round(n - k + 1, 6)}))`,
+        note: t("noteChooseKFromN"),
+      });
+      const isInt = Number.isInteger(n) && Number.isInteger(k);
+      steps.push({ lhs: "", rhs: `≈ ${round(value.re, 6)}`, note: isInt ? t("notePascalRow") : t("noteInterpolated") });
+      return steps;
+    }
+
+    if (plot.kind === "beta") {
+      const a = plot.center, b = plot.b;
+      steps.push({
+        lhs: `B(${a}, ${b})`,
+        rhs: `Γ(${a})·Γ(${b}) / Γ(${round(a + b, 6)})`,
+        note: t("noteBetaGamma"),
+      });
+      steps.push({ lhs: "", rhs: `≈ ${round(value.re, 6)}`, note: "" });
+      return steps;
+    }
+
+    return steps;
+  }
+
+  function makeReasoningBlock(plot, value) {
+    const steps = buildReasoning(plot, value);
+    if (steps.length === 0) return null;
+    const section = document.createElement("div");
+    section.className = "reasoning";
+    const title = document.createElement("p");
+    title.className = "reasoning-title";
+    title.textContent = t("reasoningTitle");
+    section.appendChild(title);
+    const grid = document.createElement("div");
+    grid.className = "reasoning-grid";
+    for (const step of steps) {
+      const lhs = document.createElement("span");
+      lhs.className = "reasoning-lhs";
+      lhs.textContent = step.lhs;
+      const eq = document.createElement("span");
+      eq.className = "reasoning-eq";
+      eq.textContent = step.lhs || step.rhs.startsWith("≈") ? "=" : "";
+      const rhs = document.createElement("span");
+      rhs.className = "reasoning-rhs";
+      rhs.textContent = step.rhs;
+      const note = document.createElement("span");
+      note.className = "reasoning-note";
+      note.textContent = step.note;
+      grid.appendChild(lhs);
+      grid.appendChild(eq);
+      grid.appendChild(rhs);
+      grid.appendChild(note);
+    }
+    section.appendChild(grid);
+    return section;
   }
 
   function runEval() {
@@ -1202,17 +2050,27 @@ svg#plot {
     currentResult = null;
 
     try {
-      const { value, plot } = evalExpression(expr);
+      const { value, plot, kind } = evalExpression(expr);
       const display = formatResult(value);
       currentResult = { expr, value, plot };
+
+      if (kind !== "number") {
+        const badge = document.createElement("p");
+        badge.className = "function-badge";
+        badge.textContent = functionBadgeText(kind);
+        resultArea.appendChild(badge);
+      }
 
       const exprRow = document.createElement("div");
       exprRow.className = "result-expr-row";
       const exprLine = document.createElement("p");
       exprLine.className = "result-expr";
       exprLine.textContent = expr;
+      const actions = document.createElement("div");
+      actions.className = "action-btns";
+      actions.appendChild(makeCopyLinkButton(expr));
       exprRow.appendChild(exprLine);
-      exprRow.appendChild(makeCopyLinkButton(expr));
+      exprRow.appendChild(actions);
       resultArea.appendChild(exprRow);
 
       const valueLine = document.createElement("p");
@@ -1230,31 +2088,50 @@ svg#plot {
         captionRow.className = "result-expr-row";
         const caption = document.createElement("p");
         caption.className = "plot-caption";
-        caption.textContent = plotCaption(plot);
+        caption.textContent = plotCaptionText(plot);
+        const plotActions = document.createElement("div");
+        plotActions.className = "action-btns";
+        plotActions.appendChild(makePinButton(expr, value, plot));
         captionRow.appendChild(caption);
-        captionRow.appendChild(makePinButton(expr, value, plot));
+        captionRow.appendChild(plotActions);
         resultArea.appendChild(captionRow);
 
         const hint = document.createElement("p");
         hint.className = "plot-hint";
-        hint.textContent = "Scroll to zoom, drag to pan, hover for exact values, double-click to reset.";
+        hint.textContent = t("plotHint");
         resultArea.appendChild(hint);
-      } else {
+
+        const { wrap: tableWrap, rows } = makeValueTable(plot);
+        const toolRow = document.createElement("div");
+        toolRow.className = "table-toggle-row action-btns";
+        const toggleBtn = makeTextButton(t("showTable"), () => {
+          tableWrap.hidden = !tableWrap.hidden;
+          toggleBtn.textContent = tableWrap.hidden ? t("showTable") : t("hideTable");
+        });
+        toolRow.appendChild(toggleBtn);
+        toolRow.appendChild(makeTextButton(t("exportCsv"), () => exportCsv(plot, rows)));
+        toolRow.appendChild(makeTextButton(t("exportPng"), () => exportPng(plotWrap)));
+        resultArea.appendChild(toolRow);
+        resultArea.appendChild(tableWrap);
+
+        const reasoning = makeReasoningBlock(plot, value);
+        if (reasoning) resultArea.appendChild(reasoning);
+      } else if (kind !== "number") {
         const caption = document.createElement("p");
         caption.className = "plot-caption";
-        caption.textContent = "Complex result — curve plotting is only available for real inputs.";
+        caption.textContent = t("complexNote");
         resultArea.appendChild(caption);
       }
 
-      history.unshift({ expr, display, isError: false });
+      history.unshift({ expr, display, isError: false, ts: Date.now() });
       updateUrl(expr);
     } catch (e) {
       const errBox = document.createElement("p");
       errBox.className = "result-error";
-      errBox.textContent = "error: " + e.message;
+      errBox.textContent = t("error") + ": " + e.message;
       resultArea.appendChild(errBox);
 
-      history.unshift({ expr, display: "error", isError: true });
+      history.unshift({ expr, display: t("error"), isError: true, ts: Date.now() });
       updateUrl(expr);
     }
 
@@ -1275,6 +2152,95 @@ svg#plot {
     exprInput.value = btn.dataset.expr;
     runEval();
   });
+
+  // ===================== language switching =====================
+
+  function setLang(lang) {
+    if (!I18N[lang]) lang = "en";
+    currentLang = lang;
+    try { window.localStorage.setItem("gf-lang", lang); } catch (e) { /* ignore */ }
+    document.documentElement.lang = lang;
+    langBtnLabel.textContent = LANG_LABELS[lang];
+    langMenu.querySelectorAll(".lang-option").forEach((opt) => {
+      opt.setAttribute("aria-current", opt.dataset.lang === lang ? "true" : "false");
+    });
+    applyStaticText();
+    renderKeypad();
+    if (history.length === 0) {
+      resultEmpty.textContent = t("resultEmpty", { ex1: "5!", ex2: "gamma(2.5)", ex3: "C(10, 3)" });
+    }
+    renderHistory();
+    renderPinnedList();
+    if (currentResult) runEval();
+  }
+
+  function applyStaticText() {
+    document.getElementById("eyebrow").textContent = t("eyebrow");
+    document.getElementById("pageTitle").textContent = t("pageTitle");
+    document.getElementById("pageLede").textContent = t("pageLede");
+    exprInput.placeholder = t("inputPlaceholder");
+    evalBtn.textContent = t("evaluate");
+    document.getElementById("pinnedTitle").textContent = t("comparing");
+    document.getElementById("historyTitle").textContent = t("history");
+    historyClearBtn.textContent = t("historyClear");
+    document.getElementById("noteText").innerHTML = "";
+    const noteP = document.getElementById("noteText");
+    const noteText = t("note", { c1: "1+2i", c2: "1+2j" });
+    noteP.textContent = "";
+    const parts = noteText.split(/(1\+2i|1\+2j)/);
+    for (const part of parts) {
+      if (part === "1+2i" || part === "1+2j") {
+        const code = document.createElement("code");
+        code.textContent = part;
+        noteP.appendChild(code);
+      } else {
+        noteP.appendChild(document.createTextNode(part));
+      }
+    }
+    const linksP = document.getElementById("linksText");
+    linksP.textContent = "";
+    const linkA = document.createElement("a");
+    linkA.href = "pascal-continuous.html";
+    linkA.textContent = t("linkText");
+    const codeEl = document.createElement("code");
+    codeEl.textContent = "binomial(n, k)";
+    const linksTemplate = t("links", { link: " LINK ", code: " CODE " });
+    const linksParts = linksTemplate.split(/( LINK | CODE )/);
+    for (const part of linksParts) {
+      if (part === " LINK ") linksP.appendChild(linkA);
+      else if (part === " CODE ") linksP.appendChild(codeEl);
+      else linksP.appendChild(document.createTextNode(part));
+    }
+  }
+
+  langBtn.addEventListener("click", () => {
+    const isOpen = !langMenu.hidden;
+    langMenu.hidden = isOpen;
+    langBtn.setAttribute("aria-expanded", String(!isOpen));
+  });
+  langMenu.addEventListener("click", (event) => {
+    const opt = event.target.closest(".lang-option");
+    if (!opt) return;
+    setLang(opt.dataset.lang);
+    langMenu.hidden = true;
+    langBtn.setAttribute("aria-expanded", "false");
+  });
+  document.addEventListener("click", (event) => {
+    if (!langBtn.contains(event.target) && !langMenu.contains(event.target)) {
+      langMenu.hidden = true;
+      langBtn.setAttribute("aria-expanded", "false");
+    }
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      langMenu.hidden = true;
+      langBtn.setAttribute("aria-expanded", "false");
+    }
+  });
+
+  // ===================== init =====================
+
+  setLang(detectInitialLang());
 
   const urlExpr = new URL(window.location.href).searchParams.get("expr");
   if (urlExpr) {
