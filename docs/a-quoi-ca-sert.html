@@ -16,6 +16,7 @@
   <div class="header-inner">
     <p class="eyebrow" id="eyebrow">gamma-factorial</p>
     <nav class="sub-nav" id="subNav" aria-label="Sections"></nav>
+    <button class="theme-toggle" id="themeToggle" type="button">☀️</button>
     <div class="lang-switch">
       <button class="lang-btn" id="langBtn" type="button" aria-haspopup="true" aria-expanded="false">
         <span class="lang-globe" aria-hidden="true">🌐</span>
@@ -138,6 +139,7 @@
 
   GF.initLangUI();
   GF.setLang(GF.detectInitialLang());
+  GF.initThemeToggle();
 
   const urlExpr = new URL(window.location.href).searchParams.get("expr");
   if (urlExpr) {
