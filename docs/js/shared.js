@@ -1289,7 +1289,6 @@
     btn.addEventListener("click", cycleTheme);
     refreshThemeButton();
   }
-})();
 
   window.GF = {
     t,
@@ -1324,3 +1323,4 @@
     makePracticalBlock,
     initThemeToggle,
   };
+})();
