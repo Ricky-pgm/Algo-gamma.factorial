@@ -59,16 +59,47 @@
     </div>
   </div>
 
-  <div class="examples" id="examples">
-    <button class="example-chip" type="button" data-expr="5!">5!</button>
-    <button class="example-chip" type="button" data-expr="5!!">5!!</button>
-    <button class="example-chip" type="button" data-expr="-0.5!">-0.5!</button>
-    <button class="example-chip" type="button" data-expr="gamma(2.5)">gamma(2.5)</button>
-    <button class="example-chip" type="button" data-expr="C(10, 3)">C(10, 3)</button>
-    <button class="example-chip" type="button" data-expr="C(4.5, 2)">C(4.5, 2)</button>
-    <button class="example-chip" type="button" data-expr="beta(2, 3)">beta(2, 3)</button>
-    <button class="example-chip" type="button" data-expr="factorial(1+2i)">factorial(1+2i)</button>
-  </div>
+      <div class="examples" id="examples">
+        <div class="example-group">
+          <p class="example-group-label" data-i18n="exGroupIntegers">Integers</p>
+          <div class="example-group-chips">
+            <button class="example-chip" type="button" data-expr="5!"><code>5!</code><span>120</span></button>
+            <button class="example-chip" type="button" data-expr="10!"><code>10!</code><span>3628800</span></button>
+            <button class="example-chip" type="button" data-expr="0!"><code>0!</code><span>1</span></button>
+          </div>
+        </div>
+        <div class="example-group">
+          <p class="example-group-label" data-i18n="exGroupReals">Non-integer reals</p>
+          <div class="example-group-chips">
+            <button class="example-chip" type="button" data-expr="4.5!"><code>4.5!</code><span>≈ 52.3428</span></button>
+            <button class="example-chip" type="button" data-expr="gamma(2.5)"><code>gamma(2.5)</code><span>≈ 1.3293</span></button>
+            <button class="example-chip" type="button" data-expr="C(4.5, 2)"><code>C(4.5, 2)</code><span>≈ 7.875</span></button>
+          </div>
+        </div>
+        <div class="example-group">
+          <p class="example-group-label" data-i18n="exGroupPoles">Negative values &amp; poles</p>
+          <div class="example-group-chips">
+            <button class="example-chip" type="button" data-expr="-0.5!"><code>-0.5!</code><span>≈ 1.7725 = √π</span></button>
+            <button class="example-chip" type="button" data-expr="-2.5!"><code>-2.5!</code><span>≈ 2.3633</span></button>
+            <button class="example-chip is-pole" type="button" data-expr="-1!"><code>-1!</code><span>∞ pole</span></button>
+          </div>
+        </div>
+        <div class="example-group">
+          <p class="example-group-label" data-i18n="exGroupComplex">Complex numbers</p>
+          <div class="example-group-chips">
+            <button class="example-chip" type="button" data-expr="factorial(1+2i)"><code>factorial(1+2i)</code><span>≈ 0.112+0.324i</span></button>
+            <button class="example-chip" type="button" data-expr="gamma(i)"><code>gamma(i)</code><span>≈ -0.155-0.498i</span></button>
+          </div>
+        </div>
+        <div class="example-group">
+          <p class="example-group-label" data-i18n="exGroupFunctions">Functions</p>
+          <div class="example-group-chips">
+            <button class="example-chip" type="button" data-expr="C(10, 3)"><code>C(10, 3)</code><span>120</span></button>
+            <button class="example-chip" type="button" data-expr="beta(2, 3)"><code>beta(2, 3)</code><span>≈ 1/12</span></button>
+            <button class="example-chip" type="button" data-expr="5!!"><code>5!!</code><span>15</span></button>
+          </div>
+        </div>
+      </div>
 
     </main>
 
@@ -852,6 +883,10 @@
   // ===================== language switching =====================
 
   function applyStaticText() {
+    // Generic hook: any element with data-i18n gets its text from the dictionary.
+    for (const el of document.querySelectorAll("[data-i18n]")) {
+      el.textContent = t(el.dataset.i18n);
+    }
     document.getElementById("eyebrow").textContent = t("eyebrow");
     document.getElementById("pageTitle").textContent = t("pageTitle");
     document.getElementById("pageLede").textContent = t("pageLede");
