@@ -392,6 +392,23 @@
       exGroupPoles: "Negative & Polstellen",
       exGroupComplex: "Komplexe Zahlen",
       exGroupFunctions: "Funktionen",
+      specTitle: "Was dieses Werkzeug berechnet",
+      specSummaryOpen: "Spezifikationen",
+      specIntro:
+        "Die verallgemeinerte Fakultät n! = Γ(n+1), berechnet mit der Lanczos-Näherung (g = 7, Reflexionsformel für Re(z) < 0,5). Sie stimmt mit der klassischen Fakultät auf nichtnegativen ganzen Zahlen überein und erweitert sie auf jede reelle oder komplexe Eingabe. Alles läuft lokal in dieser Seite — kein Server.",
+      specSyntaxTitle: "Akzeptierte Syntax",
+      specRowFactorial: "Fakultät von n",
+      specRowDoubleFactorial: "Doppelfakultät von n",
+      specRowGamma: "Eulersche Gammafunktion Γ(z)",
+      specRowBinomial: "verallgemeinerter Binomialkoeffizient",
+      specRowBeta: "Betafunktion B(a, b) = Γ(a)·Γ(b)/Γ(a+b)",
+      specRowNumber: "eine bloße Zahl wird unverändert zurückgegeben",
+      specNumbersTitle: "Akzeptierte Zahlen",
+      specNumbersBody:
+        "Ganze Zahlen und Dezimalzahlen mit Punkt (2, -3.75), wissenschaftliche Notation (2e3) sowie komplexe Zahlen mit i oder j: 1+2i, -0.5j, i. Leerzeichen innerhalb eines komplexen Literals werden ignoriert.",
+      specLimitsTitle: "Genauigkeit & Grenzen",
+      specLimitsBody:
+        "IEEE-754-Doppelgenauigkeit — etwa 15 signifikante Stellen. Überlauf ab n ≈ 170. Bei negativen ganzen Zahlen (−1, −2, …) hat Γ Polstellen: Diese Eingaben erzeugen einen Fehler statt eines Werts. Komplexe Ergebnisse werden berechnet, aber nicht geplottet.",
       reasoningPageTitle: "Wie gerechnet wird",
       reasoningPageLede: "Die vollständige Herleitung hinter dem Ergebnis: die verwendete Definition, die Zahlenwerte jeder Stufe und die Kontrollen.",
       appsPageTitle: "Wofür es nützt",
