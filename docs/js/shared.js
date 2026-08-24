@@ -114,6 +114,23 @@
       exGroupPoles: "Negative values & poles",
       exGroupComplex: "Complex numbers",
       exGroupFunctions: "Functions",
+      specTitle: "What this tool computes",
+      specSummaryOpen: "Specifications",
+      specIntro:
+        "The generalized factorial n! = Γ(n+1), computed with the Lanczos approximation (g = 7, reflection formula for Re(z) < 0.5). It matches the classic factorial on non-negative integers and extends it to any real or complex input. Everything runs locally in this page — no server involved.",
+      specSyntaxTitle: "Accepted syntax",
+      specRowFactorial: "factorial of n",
+      specRowDoubleFactorial: "double factorial of n",
+      specRowGamma: "Euler Gamma function Γ(z)",
+      specRowBinomial: "generalized binomial coefficient",
+      specRowBeta: "Beta function B(a, b) = Γ(a)·Γ(b)/Γ(a+b)",
+      specRowNumber: "a bare number is echoed back",
+      specNumbersTitle: "Accepted numbers",
+      specNumbersBody:
+        "Integers and decimals (2, -3.75), scientific notation (2e3), and complex numbers written with i or j: 1+2i, -0.5j, i. Spaces inside a complex literal are ignored.",
+      specLimitsTitle: "Precision & limits",
+      specLimitsBody:
+        "IEEE-754 double precision — about 15 significant digits. Factorials overflow beyond n ≈ 170. At negative integers (−1, −2, …) Γ has poles: those inputs raise an error instead of returning a value. Complex results are computed but not plotted.",
       reasoningPageTitle: "How it's computed",
       reasoningPageLede: "The full step-by-step derivation behind the number — the definition used, the numeric values at each stage, and the checks that keep it honest.",
       appsPageTitle: "What it's for",
