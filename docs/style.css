@@ -172,8 +172,6 @@ body {
 }
 
 .header-inner {
-  max-width: 720px;
-  margin: 0 auto 1.5rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
