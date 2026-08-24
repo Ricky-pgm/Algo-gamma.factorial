@@ -129,7 +129,7 @@
       specRowNumber: "a bare number is echoed back",
       specNumbersTitle: "Accepted numbers",
       specNumbersBody:
-        "Integers and decimals (2, -3.75), scientific notation (2e3), and complex numbers written with i or j: 1+2i, -0.5j, i. Spaces inside a complex literal are ignored.",
+        "Integers and decimals (2, -3.75), scientific notation (2e3), and complex numbers written with i or j: 1+2i, -0.5j, i. Spaces inside a complex literal are ignored. Operands may be wrapped in parentheses: (4.5)!, (-0.5)!.",
       specLimitsTitle: "Precision & limits",
       specLimitsBody:
         "IEEE-754 double precision — about 15 significant digits. Factorials overflow beyond n ≈ 170. At negative integers (−1, −2, …) Γ has poles: those inputs raise an error instead of returning a value. Complex results are computed but not plotted.",
@@ -270,7 +270,7 @@
       specRowNumber: "un nombre seul est renvoyé tel quel",
       specNumbersTitle: "Nombres acceptés",
       specNumbersBody:
-        "Entiers et décimaux avec point décimal (2, -3.75), notation scientifique (2e3), et nombres complexes écrits avec i ou j : 1+2i, -0.5j, i. Les espaces dans un littéral complexe sont ignorés.",
+        "Entiers et décimaux avec point décimal (2, -3.75), notation scientifique (2e3), et nombres complexes écrits avec i ou j : 1+2i, -0.5j, i. Les espaces dans un littéral complexe sont ignorés. Les opérandes peuvent être entre parenthèses : (4.5)!, (-0.5)!.",
       specLimitsTitle: "Précision & limites",
       specLimitsBody:
         "Précision double IEEE-754 — environ 15 chiffres significatifs. Dépassement de capacité au-delà de n ≈ 170. Aux entiers négatifs (−1, −2, …) Γ a des pôles : ces saisies produisent une erreur au lieu d'une valeur. Les résultats complexes sont calculés mais non tracés.",
@@ -411,7 +411,7 @@
       specRowNumber: "eine bloße Zahl wird unverändert zurückgegeben",
       specNumbersTitle: "Akzeptierte Zahlen",
       specNumbersBody:
-        "Ganze Zahlen und Dezimalzahlen mit Punkt (2, -3.75), wissenschaftliche Notation (2e3) sowie komplexe Zahlen mit i oder j: 1+2i, -0.5j, i. Leerzeichen innerhalb eines komplexen Literals werden ignoriert.",
+        "Ganze Zahlen und Dezimalzahlen mit Punkt (2, -3.75), wissenschaftliche Notation (2e3) sowie komplexe Zahlen mit i oder j: 1+2i, -0.5j, i. Leerzeichen innerhalb eines komplexen Literals werden ignoriert. Operande dürfen in Klammern stehen: (4.5)!, (-0.5)!.",
       specLimitsTitle: "Genauigkeit & Grenzen",
       specLimitsBody:
         "IEEE-754-Doppelgenauigkeit — etwa 15 signifikante Stellen. Überlauf ab n ≈ 170. Bei negativen ganzen Zahlen (−1, −2, …) hat Γ Polstellen: Diese Eingaben erzeugen einen Fehler statt eines Werts. Komplexe Ergebnisse werden berechnet, aber nicht geplottet.",
