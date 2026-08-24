@@ -781,28 +781,63 @@ table.value-table tbody tr:hover td { background: var(--surface-sunken); }
 
 .examples {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem;
+  flex-direction: column;
+  gap: 1.1rem;
   margin-top: 1.8rem;
 }
 
-.example-chip {
+.example-group-label {
   font-family: var(--font-ui);
-  font-size: 0.92rem;
-  font-weight: 600;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--ink-faint);
+  margin: 0 0 0.5rem;
+}
+
+.example-group-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.example-chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-family: var(--font-ui);
+  font-size: 0.9rem;
   background: var(--surface);
   border: 1px solid var(--rule-strong);
   color: var(--ink-soft);
-  border-radius: 999px;
-  padding: 0.45rem 0.95rem;
+  border-radius: 12px;
+  padding: 0.38rem 0.75rem;
   cursor: pointer;
-  transition: color 0.15s, border-color 0.15s, background 0.15s, transform 0.05s ease;
+  transition: color 0.15s, border-color 0.15s, background 0.15s, transform 0.05s ease, box-shadow 0.15s;
+}
+.example-chip code {
+  font-family: var(--font-mono);
+  font-size: 0.86em;
+  font-weight: 600;
+  color: var(--ink);
+}
+.example-chip span {
+  font-size: 0.76rem;
+  white-space: nowrap;
+  color: var(--ink-faint);
 }
 .example-chip:hover {
   border-color: var(--accent);
-  color: var(--accent);
   background: var(--accent-soft);
   transform: translateY(-1px);
+  box-shadow: 0 4px 14px -8px rgba(16, 24, 40, 0.35);
+}
+.example-chip:hover code {
+  color: var(--accent-strong);
+}
+.example-chip.is-pole span {
+  color: var(--err);
 }
 
 /* ---------- pinned ---------- */
