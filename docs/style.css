@@ -840,6 +840,86 @@ table.value-table tbody tr:hover td { background: var(--surface-sunken); }
   color: var(--err);
 }
 
+/* ---------- specification panel ---------- */
+
+.spec-panel {
+  background: var(--surface);
+  border: 1px solid var(--rule-strong);
+  border-radius: 14px;
+  box-shadow: var(--shadow-card);
+}
+
+.spec-panel summary {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  cursor: pointer;
+  padding: 0.72rem 0.95rem;
+  font-family: var(--font-ui);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--accent-strong);
+}
+.spec-panel summary::-webkit-details-marker { display: none; }
+.spec-panel summary::before {
+  content: "▸";
+  color: var(--accent);
+  transition: transform 0.15s ease;
+}
+.spec-panel[open] summary::before {
+  transform: rotate(90deg);
+}
+
+.spec-body {
+  padding: 0.5rem 1rem 1rem;
+  border-top: 1px solid var(--rule);
+}
+
+.spec-title {
+  font-family: var(--font-ui);
+  font-size: 0.95rem;
+  margin: 0.6rem 0 0.35rem;
+}
+
+.spec-text {
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  margin: 0 0 0.8rem;
+}
+
+.spec-heading {
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin: 0.9rem 0 0.35rem;
+}
+
+.spec-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+.spec-table td {
+  padding: 0.3rem 0;
+  vertical-align: top;
+  border-bottom: 1px dashed var(--rule);
+  color: var(--ink-soft);
+}
+.spec-table tr:last-child td { border-bottom: none; }
+.spec-table td:first-child {
+  white-space: nowrap;
+  padding-right: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  color: var(--accent-strong);
+}
+
 /* ---------- pinned ---------- */
 
 .pinned-section {
