@@ -2,9 +2,11 @@
 
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Any
 
 from fastapi import FastAPI, HTTPException
+from fastapi.staticfiles import StaticFiles
 
 from .binomial import binomial
 from .cli import NumberParseError, _parse_number
@@ -33,28 +35,6 @@ def _parse(raw: str) -> float | complex:
         return _parse_number(raw)
     except NumberParseError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from None
-
-
-@app.get("/")
-def root() -> dict[str, Any]:
-    return {
-        "name": "gamma-factorial",
-        "version": "0.1.0",
-        "description": app.description,
-        "endpoints": {
-            "factorial": "/factorial/{value}",
-            "gamma": "/gamma/{value}",
-            "binomial": "/binomial/{n}/{k}",
-        },
-        "examples": [
-            "/factorial/5",
-            "/factorial/-0.5",
-            "/factorial/1%2B2j",
-            "/gamma/0.5",
-            "/binomial/10/3",
-            "/binomial/4.5/2",
-        ],
-    }
 
 
 @app.get("/factorial/{value}")
@@ -90,3 +70,7 @@ def binomial_endpoint(n_value: str, k_value: str) -> dict[str, Any]:
         "operation": "binomial",
         "result": _serialize(result),
     }
+
+
+_STATIC_DIR = Path(__file__).resolve().parent.parent / "docs"
+app.mount("/", StaticFiles(directory=_STATIC_DIR, html=True), name="static")
