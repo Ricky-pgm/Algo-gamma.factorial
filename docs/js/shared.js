@@ -109,7 +109,9 @@
       navReasoning: "How it's computed",
       navApps: "What it's for",
       navFaq: "FAQ",
-      exGroupIntegers: "Integers",
+      exGroupIntegers: "Integers",      themeToLight: "Switch to light mode",
+      themeToDark: "Switch to dark mode",
+
       exGroupReals: "Non-integer reals",
       exGroupPoles: "Negative values & poles",
       exGroupComplex: "Complex numbers",
@@ -248,7 +250,9 @@
       navReasoning: "Comment c'est calculé",
       navApps: "À quoi ça sert",
       navFaq: "FAQ",
-      exGroupIntegers: "Entiers",
+      exGroupIntegers: "Entiers",      themeToLight: "Passer en mode clair",
+      themeToDark: "Passer en mode sombre",
+
       exGroupReals: "Réels non entiers",
       exGroupPoles: "Négatifs & pôles",
       exGroupComplex: "Nombres complexes",
@@ -387,7 +391,9 @@
       navReasoning: "Wie gerechnet wird",
       navApps: "Wofür es nützt",
       navFaq: "FAQ",
-      exGroupIntegers: "Ganze Zahlen",
+      exGroupIntegers: "Ganze Zahlen",      themeToLight: "Zum hellen Modus wechseln",
+      themeToDark: "Zum dunklen Modus wechseln",
+
       exGroupReals: "Nicht-ganzzahlige Reelle",
       exGroupPoles: "Negative & Polstellen",
       exGroupComplex: "Komplexe Zahlen",
@@ -1131,6 +1137,7 @@
         opt.setAttribute("aria-current", opt.dataset.lang === lang ? "true" : "false");
       });
     }
+    refreshThemeButton();
     if (langChangeHook) langChangeHook();
   }
 
@@ -1236,6 +1243,54 @@
     return answer;
   }
 
+  // ===================== theme toggle =====================
+  // Light/dark follows prefers-color-scheme unless the user picks a side;
+  // the explicit choice persists in localStorage("gf-theme") and is applied
+  // as data-theme on <html>, which style.css reads via :root[data-theme=...].
+
+  const THEME_KEY = "gf-theme";
+
+  function storedTheme() {
+    try { return window.localStorage.getItem(THEME_KEY); } catch (e) { return null; }
+  }
+
+  function appliedTheme() {
+    const attr = document.documentElement.dataset.theme;
+    if (attr === "dark" || attr === "light") return attr;
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  }
+
+  function refreshThemeButton() {
+    const btn = document.getElementById("themeToggle");
+    if (!btn) return;
+    const next = appliedTheme() === "dark" ? "light" : "dark";
+    // The label announces what clicking will switch TO.
+    btn.textContent = next === "dark" ? "🌙" : "☀️";
+    const label = t(next === "dark" ? "themeToDark" : "themeToLight");
+    btn.setAttribute("aria-label", label);
+    btn.title = label;
+  }
+
+  function cycleTheme() {
+    const next = appliedTheme() === "dark" ? "light" : "dark";
+    document.documentElement.dataset.theme = next;
+    try { window.localStorage.setItem(THEME_KEY, next); } catch (e) { /* ignore */ }
+    refreshThemeButton();
+  }
+
+  function initThemeToggle() {
+    const stored = storedTheme();
+    if (stored === "dark" || stored === "light") {
+      document.documentElement.dataset.theme = stored;
+    }
+    const btn = document.getElementById("themeToggle");
+    if (!btn || btn.dataset.themeBound === "true") return;
+    btn.dataset.themeBound = "true";
+    btn.addEventListener("click", cycleTheme);
+    refreshThemeButton();
+  }
+})();
+
   window.GF = {
     t,
     setLang,
@@ -1267,5 +1322,5 @@
     makeReasoningBlock,
     buildPractical,
     makePracticalBlock,
+    initThemeToggle,
   };
-})();
