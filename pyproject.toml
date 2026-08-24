@@ -5,6 +5,10 @@ description = "Generalized factorial via the Gamma function (Lanczos), valid for
 requires-python = ">=3.9"
 readme = "README.md"
 license = { file = "LICENSE" }
+dependencies = ["fastapi>=0.115"]
+
+[tool.vercel]
+entrypoint = "gamma_factorial.api:app"
 
 [project.scripts]
 gamma-factorial = "gamma_factorial.cli:main"
