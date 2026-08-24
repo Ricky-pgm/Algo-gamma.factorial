@@ -642,6 +642,21 @@
   const FACTORIAL_SUFFIX_RE = /^(.+?)!$/;
   const CALL_RE = /^([A-Za-z_]+)\((.*)\)$/;
 
+  // True when s is exactly one balanced pair of outer parentheses, so
+  // "(a)(b)" and "(a)+(b)" are not mistaken for a wrapped operand.
+  function isWrappedInParens(s) {
+    if (!s.startsWith("(") || !s.endsWith(")")) return false;
+    let depth = 0;
+    for (let i = 0; i < s.length; i++) {
+      if (s[i] === "(") depth++;
+      else if (s[i] === ")") {
+        depth--;
+        if (depth === 0 && i < s.length - 1) return false;
+      }
+    }
+    return depth === 0;
+  }
+
   function formatResult(value) {
     return value.toString();
   }
@@ -662,15 +677,23 @@
       return out;
     }
 
+    // An operand is a plain number literal or any parenthesized expression,
+    // e.g. -0.5, (4.5), ((2+1)) or (gamma(2.5)); parentheses recurse.
+    function evalOperand(raw) {
+      const s = raw.trim();
+      if (isWrappedInParens(s)) return evalExpression(s.slice(1, -1)).value;
+      return parseNumber(s);
+    }
+
     const dfactMatch = DOUBLE_FACTORIAL_SUFFIX_RE.exec(trimmed);
     if (dfactMatch) {
-      const n = parseNumber(dfactMatch[1]);
+      const n = evalOperand(dfactMatch[1]);
       return { value: doubleFactorial(n), plot: plotFor("doubleFactorial", n), kind: "doubleFactorial" };
     }
 
     const factMatch = FACTORIAL_SUFFIX_RE.exec(trimmed);
     if (factMatch) {
-      const n = parseNumber(factMatch[1]);
+      const n = evalOperand(factMatch[1]);
       return { value: factorial(n), plot: plotFor("factorial", n), kind: "factorial" };
     }
 
@@ -680,25 +703,25 @@
       const rawArgs = callMatch[2].split(",").map((a) => a.trim()).filter(Boolean);
 
       if (func === "factorial" && rawArgs.length === 1) {
-        const n = parseNumber(rawArgs[0]);
+        const n = evalOperand(rawArgs[0]);
         return { value: factorial(n), plot: plotFor("factorial", n), kind: "factorial" };
       }
       if (func === "doublefactorial" && rawArgs.length === 1) {
-        const n = parseNumber(rawArgs[0]);
+        const n = evalOperand(rawArgs[0]);
         return { value: doubleFactorial(n), plot: plotFor("doubleFactorial", n), kind: "doubleFactorial" };
       }
       if (func === "gamma" && rawArgs.length === 1) {
-        const z = parseNumber(rawArgs[0]);
+        const z = evalOperand(rawArgs[0]);
         return { value: gamma(z), plot: plotFor("gamma", z), kind: "gamma" };
       }
       if ((func === "c" || func === "binomial") && rawArgs.length === 2) {
-        const n = parseNumber(rawArgs[0]);
-        const k = parseNumber(rawArgs[1]);
+        const n = evalOperand(rawArgs[0]);
+        const k = evalOperand(rawArgs[1]);
         return { value: binomial(n, k), plot: plotFor("binomial", k, { n }), kind: "binomial" };
       }
       if (func === "beta" && rawArgs.length === 2) {
-        const a = parseNumber(rawArgs[0]);
-        const b = parseNumber(rawArgs[1]);
+        const a = evalOperand(rawArgs[0]);
+        const b = evalOperand(rawArgs[1]);
         return { value: beta(a, b), plot: plotFor("beta", a, { b }), kind: "beta" };
       }
       throw new GammaError(t("errUnrecognized", { expr }));
@@ -707,7 +730,7 @@
     // A bare number (real or complex), typed with no function around it:
     // just echo it back, like a plain calculator would.
     try {
-      const n = parseNumber(trimmed);
+      const n = evalOperand(trimmed);
       return { value: n, plot: null, kind: "number", isBareNumber: true };
     } catch (e) {
       throw new GammaError(t("errUnrecognized", { expr }));
