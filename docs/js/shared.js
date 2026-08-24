@@ -567,7 +567,17 @@
   }
 
   function factorial(n) {
-    return gamma(Complex.from(n).add(1));
+    n = Complex.from(n);
+    // Exact product for non-negative integers: keeps small factorials
+    // (0! .. 22!) bit-exact instead of carrying Lanczos rounding noise
+    // into values people verify by hand. Larger integers fall through to
+    // Gamma, matching the package's floating-point behavior.
+    if (n.isReal && Number.isInteger(n.re) && n.re >= 0 && n.re <= 170) {
+      let result = 1;
+      for (let i = 2; i <= n.re; i++) result *= i;
+      return new Complex(result, 0);
+    }
+    return gamma(n.add(1));
   }
 
   // n!! = n(n-2)(n-4)... — only defined here for real non-negative integers
@@ -598,6 +608,20 @@
     // classic convention (and math.comb): 0 for k < 0 or k > n.
     if (isNonpositiveInteger(k.add(1))) return new Complex(0, 0);
     if (isNonpositiveInteger(n.sub(k).add(1))) return new Complex(0, 0);
+    // Exact multiplicative formula for non-negative integers, mirroring
+    // math.comb: avoids Gamma-ratio rounding noise on everyday inputs
+    // like C(10, 3).
+    if (
+      n.isReal && k.isReal &&
+      Number.isInteger(n.re) && Number.isInteger(k.re) &&
+      n.re >= 0 && k.re >= 0 && n.re <= 1000
+    ) {
+      if (k.re > n.re) return new Complex(0, 0);
+      const kk = Math.min(k.re, n.re - k.re);
+      let result = 1;
+      for (let i = 1; i <= kk; i++) result = (result * (n.re - kk + i)) / i;
+      return new Complex(result, 0);
+    }
     return gamma(n.add(1)).div(gamma(k.add(1)).mul(gamma(n.sub(k).add(1))));
   }
 
