@@ -227,6 +227,9 @@ body {
   cursor: pointer;
   transition: color 0.15s, border-color 0.15s, background 0.15s, transform 0.1s ease;
 }
+.theme-toggle svg {
+  display: block;
+}
 .theme-toggle:hover {
   border-color: var(--accent);
   background: var(--accent-soft);
