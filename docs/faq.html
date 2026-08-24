@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FAQ — gamma-factorial</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.85em%27 font-size=%2790%27 fill=%27%23b0402a%27%3EΓ%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#f7f0df" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1b1610" media="(prefers-color-scheme: dark)">
+<meta name="description" content="What the generalized factorial calculator computes, which numbers and syntax it accepts, its precision limits, and how to reuse the project.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="page">
+<header class="site-header">
+  <div class="header-inner">
+    <p class="eyebrow" id="eyebrow">gamma-factorial</p>
+    <nav class="sub-nav" id="subNav" aria-label="Sections"></nav>
+    <div class="lang-switch">
+      <button class="lang-btn" id="langBtn" type="button" aria-haspopup="true" aria-expanded="false">
+        <span class="lang-globe" aria-hidden="true">🌐</span>
+        <span id="langBtnLabel">EN</span>
+      </button>
+      <div class="lang-menu" id="langMenu" role="menu" hidden>
+        <button class="lang-option" type="button" role="menuitem" data-lang="en">English</button>
+        <button class="lang-option" type="button" role="menuitem" data-lang="fr">Français</button>
+        <button class="lang-option" type="button" role="menuitem" data-lang="de">Deutsch</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+  <h1 id="pageTitle">Frequently asked questions</h1>
+  <p class="lede" id="pageLede"></p>
+
+  <div class="faq-list" id="faqList"></div>
+
+  <footer class="page-foot">
+    <p class="note" id="noteText"></p>
+  </footer>
+</div>
+
+<script src="js/shared.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  // Long-form FAQ copy lives here, page-local: shared.js only carries UI chrome
+  // labels. Each item is { q, a }; order defines rendering order.
+  const COPY = {
+    en: {
+      title: "Frequently asked questions",
+      lede: "Short, precise answers about what this calculator computes, which inputs it accepts, and where its limits are.",
+      items: [
+        {
+          q: "What exactly does \u201cgeneralized factorial\u201d mean?",
+          a: "For a non-negative integer n, n! = 1 × 2 × … × n as usual. This tool evaluates n! = Γ(n+1), where Γ is Euler's Gamma function, so the same notation keeps an exact, smooth meaning for any real or complex input — for example (-0.5)! = √π ≈ 1.7725."
+        },
+        {
+          q: "Which numbers can I type in?",
+          a: "Integers and decimal numbers with a dot (2, -3.75), scientific notation (2e3), and complex numbers written with i or j — e.g. 1+2i, -0.5j or just i. Spaces inside complex literals are ignored."
+        },
+        {
+          q: "Which operations are supported?",
+          a: "The suffix operators n! and n!! (double factorial), and the functions gamma(z), factorial(n), doublefactorial(n), C(n, k) / binomial(n, k) and beta(a, b). A bare number is simply echoed back."
+        },
+        {
+          q: "Why is (-0.5)! = √π and not an error?",
+          a: "Because Γ(1/2) = √π. The Gamma function interpolates the factorial smoothly between integers, and for negative non-integer inputs it stays finite thanks to Euler's reflection formula Γ(z)·Γ(1−z) = π / sin(πz)."
+        },
+        {
+          q: "Why do (-1)!, (-2)! … return an error?",
+          a: "Γ(z) has poles at z = 0, −1, −2, …, so n! diverges whenever n+1 is a non-positive integer: the value genuinely blows up to infinity, and there is no finite answer to display."
+        },
+        {
+          q: "How accurate are the results?",
+          a: "Computations use IEEE-754 double precision through the Lanczos approximation (g = 7) — about 15 significant digits, matching the Python package this site mirrors. Factorials overflow beyond n ≈ 170, because doubles cap near 1.8 × 10^308."
+        },
+        {
+          q: "Does anything I type get sent to a server?",
+          a: "No. The calculator runs entirely in your browser and mirrors the open-source gamma-factorial Python package. A small read-only JSON API (/factorial/5, /gamma/0.5, /binomial/10/3) is deployed alongside for programmatic access."
+        },
+        {
+          q: "Can I reuse or cite this project?",
+          a: "Yes — the project is MIT-licensed. Both the Python package (gamma_factorial: gamma, factorial, binomial and a CLI) and this website's code can be reused with attribution. The definitions used here follow the standard references (DLMF §5.2, §5.5)."
+        }
+      ]
+    }
+  };
+
+  function currentLang() {
+    // setLang() syncs documentElement.lang before running the hook.
+    return document.documentElement.lang || "en";
+  }
+
+  function applyCopy() {
+    const s = COPY[currentLang()] || COPY.en;
+    document.getElementById("eyebrow").textContent = GF.t("eyebrow");
+    document.getElementById("pageTitle").textContent = s.title;
+    document.getElementById("pageLede").textContent = s.lede;
+    document.title = s.title + " — gamma-factorial";
+
+    const list = document.getElementById("faqList");
+    list.innerHTML = "";
+    for (const item of s.items) {
+      const details = document.createElement("details");
+      details.className = "faq-item";
+      const summary = document.createElement("summary");
+      summary.textContent = item.q;
+      const body = document.createElement("div");
+      body.className = "faq-answer";
+      const p = document.createElement("p");
+      p.textContent = item.a;
+      body.appendChild(p);
+      details.appendChild(summary);
+      details.appendChild(body);
+      list.appendChild(details);
+    }
+  }
+
+  GF.setLangHook(applyCopy);
+  GF.initLangUI();
+  GF.setLang(GF.detectInitialLang());
+})();
+</script>
+</body>
+</html>
