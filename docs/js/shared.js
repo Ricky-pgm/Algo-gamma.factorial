@@ -253,6 +253,23 @@
       exGroupPoles: "Négatifs & pôles",
       exGroupComplex: "Nombres complexes",
       exGroupFunctions: "Fonctions",
+      specTitle: "Ce que cet outil calcule",
+      specSummaryOpen: "Spécifications",
+      specIntro:
+        "La factorielle généralisée n! = Γ(n+1), calculée par l'approximation de Lanczos (g = 7, formule de réflexion pour Re(z) < 0,5). Elle coïncide avec la factorielle classique sur les entiers naturels et l'étend à tout nombre réel ou complexe. Tout est calculé localement dans cette page — aucun serveur.",
+      specSyntaxTitle: "Syntaxe acceptée",
+      specRowFactorial: "factorielle de n",
+      specRowDoubleFactorial: "double factorielle de n",
+      specRowGamma: "fonction Gamma d'Euler Γ(z)",
+      specRowBinomial: "coefficient binomial généralisé",
+      specRowBeta: "fonction bêta B(a, b) = Γ(a)·Γ(b)/Γ(a+b)",
+      specRowNumber: "un nombre seul est renvoyé tel quel",
+      specNumbersTitle: "Nombres acceptés",
+      specNumbersBody:
+        "Entiers et décimaux avec point décimal (2, -3.75), notation scientifique (2e3), et nombres complexes écrits avec i ou j : 1+2i, -0.5j, i. Les espaces dans un littéral complexe sont ignorés.",
+      specLimitsTitle: "Précision & limites",
+      specLimitsBody:
+        "Précision double IEEE-754 — environ 15 chiffres significatifs. Dépassement de capacité au-delà de n ≈ 170. Aux entiers négatifs (−1, −2, …) Γ a des pôles : ces saisies produisent une erreur au lieu d'une valeur. Les résultats complexes sont calculés mais non tracés.",
       reasoningPageTitle: "Comment c'est calculé",
       reasoningPageLede: "La dérivation complète derrière le résultat : la définition utilisée, les valeurs numériques à chaque étape et les vérifications.",
       appsPageTitle: "À quoi ça sert",
