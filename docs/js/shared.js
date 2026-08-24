@@ -1185,6 +1185,7 @@
       { page: "calc", href: "index.html" + q, key: "navCalc" },
       { page: "reasoning", href: "comment-cest-calcule.html" + q, key: "navReasoning" },
       { page: "apps", href: "a-quoi-ca-sert.html" + q, key: "navApps" },
+      { page: "faq", href: "faq.html", key: "navFaq" },
     ];
     nav.innerHTML = "";
     for (const it of items) {
