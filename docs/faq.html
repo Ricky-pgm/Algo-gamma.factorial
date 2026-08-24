@@ -85,6 +85,82 @@
           a: "Yes — the project is MIT-licensed. Both the Python package (gamma_factorial: gamma, factorial, binomial and a CLI) and this website's code can be reused with attribution. The definitions used here follow the standard references (DLMF §5.2, §5.5)."
         }
       ]
+    },
+    fr: {
+      title: "Foire aux questions",
+      lede: "Des réponses courtes et précises sur ce que calcule cette calculatrice, les saisies acceptées et ses limites.",
+      items: [
+        {
+          q: "Que signifie exactement « factorielle généralisée » ?",
+          a: "Pour un entier naturel n, n! = 1 × 2 × … × n comme d'habitude. Cet outil évalue n! = Γ(n+1), où Γ est la fonction Gamma d'Euler : la même notation garde un sens exact et continu pour toute entrée réelle ou complexe — par exemple (-0.5)! = √π ≈ 1.7725."
+        },
+        {
+          q: "Quels nombres puis-je saisir ?",
+          a: "Entiers et décimaux avec point (2, -3.75), notation scientifique (2e3), et nombres complexes écrits avec i ou j — p. ex. 1+2i, -0.5j ou juste i. Les espaces dans un littéral complexe sont ignorés."
+        },
+        {
+          q: "Quelles opérations sont prises en charge ?",
+          a: "Les opérateurs suffixes n! et n!! (double factorielle), et les fonctions gamma(z), factorial(n), doublefactorial(n), C(n, k) / binomial(n, k) et beta(a, b). Un nombre seul est simplement renvoyé tel quel."
+        },
+        {
+          q: "Pourquoi (-0.5)! = √π et pas une erreur ?",
+          a: "Parce que Γ(1/2) = √π. La fonction Gamma interpole la factorielle de façon continue entre les entiers, et pour les entrées négatives non entières elle reste finie grâce à la formule de réflexion Γ(z)·Γ(1−z) = π / sin(πz)."
+        },
+        {
+          q: "Pourquoi (-1)!, (-2)! … renvoient une erreur ?",
+          a: "Γ(z) a des pôles en z = 0, −1, −2, …, donc n! diverge dès que n+1 est un entier négatif ou nul : la valeur explose littéralement vers l'infini, il n'y a pas de réponse finie à afficher."
+        },
+        {
+          q: "Quelle est la précision des résultats ?",
+          a: "Les calculs utilisent la précision double IEEE-754 via l'approximation de Lanczos (g = 7) — environ 15 chiffres significatifs, à l'identique du paquet Python reflété par ce site. Dépassement de capacité au-delà de n ≈ 170, les doubles étant plafonnés vers 1,8 × 10^308."
+        },
+        {
+          q: "Ce que je saisis est-il envoyé à un serveur ?",
+          a: "Non. La calculatrice tourne entièrement dans votre navigateur et reflète le paquet Python open-source gamma-factorial. Une petite API JSON en lecture seule (/factorial/5, /gamma/0.5, /binomial/10/3) est déployée à côté pour un accès programmatique."
+        },
+        {
+          q: "Puis-je réutiliser ou citer ce projet ?",
+          a: "Oui — le projet est sous licence MIT. Le paquet Python (gamma_factorial : gamma, factorial, binomial et une CLI) comme le code de ce site sont réutilisables avec attribution. Les définitions suivent les références standards (DLMF §5.2, §5.5)."
+        }
+      ]
+    },
+    de: {
+      title: "Häufig gestellte Fragen",
+      lede: "Kurze, präzise Antworten dazu, was dieser Rechner berechnet, welche Eingaben er akzeptiert und wo seine Grenzen liegen.",
+      items: [
+        {
+          q: "Was bedeutet „verallgemeinerte Fakultät“ genau?",
+          a: "Für eine nichtnegative ganze Zahl n ist n! = 1 × 2 × … × n wie gewohnt. Dieses Werkzeug berechnet n! = Γ(n+1), wobei Γ die eulersche Gammafunktion ist — dieselbe Notation behält also für jede reelle oder komplexe Eingabe eine exakte, stetige Bedeutung, z. B. (-0.5)! = √π ≈ 1.7725."
+        },
+        {
+          q: "Welche Zahlen kann ich eingeben?",
+          a: "Ganze Zahlen und Dezimalzahlen mit Punkt (2, -3.75), wissenschaftliche Notation (2e3) sowie komplexe Zahlen mit i oder j — z. B. 1+2i, -0.5j oder einfach i. Leerzeichen innerhalb eines komplexen Literals werden ignoriert."
+        },
+        {
+          q: "Welche Operationen werden unterstützt?",
+          a: "Die Suffixoperatoren n! und n!! (Doppelfakultät) sowie die Funktionen gamma(z), factorial(n), doublefactorial(n), C(n, k) / binomial(n, k) und beta(a, b). Eine bloße Zahl wird unverändert zurückgegeben."
+        },
+        {
+          q: "Warum gilt (-0.5)! = √π statt einer Fehlermeldung?",
+          a: "Weil Γ(1/2) = √π gilt. Die Gammafunktion interpoliert die Fakultät stetig zwischen den ganzen Zahlen, und für negative nicht-ganzzahlige Eingaben bleibt sie dank der Reflexionsformel Γ(z)·Γ(1−z) = π / sin(πz) endlich."
+        },
+        {
+          q: "Warum liefern (-1)!, (-2)! … eine Fehlermeldung?",
+          a: "Γ(z) hat Polstellen bei z = 0, −1, −2, …, daher divergiert n!, sobald n+1 eine nichtpositive ganze Zahl ist: Der Wert wächst tatsächlich über alle Grenzen, es gibt keine endliche Antwort anzuzeigen."
+        },
+        {
+          q: "Wie genau sind die Ergebnisse?",
+          a: "Die Berechnungen nutzen IEEE-754-Doppelgenauigkeit mit der Lanczos-Näherung (g = 7) — etwa 15 signifikante Stellen, identisch zum Python-Paket, das diese Seite spiegelt. Überlauf ab n ≈ 170, da Doubles bei ca. 1,8 × 10^308 begrenzt sind."
+        },
+        {
+          q: "Werden meine Eingaben an einen Server gesendet?",
+          a: "Nein. Der Rechner läuft vollständig im Browser und spiegelt das Open-Source-Python-Paket gamma-factorial. Eine kleine schreibgeschützte JSON-API (/factorial/5, /gamma/0.5, /binomial/10/3) ist zusätzlich für programmatische Zugriffe bereitgestellt."
+        },
+        {
+          q: "Darf ich dieses Projekt wiederverwenden oder zitieren?",
+          a: "Ja — das Projekt steht unter der MIT-Lizenz. Sowohl das Python-Paket (gamma_factorial: gamma, factorial, binomial und eine CLI) als auch der Code dieser Website sind mit Namensnennung wiederverwendbar. Die verwendeten Definitionen folgen den Standardreferenzen (DLMF §5.2, §5.5)."
+        }
+      ]
     }
   };
 
