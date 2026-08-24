@@ -29,7 +29,7 @@
   </div>
 </header>
 
-<div class="page">
+<div class="page page-home">
   <h1 id="pageTitle">Generalized factorial calculator</h1>
   <p class="lede" id="pageLede">
     n! = Γ(n+1), extended to any real number via the Lanczos approximation
@@ -38,7 +38,9 @@
     read a number. Runs entirely in this page; no server, no install.
   </p>
 
-  <div class="calc">
+  <div class="home-grid">
+    <main class="home-main">
+      <div class="calc">
     <div class="input-row">
       <span class="prefix">ƒ</span>
       <input id="exprInput" type="text" autocomplete="off" autocapitalize="off" spellcheck="false">
@@ -68,12 +70,16 @@
     <button class="example-chip" type="button" data-expr="factorial(1+2i)">factorial(1+2i)</button>
   </div>
 
-  <div class="history" id="historySection" hidden>
-    <div class="history-head">
-      <p class="history-title" id="historyTitle">History</p>
-      <button class="history-clear-btn" id="historyClearBtn" type="button">Clear</button>
+    <div class="history" id="historySection" hidden>
+      <div class="history-head">
+        <p class="history-title" id="historyTitle">History</p>
+        <button class="history-clear-btn" id="historyClearBtn" type="button">Clear</button>
+      </div>
+      <div class="history-list" id="historyList"></div>
     </div>
-    <div class="history-list" id="historyList"></div>
+    </main>
+
+    <aside class="home-aside"></aside>
   </div>
 
   <footer class="page-foot">
