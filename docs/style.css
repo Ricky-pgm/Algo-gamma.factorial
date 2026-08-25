@@ -1206,8 +1206,8 @@ table.value-table tbody tr:hover td { background: var(--surface-sunken); }
 
 .domain-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.2rem;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.4rem;
   margin-bottom: 2.4rem;
 }
 
@@ -1215,28 +1215,74 @@ table.value-table tbody tr:hover td { background: var(--surface-sunken); }
   background: var(--surface);
   border: 1px solid var(--rule);
   border-radius: 16px;
-  padding: 1.4rem 1.5rem;
+  padding: 1.5rem 1.6rem;
   box-shadow: var(--shadow-card);
-  transition: box-shadow 0.15s ease, transform 0.12s ease;
+  transition: box-shadow 0.2s ease, transform 0.15s ease, border-color 0.2s ease;
+  position: relative;
+  overflow: hidden;
 }
+.domain-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  border-radius: 16px 0 0 16px;
+  transition: width 0.2s ease;
+}
+.domain-card[data-domain="cs"]::before { background: #6366f1; }
+.domain-card[data-domain="ai"]::before { background: #8b5cf6; }
+.domain-card[data-domain="stats"]::before { background: #06b6d4; }
+.domain-card[data-domain="physics"]::before { background: #f59e0b; }
+.domain-card[data-domain="bio"]::before { background: #10b981; }
+.domain-card[data-domain="everyday"]::before { background: #ef4444; }
+
 .domain-card:hover {
-  box-shadow: 0 6px 24px rgba(0,0,0,0.10);
-  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+  transform: translateY(-3px);
+  border-color: var(--accent);
+}
+.domain-card:hover::before {
+  width: 6px;
+}
+
+.domain-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.6rem;
+}
+
+.domain-icon {
+  font-size: 1.3rem;
+  line-height: 1;
+  flex-shrink: 0;
 }
 
 .domain-name {
   font-family: var(--font-ui);
   font-size: 1.05rem;
   font-weight: 700;
-  margin: 0 0 0.45rem;
+  margin: 0;
   color: var(--accent-strong);
+}
+
+.domain-stat {
+  font-family: var(--font-mono);
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--accent-strong);
+  margin: 0 0 0.5rem;
+  letter-spacing: -0.02em;
+  opacity: 0.9;
 }
 
 .domain-desc {
   font-size: 0.88rem;
   color: var(--ink-soft);
   margin: 0 0 0.8rem;
-  line-height: 1.5;
+  line-height: 1.55;
 }
 
 .domain-examples {
@@ -1245,11 +1291,13 @@ table.value-table tbody tr:hover td { background: var(--surface-sunken); }
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  gap: 0.55rem;
+  border-top: 1px solid var(--rule);
+  padding-top: 0.8rem;
 }
 .domain-examples li {
   font-size: 0.85rem;
-  line-height: 1.55;
+  line-height: 1.5;
   color: var(--ink);
   display: flex;
   align-items: baseline;
@@ -1259,13 +1307,15 @@ table.value-table tbody tr:hover td { background: var(--surface-sunken); }
 .domain-examples li .example-chip {
   flex-shrink: 0;
   font-size: 0.78rem;
-  padding: 0.2rem 0.5rem;
+  padding: 0.2rem 0.55rem;
   background: var(--accent-soft);
   border: 1px solid var(--accent);
   border-radius: 6px;
   color: var(--accent-strong);
   cursor: pointer;
   font-family: var(--font-mono);
+  font-weight: 600;
+  transition: background 0.15s ease, color 0.15s ease;
 }
 .domain-examples li .example-chip:hover {
   background: var(--accent);
