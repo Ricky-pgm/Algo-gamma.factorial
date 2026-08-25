@@ -52,6 +52,8 @@
       badgeBeta: "Beta function",
       badgeNumber: "Number",
       reasoningTitle: "How this was computed",
+      reasoningShowFull: "Show full derivation",
+      reasoningShowLess: "Show less",
       noteDefinition: "definition",
       noteIntegerN: "n is a whole number",
       noteDirect: "Re(z) ≥ 0.5, Lanczos series",
@@ -233,6 +235,8 @@
       badgeBeta: "Fonction Beta",
       badgeNumber: "Nombre",
       reasoningTitle: "Comment c'est calculé",
+      reasoningShowFull: "Afficher la dérivation complète",
+      reasoningShowLess: "Afficher moins",
       noteDefinition: "définition",
       noteIntegerN: "n est un entier",
       noteDirect: "Re(z) ≥ 0.5, série de Lanczos",
@@ -414,6 +418,8 @@
       badgeBeta: "Betafunktion",
       badgeNumber: "Zahl",
       reasoningTitle: "So wurde gerechnet",
+      reasoningShowFull: "Vollständige Herleitung anzeigen",
+      reasoningShowLess: "Weniger anzeigen",
       noteDefinition: "Definition",
       noteIntegerN: "n ist eine ganze Zahl",
       noteDirect: "Re(z) ≥ 0.5, Lanczos-Reihe",
@@ -1122,7 +1128,12 @@
     }
     const grid = document.createElement("div");
     grid.className = "reasoning-grid";
-    for (const step of reasoning.steps) {
+    const CONDENSED_LIMIT = 3;
+    const steps = reasoning.steps;
+    const visibleSteps = steps.slice(0, CONDENSED_LIMIT);
+    const hiddenSteps = steps.slice(CONDENSED_LIMIT);
+
+    function appendStep(step) {
       const lhs = document.createElement("span");
       lhs.className = "reasoning-lhs";
       lhs.textContent = step.lhs;
@@ -1140,7 +1151,50 @@
       grid.appendChild(rhs);
       grid.appendChild(note);
     }
+
+    for (const step of visibleSteps) appendStep(step);
     section.appendChild(grid);
+
+    if (hiddenSteps.length > 0) {
+      const extra = document.createElement("div");
+      extra.className = "reasoning-extra";
+      extra.hidden = true;
+      const extraGrid = document.createElement("div");
+      extraGrid.className = "reasoning-grid";
+      for (const step of hiddenSteps) {
+        const lhs = document.createElement("span");
+        lhs.className = "reasoning-lhs";
+        lhs.textContent = step.lhs;
+        const eq = document.createElement("span");
+        eq.className = "reasoning-eq";
+        eq.textContent = step.eq || "";
+        const rhs = document.createElement("span");
+        rhs.className = "reasoning-rhs";
+        rhs.textContent = step.rhs;
+        const note = document.createElement("span");
+        note.className = "reasoning-note";
+        note.textContent = step.note;
+        extraGrid.appendChild(lhs);
+        extraGrid.appendChild(eq);
+        extraGrid.appendChild(rhs);
+        extraGrid.appendChild(note);
+      }
+      extra.appendChild(extraGrid);
+      section.appendChild(extra);
+
+      const toggle = document.createElement("button");
+      toggle.className = "reasoning-toggle";
+      toggle.type = "button";
+      toggle.setAttribute("aria-expanded", "false");
+      toggle.textContent = t("reasoningShowFull");
+      toggle.addEventListener("click", () => {
+        const expanded = toggle.getAttribute("aria-expanded") === "true";
+        toggle.setAttribute("aria-expanded", String(!expanded));
+        extra.hidden = expanded;
+        toggle.textContent = expanded ? t("reasoningShowFull") : t("reasoningShowLess");
+      });
+      section.appendChild(toggle);
+    }
     if (reasoning.tail) {
       const tail = document.createElement("p");
       tail.className = "reasoning-tail";

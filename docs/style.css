@@ -1168,6 +1168,40 @@ table.value-table tbody tr:hover td { background: var(--surface-sunken); }
   flex-shrink: 0;
 }
 
+/* ---------- reasoning detail toggle ---------- */
+
+.reasoning-extra {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.3s ease, opacity 0.2s ease;
+}
+.reasoning-extra:not([hidden]) {
+  max-height: 2000px;
+  opacity: 1;
+}
+
+.reasoning-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.55rem;
+  padding: 0.35rem 0.8rem;
+  font-family: var(--font-ui);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--accent);
+  background: transparent;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s;
+}
+.reasoning-toggle:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+
 /* ---------- domain grid ---------- */
 
 .domain-grid {
