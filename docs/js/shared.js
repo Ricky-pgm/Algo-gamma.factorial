@@ -114,6 +114,7 @@
       navReasoning: "How it's computed",
       navApps: "What it's for",
       navFaq: "FAQ",
+      navApp: "Applications",
       exGroupIntegers: "Integers",      themeToLight: "Switch to light mode",
       themeToDark: "Switch to dark mode",
 
@@ -143,10 +144,13 @@
       reasoningPageLede: "The full step-by-step derivation behind the number — the definition used, the numeric values at each stage, and the checks that keep it honest.",
       appsPageTitle: "What it's for",
       appsPageLede: "Concrete uses of this value — what it counts, a worked example, how to read the curve, and what to try next.",
+      appPageTitle: "Real-world applications",
+      appPageLede: "Where generalized factorials, Gamma, binomial and beta functions show up — from algorithms to AI, physics to everyday life.",
       openReasoning: "How it's computed",
       openApps: "What it's for",
       reasoningEmpty: "Enter an expression (e.g. 5!, gamma(0.2), C(10, 2.5), beta(2, 3)) to see the detailed derivation.",
       appsEmpty: "Enter an expression (e.g. 5!, gamma(0.2), C(10, 2.5), beta(2, 3)) to see how it is used in practice.",
+      appEmpty: "Browse the domains below or type an expression at the top to see where it appears in the real world.",
     },
     fr: {
       eyebrow: "gamma-factorial",
@@ -261,6 +265,7 @@
       navReasoning: "Comment c'est calculé",
       navApps: "À quoi ça sert",
       navFaq: "FAQ",
+      navApp: "Applications",
       exGroupIntegers: "Entiers",      themeToLight: "Passer en mode clair",
       themeToDark: "Passer en mode sombre",
 
@@ -290,10 +295,13 @@
       reasoningPageLede: "La dérivation complète derrière le résultat : la définition utilisée, les valeurs numériques à chaque étape et les vérifications.",
       appsPageTitle: "À quoi ça sert",
       appsPageLede: "Les usages concrets de cette valeur : ce qu'elle compte, un exemple appliqué, comment lire la courbe et quoi essayer ensuite.",
+      appPageTitle: "Applications concrètes",
+      appPageLede: "Où les factorielles généralisées, Gamma, binomiale et bêta apparaissent — des algorithmes à l'IA, de la physique au quotidien.",
       openReasoning: "Comment c'est calculé",
       openApps: "À quoi ça sert",
       reasoningEmpty: "Saisis une expression (ex. 5!, gamma(0,2), C(10, 2,5), beta(2, 3)) pour voir le raisonnement détaillé.",
       appsEmpty: "Saisis une expression (ex. 5!, gamma(0,2), C(10, 2,5), beta(2, 3)) pour voir son utilité concrète.",
+      appEmpty: "Parcoure les domaines ci-dessous ou saisis une expression en haut pour voir où elle apparaît dans le monde réel.",
     },
     de: {
       eyebrow: "gamma-factorial",
@@ -408,6 +416,7 @@
       navReasoning: "Wie gerechnet wird",
       navApps: "Wofür es nützt",
       navFaq: "FAQ",
+      navApp: "Anwendungen",
       exGroupIntegers: "Ganze Zahlen",      themeToLight: "Zum hellen Modus wechseln",
       themeToDark: "Zum dunklen Modus wechseln",
 
@@ -437,10 +446,13 @@
       reasoningPageLede: "Die vollständige Herleitung hinter dem Ergebnis: die verwendete Definition, die Zahlenwerte jeder Stufe und die Kontrollen.",
       appsPageTitle: "Wofür es nützt",
       appsPageLede: "Konkrete Anwendungen dieses Werts: was er zählt, ein durchgerechnetes Beispiel, wie man die Kurve liest und was man als Nächstes probiert.",
+      appPageTitle: "Einsatzgebiete",
+      appPageLede: "Wo verallgemeinerte Fakultäten, Gamma-, Binomial- und Betafunktionen vorkommen — von Algorithmen über KI bis zur Physik.",
       openReasoning: "Wie gerechnet wird",
       openApps: "Wofür es nützt",
       reasoningEmpty: "Gib einen Ausdruck ein (z. B. 5!, gamma(0,2), C(10, 2,5), beta(2, 3)), um die detaillierte Herleitung zu sehen.",
       appsEmpty: "Gib einen Ausdruck ein (z. B. 5!, gamma(0,2), C(10, 2,5), beta(2, 3)), um die praktische Verwendung zu sehen.",
+      appEmpty: "Durchstöbere die Bereiche unten oder gib einen Ausdruck oben ein, um zu sehen, wo er in der Praxis vorkommt.",
     },
   };
 
@@ -1263,6 +1275,7 @@
       { page: "reasoning", href: "comment-cest-calcule.html" + q, key: "navReasoning" },
       { page: "apps", href: "a-quoi-ca-sert.html" + q, key: "navApps" },
       { page: "faq", href: "faq.html", key: "navFaq" },
+      { page: "app", href: "applications.html" + q, key: "navApp" },
     ];
     nav.innerHTML = "";
     for (const it of items) {
