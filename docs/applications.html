@@ -58,67 +58,91 @@
   <section class="domain-grid" id="domainGrid">
     <!-- Computer Science -->
     <article class="domain-card" data-domain="cs">
-      <h3 class="domain-name" data-i18n="domainCS">Computer Science &amp; Algorithms</h3>
-      <p class="domain-desc" data-i18n="domainCSDesc">Sorting, searching, and combinatorial optimization all revolve around factorials and binomial coefficients.</p>
+      <div class="domain-header">
+        <span class="domain-icon" aria-hidden="true">💻</span>
+        <h3 class="domain-name" data-i18n="domainCS">Computer Science &amp; Algorithms</h3>
+      </div>
+      <p class="domain-stat" data-i18n="domainCSStat">20! ≈ 2.4 × 10¹⁸</p>
+      <p class="domain-desc" data-i18n="domainCSDesc">That's how many routes a brute-force TSP solver must check for just 20 cities — at 1 billion operations per second, it would take <strong>76 years</strong>. Factorials are the reason we need clever algorithms, not just fast computers.</p>
       <ul class="domain-examples">
-        <li><span data-i18n="domainCSEx1">Sorting n items explores up to n! permutations — <strong>52!</strong> ≈ 8×10⁶⁷ possible orderings of a deck of cards.</span> <button class="example-chip" type="button" data-expr="52!">52!</button></li>
-        <li><span data-i18n="domainCSEx2">Brute-force TSP on 20 cities: <strong>20!</strong> ≈ 2.4×10¹⁸ routes to check.</span> <button class="example-chip" type="button" data-expr="20!">20!</button></li>
-        <li><span data-i18n="domainCSEx3">Feature selection: choosing 5 features from 20 candidates = <strong>C(20,5)</strong> = 15504 combinations.</span> <button class="example-chip" type="button" data-expr="C(20,5)">C(20,5)</button></li>
+        <li><span data-i18n="domainCSEx1"><strong>Sorting</strong>: 52! ≈ 8×10⁶⁷ possible orderings of a deck of cards — more than atoms in the observable universe (10⁸⁰).</span> <button class="example-chip" type="button" data-expr="52!">52!</button></li>
+        <li><span data-i18n="domainCSEx2"><strong>Feature selection</strong>: choosing 5 features from 20 candidates = <strong>C(20,5)</strong> = 15,504 — that's why exhaustive search is rarely practical.</span> <button class="example-chip" type="button" data-expr="C(20,5)">C(20,5)</button></li>
+        <li><span data-i18n="domainCSEx3"><strong>RSA encryption</strong>: factoring a 2048-bit number is hard because the search space is combinatorially vast.</span></li>
       </ul>
     </article>
 
     <!-- AI & Machine Learning -->
     <article class="domain-card" data-domain="ai">
-      <h3 class="domain-name" data-i18n="domainAI">AI &amp; Machine Learning</h3>
-      <p class="domain-desc" data-i18n="domainAIDesc">Bayesian inference, model selection, and generative models rely heavily on Gamma and Beta functions.</p>
+      <div class="domain-header">
+        <span class="domain-icon" aria-hidden="true">🤖</span>
+        <h3 class="domain-name" data-i18n="domainAI">AI &amp; Machine Learning</h3>
+      </div>
+      <p class="domain-stat" data-i18n="domainAIStat">Beta(8, 4)</p>
+      <p class="domain-desc" data-i18n="domainAIDesc">After 8 clicks and 4 purchases on your A/B test, Bayesian inference uses <strong>Beta distributions</strong> to estimate the true conversion rate — no p-values needed, just continuous updating.</p>
       <ul class="domain-examples">
-        <li><span data-i18n="domainAIEx1">Bayesian A/B testing: after 8 successes and 4 failures, your belief about the conversion rate follows <strong>Beta(8,4)</strong>.</span> <button class="example-chip" type="button" data-expr="beta(8,4)">beta(8,4)</button></li>
-        <li><span data-i18n="domainAIEx2">Variational inference minimizes KL divergence using <strong>Gamma(z)</strong> as the normalizing kernel of exponential-family posteriors.</span></li>
-        <li><span data-i18n="domainAIEx3">Cross-validation: <strong>C(10,3)</strong> = 120 ways to pick 3 test folds from 10.</span> <button class="example-chip" type="button" data-expr="C(10,3)">C(10,3)</button></li>
+        <li><span data-i18n="domainAIEx1"><strong>LLM sampling</strong>: GPT chooses the next token from a multinomial distribution — the normalization constant involves factorials of vocabulary size.</span></li>
+        <li><span data-i18n="domainAIEx2"><strong>Thompson sampling</strong>: uses Beta posteriors to balance exploration vs exploitation in real-time ad placement.</span> <button class="example-chip" type="button" data-expr="beta(8,4)">beta(8,4)</button></li>
+        <li><span data-i18n="domainAIEx3"><strong>Cross-validation</strong>: <strong>C(10,3)</strong> = 120 ways to split data into folds — the basis of robust model evaluation.</span> <button class="example-chip" type="button" data-expr="C(10,3)">C(10,3)</button></li>
       </ul>
     </article>
 
     <!-- Statistics -->
     <article class="domain-card" data-domain="stats">
-      <h3 class="domain-name" data-i18n="domainStats">Statistics &amp; Data Science</h3>
-      <p class="domain-desc" data-i18n="domainStatsDesc">Hypothesis tests, confidence intervals, and Bayesian posteriors are all built on Gamma and Beta.</p>
+      <div class="domain-header">
+        <span class="domain-icon" aria-hidden="true">📊</span>
+        <h3 class="domain-name" data-i18n="domainStats">Statistics &amp; Data Science</h3>
+      </div>
+      <p class="domain-stat" data-i18n="domainStatsStat">p = 0.05 ≠ 95%</p>
+      <p class="domain-desc" data-i18n="domainStatsDesc">A p-value of 0.05 does NOT mean there's a 95% chance the effect is real. It means: if there were no effect, you'd see data this extreme 5% of the time. Bayesian methods using Beta posteriors give you what you actually want: the probability the effect is real.</p>
       <ul class="domain-examples">
-        <li><span data-i18n="domainStatsEx1">The chi-squared distribution with k degrees of freedom is a scaled Gamma(k/2). For k=10: <strong>Gamma(5)</strong> = 24.</span> <button class="example-chip" type="button" data-expr="gamma(5)">gamma(5)</button></li>
-        <li><span data-i18n="domainStatsEx2">A 95% Bayesian credible interval for a proportion uses <strong>Beta(α,β)</strong> quantiles.</span> <button class="example-chip" type="button" data-expr="beta(3,7)">beta(3,7)</button></li>
-        <li><span data-i18n="domainStatsEx3">Permutation tests: the number of ways to assign 12 subjects to two groups of 6 = <strong>C(12,6)</strong> = 924.</span> <button class="example-chip" type="button" data-expr="C(12,6)">C(12,6)</button></li>
+        <li><span data-i18n="domainStatsEx1"><strong>Clinical trials</strong>: testing a drug on 200 patients uses binomial power analysis to determine sample size.</span> <button class="example-chip" type="button" data-expr="C(200,100)">C(200,100)</button></li>
+        <li><span data-i18n="domainStatsEx2"><strong>Chi-squared test</strong>: with k=10 degrees of freedom, the distribution is <strong>Gamma(5)</strong> — that's what your stats software computes.</span> <button class="example-chip" type="button" data-expr="gamma(5)">gamma(5)</button></li>
+        <li><span data-i18n="domainStatsEx3"><strong>Permutation test</strong>: assigning 12 patients to two groups of 6 gives <strong>C(12,6)</strong> = 924 random assignments — the exact null distribution.</span> <button class="example-chip" type="button" data-expr="C(12,6)">C(12,6)</button></li>
       </ul>
     </article>
 
     <!-- Physics -->
     <article class="domain-card" data-domain="physics">
-      <h3 class="domain-name" data-i18n="domainPhysics">Physics &amp; Engineering</h3>
-      <p class="domain-desc" data-i18n="domainPhysicsDesc">Quantum mechanics, statistical mechanics, and signal processing use Gamma and double factorials constantly.</p>
+      <div class="domain-header">
+        <span class="domain-icon" aria-hidden="true">⚛️</span>
+        <h3 class="domain-name" data-i18n="domainPhysics">Physics &amp; Engineering</h3>
+      </div>
+      <p class="domain-stat" data-i18n="domainPhysicsStat">7!! = 105</p>
+      <p class="domain-desc" data-i18n="domainPhysicsDesc">Feynman diagrams — the computational backbone of quantum field theory — count contractions using double factorials. Each diagram represents a term in an infinite series that describes how particles interact.</p>
       <ul class="domain-examples">
-        <li><span data-i18n="domainPhysicsEx1">Wick's theorem in QFT: contractions of n fields involve <strong>(n-1)!!</strong> pairings. For 7 fields: 7!! = 105.</span> <button class="example-chip" type="button" data-expr="7!!">7!!</button></li>
-        <li><span data-i18n="domainPhysicsEx2">Volume of a 6-dimensional unit sphere: V₆ = π³/<strong>Gamma(4)</strong> = π³/6 ≈ 5.1677.</span> <button class="example-chip" type="button" data-expr="gamma(4)">gamma(4)</button></li>
-        <li><span data-i18n="domainPhysicsEx3">Quantum harmonic oscillator: energy level n has <strong>n!!</strong> normalization factors.</span></li>
+        <li><span data-i18n="domainPhysicsEx1"><strong>Wick's theorem</strong>: computing n-field contractions requires <strong>(n-1)!!</strong> pairings — for 7 fields, that's 105 Feynman diagrams.</span> <button class="example-chip" type="button" data-expr="7!!">7!!</button></li>
+        <li><span data-i18n="domainPhysicsEx2"><strong>Black body radiation</strong>: Planck's law for photon statistics involves Gamma functions — this is how we understand stars.</span> <button class="example-chip" type="button" data-expr="gamma(3)">gamma(3)</button></li>
+        <li><span data-i18n="domainPhysicsEx3"><strong>Quantum harmonic oscillator</strong>: the n-th energy level normalization uses <strong>(2n)!!</strong> — connecting factorials to quantum energy quantization.</span> <button class="example-chip" type="button" data-expr="8!!">8!!</button></li>
       </ul>
     </article>
 
     <!-- Biology -->
     <article class="domain-card" data-domain="bio">
-      <h3 class="domain-name" data-i18n="domainBio">Biology &amp; Bioinformatics</h3>
-      <p class="domain-desc" data-i18n="domainBioDesc">Sequence analysis, phylogenetics, and population genetics all use generalized factorials.</p>
+      <div class="domain-header">
+        <span class="domain-icon" aria-hidden="true">🧬</span>
+        <h3 class="domain-name" data-i18n="domainBio">Biology &amp; Bioinformatics</h3>
+      </div>
+      <p class="domain-stat" data-i18n="domainBioStat">10³⁰⁰ conformations</p>
+      <p class="domain-desc" data-i18n="domainBioDesc"><strong>Levinthal's paradox</strong>: a protein with 100 amino acids has ~10³⁰⁰ possible conformations. If it tried one per nanosecond, it would take longer than the age of the universe to fold by random search. Yet it folds in milliseconds — nature solved the combinatorial explosion.</p>
       <ul class="domain-examples">
-        <li><span data-i18n="domainBioEx1">DNA sequence permutations: the number of distinct orderings of 10 nucleotides = <strong>10!</strong> = 3,628,800.</span> <button class="example-chip" type="button" data-expr="10!">10!</button></li>
-        <li><span data-i18n="domainBioEx2">K-mer counting: choosing 3 positions from a 20-mer = <strong>C(20,3)</strong> = 1140 possible 3-mers.</span> <button class="example-chip" type="button" data-expr="C(20,3)">C(20,3)</button></li>
-        <li><span data-i18n="domainBioEx3">Allele frequency models use the <strong>Beta</strong> distribution as a conjugate prior for binomial likelihoods.</span> <button class="example-chip" type="button" data-expr="beta(2,5)">beta(2,5)</button></li>
+        <li><span data-i18n="domainBioEx1"><strong>COVID variants</strong>: the spike protein has ~1,270 amino acids. Each position can mutate to ~19 alternatives — the combinatorial space is staggering.</span> <button class="example-chip" type="button" data-expr="19^5">19^5</button></li>
+        <li><span data-i18n="domainBioEx2"><strong>K-mer counting</strong>: counting 3-mers in a 20-nucleotide sequence explores <strong>C(20,3)</strong> = 1,140 positions — fundamental to genome assembly.</span> <button class="example-chip" type="button" data-expr="C(20,3)">C(20,3)</button></li>
+        <li><span data-i18n="domainBioEx3"><strong>Allele frequencies</strong>: Bayesian models use <strong>Beta distributions</strong> to track how gene frequencies evolve in populations.</span> <button class="example-chip" type="button" data-expr="beta(2,5)">beta(2,5)</button></li>
       </ul>
     </article>
 
     <!-- Everyday -->
     <article class="domain-card" data-domain="everyday">
-      <h3 class="domain-name" data-i18n="domainEveryday">Everyday Life</h3>
-      <p class="domain-desc" data-i18n="domainEverydayDesc">Lottery odds, seating arrangements, and probability estimates all involve these functions.</p>
+      <div class="domain-header">
+        <span class="domain-icon" aria-hidden="true">🏠</span>
+        <h3 class="domain-name" data-i18n="domainEveryday">Everyday Life</h3>
+      </div>
+      <p class="domain-stat" data-i18n="domainEverydayStat">2²⁵⁶ keys</p>
+      <p class="domain-desc" data-i18n="domainEverydayDesc">Your WiFi password uses WPA2 with 2²⁵⁶ possible keys — that's more than the number of atoms in the universe. Even with every computer on Earth working together, brute-forcing it would take longer than the heat death of the cosmos.</p>
       <ul class="domain-examples">
-        <li><span data-i18n="domainEverydayEx1">Lottery odds: picking 6 numbers from 49 gives <strong>C(49,6)</strong> = 13,983,816 possible tickets.</span> <button class="example-chip" type="button" data-expr="C(49,6)">C(49,6)</button></li>
-        <li><span data-i18n="domainEverydayEx2">Seating 8 guests around a round table: <strong>(8-1)!</strong> = 7! = 5040 arrangements.</span> <button class="example-chip" type="button" data-expr="7!">7!</button></li>
-        <li><span data-i18n="domainEverydayEx3">Estimating a 30% success rate with 10 trials: your prior belief follows <strong>Beta(3,7)</strong>.</span> <button class="example-chip" type="button" data-expr="beta(3,7)">beta(3,7)</button></li>
+        <li><span data-i18n="domainEverydayEx1"><strong>Lottery</strong>: picking 6 numbers from 49 gives <strong>C(49,6)</strong> = 13,983,816 possible tickets — your odds are about 1 in 14 million.</span> <button class="example-chip" type="button" data-expr="C(49,6)">C(49,6)</button></li>
+        <li><span data-i18n="domainEverydayEx2"><strong>PIN security</strong>: a 4-digit PIN has 10⁴ = 10,000 combinations. After 3 wrong attempts, your phone locks — that's why 2-factor authentication matters.</span></li>
+        <li><span data-i18n="domainEverydayEx3"><strong>Seating 8 guests</strong> around a round table: <strong>7!</strong> = 5,040 arrangements — explains why the host needs a seating chart algorithm.</span> <button class="example-chip" type="button" data-expr="7!">7!</button></li>
       </ul>
     </article>
   </section>
