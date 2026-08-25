@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Real-world applications — gamma-factorial</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.85em%27 font-size=%2790%27 fill=%27%23b0402a%27%3EΓ%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#f7f0df" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1b1610" media="(prefers-color-scheme: dark)">
+<meta name="description" content="Where generalized factorials, Gamma, binomial and beta functions appear in the real world — from algorithms and AI to physics and everyday life.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="page">
+<header class="site-header">
+  <div class="header-inner">
+    <p class="eyebrow" id="eyebrow">gamma-factorial</p>
+    <nav class="sub-nav" id="subNav" aria-label="Sections"></nav>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label=""></button>
+    <div class="lang-switch">
+      <button class="lang-btn" id="langBtn" type="button" aria-haspopup="true" aria-expanded="false">
+        <span class="lang-globe" aria-hidden="true">🌐</span>
+        <span id="langBtnLabel">EN</span>
+      </button>
+      <div class="lang-menu" id="langMenu" role="menu" hidden>
+        <button class="lang-option" type="button" role="menuitem" data-lang="en">English</button>
+        <button class="lang-option" type="button" role="menuitem" data-lang="fr">Français</button>
+        <button class="lang-option" type="button" role="menuitem" data-lang="de">Deutsch</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+  <h1 id="pageTitle">Real-world applications</h1>
+  <p class="lede" id="pageLede"></p>
+
+  <div class="calc">
+    <div class="input-row">
+      <span class="prefix">ƒ</span>
+      <input id="exprInput" type="text" autocomplete="off" autocapitalize="off" spellcheck="false">
+      <button class="evaluate-btn" id="evalBtn" type="button">Evaluate</button>
+    </div>
+    <div class="keypad" id="keypad"></div>
+    <div class="result-area" id="resultArea">
+      <p class="result-empty" id="resultEmpty"></p>
+    </div>
+  </div>
+
+  <div class="examples" id="examples">
+    <button class="example-chip" type="button" data-expr="C(49,6)">C(49,6)</button>
+    <button class="example-chip" type="button" data-expr="52!">52!</button>
+    <button class="example-chip" type="button" data-expr="gamma(3)">gamma(3)</button>
+    <button class="example-chip" type="button" data-expr="beta(2,3)">beta(2,3)</button>
+    <button class="example-chip" type="button" data-expr="C(20,3)">C(20,3)</button>
+    <button class="example-chip" type="button" data-expr="7!!">7!!</button>
+  </div>
+
+  <section class="domain-grid" id="domainGrid">
+    <!-- Computer Science -->
+    <article class="domain-card" data-domain="cs">
+      <h3 class="domain-name" data-i18n="domainCS">Computer Science &amp; Algorithms</h3>
+      <p class="domain-desc" data-i18n="domainCSDesc">Sorting, searching, and combinatorial optimization all revolve around factorials and binomial coefficients.</p>
+      <ul class="domain-examples">
+        <li><span data-i18n="domainCSEx1">Sorting n items explores up to n! permutations — <strong>52!</strong> ≈ 8×10⁶⁷ possible orderings of a deck of cards.</span> <button class="example-chip" type="button" data-expr="52!">52!</button></li>
+        <li><span data-i18n="domainCSEx2">Brute-force TSP on 20 cities: <strong>20!</strong> ≈ 2.4×10¹⁸ routes to check.</span> <button class="example-chip" type="button" data-expr="20!">20!</button></li>
+        <li><span data-i18n="domainCSEx3">Feature selection: choosing 5 features from 20 candidates = <strong>C(20,5)</strong> = 15504 combinations.</span> <button class="example-chip" type="button" data-expr="C(20,5)">C(20,5)</button></li>
+      </ul>
+    </article>
+
+    <!-- AI & Machine Learning -->
+    <article class="domain-card" data-domain="ai">
+      <h3 class="domain-name" data-i18n="domainAI">AI &amp; Machine Learning</h3>
+      <p class="domain-desc" data-i18n="domainAIDesc">Bayesian inference, model selection, and generative models rely heavily on Gamma and Beta functions.</p>
+      <ul class="domain-examples">
+        <li><span data-i18n="domainAIEx1">Bayesian A/B testing: after 8 successes and 4 failures, your belief about the conversion rate follows <strong>Beta(8,4)</strong>.</span> <button class="example-chip" type="button" data-expr="beta(8,4)">beta(8,4)</button></li>
+        <li><span data-i18n="domainAIEx2">Variational inference minimizes KL divergence using <strong>Gamma(z)</strong> as the normalizing kernel of exponential-family posteriors.</span></li>
+        <li><span data-i18n="domainAIEx3">Cross-validation: <strong>C(10,3)</strong> = 120 ways to pick 3 test folds from 10.</span> <button class="example-chip" type="button" data-expr="C(10,3)">C(10,3)</button></li>
+      </ul>
+    </article>
+
+    <!-- Statistics -->
+    <article class="domain-card" data-domain="stats">
+      <h3 class="domain-name" data-i18n="domainStats">Statistics &amp; Data Science</h3>
+      <p class="domain-desc" data-i18n="domainStatsDesc">Hypothesis tests, confidence intervals, and Bayesian posteriors are all built on Gamma and Beta.</p>
+      <ul class="domain-examples">
+        <li><span data-i18n="domainStatsEx1">The chi-squared distribution with k degrees of freedom is a scaled Gamma(k/2). For k=10: <strong>Gamma(5)</strong> = 24.</span> <button class="example-chip" type="button" data-expr="gamma(5)">gamma(5)</button></li>
+        <li><span data-i18n="domainStatsEx2">A 95% Bayesian credible interval for a proportion uses <strong>Beta(α,β)</strong> quantiles.</span> <button class="example-chip" type="button" data-expr="beta(3,7)">beta(3,7)</button></li>
+        <li><span data-i18n="domainStatsEx3">Permutation tests: the number of ways to assign 12 subjects to two groups of 6 = <strong>C(12,6)</strong> = 924.</span> <button class="example-chip" type="button" data-expr="C(12,6)">C(12,6)</button></li>
+      </ul>
+    </article>
+
+    <!-- Physics -->
+    <article class="domain-card" data-domain="physics">
+      <h3 class="domain-name" data-i18n="domainPhysics">Physics &amp; Engineering</h3>
+      <p class="domain-desc" data-i18n="domainPhysicsDesc">Quantum mechanics, statistical mechanics, and signal processing use Gamma and double factorials constantly.</p>
+      <ul class="domain-examples">
+        <li><span data-i18n="domainPhysicsEx1">Wick's theorem in QFT: contractions of n fields involve <strong>(n-1)!!</strong> pairings. For 7 fields: 7!! = 105.</span> <button class="example-chip" type="button" data-expr="7!!">7!!</button></li>
+        <li><span data-i18n="domainPhysicsEx2">Volume of a 6-dimensional unit sphere: V₆ = π³/<strong>Gamma(4)</strong> = π³/6 ≈ 5.1677.</span> <button class="example-chip" type="button" data-expr="gamma(4)">gamma(4)</button></li>
+        <li><span data-i18n="domainPhysicsEx3">Quantum harmonic oscillator: energy level n has <strong>n!!</strong> normalization factors.</span></li>
+      </ul>
+    </article>
+
+    <!-- Biology -->
+    <article class="domain-card" data-domain="bio">
+      <h3 class="domain-name" data-i18n="domainBio">Biology &amp; Bioinformatics</h3>
+      <p class="domain-desc" data-i18n="domainBioDesc">Sequence analysis, phylogenetics, and population genetics all use generalized factorials.</p>
+      <ul class="domain-examples">
+        <li><span data-i18n="domainBioEx1">DNA sequence permutations: the number of distinct orderings of 10 nucleotides = <strong>10!</strong> = 3,628,800.</span> <button class="example-chip" type="button" data-expr="10!">10!</button></li>
+        <li><span data-i18n="domainBioEx2">K-mer counting: choosing 3 positions from a 20-mer = <strong>C(20,3)</strong> = 1140 possible 3-mers.</span> <button class="example-chip" type="button" data-expr="C(20,3)">C(20,3)</button></li>
+        <li><span data-i18n="domainBioEx3">Allele frequency models use the <strong>Beta</strong> distribution as a conjugate prior for binomial likelihoods.</span> <button class="example-chip" type="button" data-expr="beta(2,5)">beta(2,5)</button></li>
+      </ul>
+    </article>
+
+    <!-- Everyday -->
+    <article class="domain-card" data-domain="everyday">
+      <h3 class="domain-name" data-i18n="domainEveryday">Everyday Life</h3>
+      <p class="domain-desc" data-i18n="domainEverydayDesc">Lottery odds, seating arrangements, and probability estimates all involve these functions.</p>
+      <ul class="domain-examples">
+        <li><span data-i18n="domainEverydayEx1">Lottery odds: picking 6 numbers from 49 gives <strong>C(49,6)</strong> = 13,983,816 possible tickets.</span> <button class="example-chip" type="button" data-expr="C(49,6)">C(49,6)</button></li>
+        <li><span data-i18n="domainEverydayEx2">Seating 8 guests around a round table: <strong>(8-1)!</strong> = 7! = 5040 arrangements.</span> <button class="example-chip" type="button" data-expr="7!">7!</button></li>
+        <li><span data-i18n="domainEverydayEx3">Estimating a 30% success rate with 10 trials: your prior belief follows <strong>Beta(3,7)</strong>.</span> <button class="example-chip" type="button" data-expr="beta(3,7)">beta(3,7)</button></li>
+      </ul>
+    </article>
+  </section>
+
+  <footer class="page-foot">
+    <p class="note" id="noteText"></p>
+  </footer>
+</div>
+
+<script src="js/shared.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  const { t, evalExpression, formatResult, makeAnswerContext, makePracticalBlock } = GF;
+
+  const exprInput = document.getElementById("exprInput");
+  const evalBtn = document.getElementById("evalBtn");
+  const resultArea = document.getElementById("resultArea");
+  const resultEmpty = document.getElementById("resultEmpty");
+
+  let last = null;
+
+  function render() {
+    resultArea.innerHTML = "";
+    if (!last) {
+      resultArea.appendChild(resultEmpty);
+      return;
+    }
+    const { expr, value, plot, kind } = last;
+    resultArea.appendChild(makeAnswerContext(expr, value, kind));
+    const practical = makePracticalBlock(plot, value, kind);
+    if (practical) resultArea.appendChild(practical);
+  }
+
+  function run() {
+    const expr = exprInput.value.trim();
+    if (!expr) return;
+    resultArea.innerHTML = "";
+    try {
+      const { value, plot, kind } = evalExpression(expr);
+      last = { expr, value, plot, kind };
+      render();
+      window.history.replaceState(null, "", GF.urlFor(expr));
+      GF.renderNav("app");
+    } catch (e) {
+      const p = document.createElement("p");
+      p.className = "result-error";
+      p.textContent = t("error") + ": " + e.message;
+      resultArea.appendChild(p);
+    }
+  }
+
+  function applyStaticText() {
+    document.getElementById("eyebrow").textContent = t("eyebrow");
+    document.getElementById("pageTitle").textContent = t("appPageTitle");
+    document.getElementById("pageLede").textContent = t("appPageLede");
+    document.title = t("appPageTitle") + " — gamma-factorial";
+    exprInput.placeholder = t("inputPlaceholder");
+    evalBtn.textContent = t("evaluate");
+    resultEmpty.textContent = t("appEmpty");
+    const note = document.getElementById("noteText");
+    note.textContent = t("note", { c1: "1+2i", c2: "1+2j" });
+  }
+
+  GF.setLangHook(() => {
+    applyStaticText();
+    GF.renderKeypad();
+    GF.renderNav("app");
+    render();
+  });
+
+  evalBtn.addEventListener("click", run);
+  exprInput.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") run();
+  });
+
+  // Example chips in calculator area
+  document.getElementById("examples").addEventListener("click", (event) => {
+    const btn = event.target.closest(".example-chip");
+    if (!btn) return;
+    exprInput.value = btn.dataset.expr;
+    run();
+    exprInput.focus();
+  });
+
+  // Domain card example chips — scroll up to calculator and run
+  document.getElementById("domainGrid").addEventListener("click", (event) => {
+    const btn = event.target.closest(".example-chip");
+    if (!btn) return;
+    exprInput.value = btn.dataset.expr;
+    run();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    setTimeout(() => exprInput.focus(), 300);
+  });
+
+  GF.initLangUI();
+  GF.setLang(GF.detectInitialLang());
+  GF.initThemeToggle();
+
+  const urlExpr = new URL(window.location.href).searchParams.get("expr");
+  if (urlExpr) {
+    exprInput.value = urlExpr;
+    run();
+  } else {
+    render();
+  }
+
+  exprInput.focus();
+})();
+</script>
+</body>
+</html>
