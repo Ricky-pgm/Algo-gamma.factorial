@@ -1168,6 +1168,76 @@ table.value-table tbody tr:hover td { background: var(--surface-sunken); }
   flex-shrink: 0;
 }
 
+/* ---------- domain grid ---------- */
+
+.domain-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.2rem;
+  margin-bottom: 2.4rem;
+}
+
+.domain-card {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 16px;
+  padding: 1.4rem 1.5rem;
+  box-shadow: var(--shadow-card);
+  transition: box-shadow 0.15s ease, transform 0.12s ease;
+}
+.domain-card:hover {
+  box-shadow: 0 6px 24px rgba(0,0,0,0.10);
+  transform: translateY(-2px);
+}
+
+.domain-name {
+  font-family: var(--font-ui);
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 0.45rem;
+  color: var(--accent-strong);
+}
+
+.domain-desc {
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+  margin: 0 0 0.8rem;
+  line-height: 1.5;
+}
+
+.domain-examples {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.domain-examples li {
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: var(--ink);
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.domain-examples li .example-chip {
+  flex-shrink: 0;
+  font-size: 0.78rem;
+  padding: 0.2rem 0.5rem;
+  background: var(--accent-soft);
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  color: var(--accent-strong);
+  cursor: pointer;
+  font-family: var(--font-mono);
+}
+.domain-examples li .example-chip:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
 /* ---------- footer ---------- */
 
 .page-foot {
@@ -1305,6 +1375,9 @@ table.value-table tbody tr:hover td { background: var(--surface-sunken); }
     flex: 1;
     min-width: 260px;
   }
+  .domain-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 480px) {
@@ -1371,6 +1444,9 @@ table.value-table tbody tr:hover td { background: var(--surface-sunken); }
   .lang-option {
     padding: 0.7rem 0.8rem;
     font-size: 0.95rem;
+  }
+  .domain-grid {
+    grid-template-columns: 1fr;
   }
 }
 
