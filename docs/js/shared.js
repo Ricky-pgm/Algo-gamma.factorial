@@ -86,25 +86,30 @@
       practFactorialGamma: "For a non-integer {n}, the interpolation shows up across science — e.g. the volume of a sphere in d dimensions, V_d = π^(d/2)/Γ(d/2+1). Try d = {d}: V ≈ {vol}.",
       practFactorialCurve: "The dots are the classic whole-number factorials; the curve between them is the smooth interpolation. Below −1 the curve changes sign between consecutive unit intervals and shoots up at every negative integer (poles of Γ). The values outrun any exponential: 170! already overflows a double.",
       practFactorialTry: "Evaluate 3.5! then 4.5! and pin both: the interpolation passes exactly through 4! = 24 and 5! = 120.",
+      practFactorialWhere: "Sorting algorithms explore n! permutations in the worst case \u2014 that is why O(n!) is intractable. In bioinformatics, n! counts the possible orderings of DNA fragments in sequencing. Every time you arrange n books, shuffle a deck, or seat n guests, you are computing n!.",
       practGammaWhat: "Γ(z) extends the factorial to every complex number: Γ(n) = (n−1)! for whole n. It is the backbone of statistics and physics.",
       practGammaUse: "The Gamma distribution with shape a has density t^(a−1)·e^(−t)/Γ(a). And Γ(1/2) = √π ≈ 1.7725, which gives Γ(3/2) = √π/2 ≈ 0.8862.",
       practGammaCurve: "The curve has a pole (vertical asymptote) at every integer ≤ 0 and a minimum ≈ 0.8856 near z ≈ 1.4616. Between 0 and 1 it dips below 1; past 1 it climbs like a factorial.",
       practGammaTry: "Evaluate Γ(1.46) to spot the minimum, Γ(0.5) = √π, then Γ(0.2) to watch the reflection formula take over below 0.5.",
+      practGammaWhere: "The Gamma function underpins the chi-squared, Student t, and F-distributions used in every hypothesis test. In physics it normalizes quantum wave functions. Machine learning uses it in variational inference and in the evidence lower bound of deep generative models.",
       practDoubleWhat: "n!! = n·(n−2)·(n−4)··· is the product of every other factor — natural whenever things come in pairs.",
       practDoubleUseOdd: "Moments of the normal distribution: E[X^(2k)] = (2k−1)!!·σ^(2k). With n = {n} odd, k = {k} and (2k−1)!! = {v}.",
       practDoubleUseEven: "Even double factorials satisfy (2k)!! = 2^k·k!. With n = {n} even, k = {k}: 2^k·k! = {v}.",
       practDoubleCurve: "n!! is defined only for whole numbers (the dots). Even and odd rows form two separate families; 0!! = 1 and (−1)!! = 1 by convention.",
       practDoubleTry: "Compare 5!! with 6!!, then try 10!! — even double factorials grow very fast.",
+      practDoubleWhere: "In physics, (2k-1)!! appears in Wick theorem for computing Feynman diagram contractions. In statistics, it gives the even moments of the normal distribution. Even double factorials (2k)!! = 2^k k! show up in sphere-surface calculations.",
       practBinomialWhat: "C(n, k) counts the ways to choose k items from n when order does not matter (combinations).",
       practBinomialUse: "Pick {k} people from {n}: there are {c} possible teams. To allow repetition, use C(n+k−1, k).",
       practBinomialInterp: "Here k = {k} is not a whole number, so the value {c} is the smooth interpolation between rows of Pascal's triangle — it still lands exactly on {cint} at every whole k.",
       practBinomialCurve: "As k sweeps across the plot, C(n, k) peaks at k = n/2 and is symmetric around it. Pinning two rows shows how a larger n gives a taller, wider bell.",
       practBinomialTry: "Evaluate C(10, 3), C(10, 5), C(10, 7) and pin two of them to compare the rows.",
+      practBinomialWhere: "Lottery odds are pure binomials: C(49,6) = 13,983,816 for a standard 6-from-49 draw. In machine learning, C(n,k) counts the ways to select k features from n candidates. Bioinformatics uses it to estimate k-mer occurrence frequencies across a genome.",
       practBetaWhat: "B(a, b) = ∫₀¹ t^(a−1)(1−t)^(b−1) dt = Γ(a)Γ(b)/Γ(a+b) — the normalizing constant of the beta distribution.",
       practBetaUsePeak: "A Beta(a, b) distribution models a probability in Bayesian statistics (e.g. A/B tests). Its peak is at (a−1)/(a+b−2) = {peak}.",
       practBetaUse: "A Beta(a, b) distribution models a probability in Bayesian statistics (e.g. A/B tests).",
       practBetaCurve: "For a fixed b, B(a, b) decays like a power of a; the highlighted point is the value you just computed.",
       practBetaTry: "Try B(0.5, 0.5) = π (the arcsine law) and compare it with B(2, 3) = 1/12.",
+      practBetaWhere: "Beta distributions are the workhorse of Bayesian A/B testing: Beta(a,b) models your belief about a conversion rate after a successes and b failures. They also appear in reliability engineering and quality control.",
       navCalc: "Calculator",
       navReasoning: "How it's computed",
       navApps: "What it's for",
@@ -120,6 +125,7 @@
       specSummaryOpen: "Specifications",
       specIntro:
         "The generalized factorial n! = Γ(n+1), computed with the Lanczos approximation (g = 7, reflection formula for Re(z) < 0.5). It matches the classic factorial on non-negative integers and extends it to any real or complex input. Everything runs locally in this page — no server involved.",
+      practWhere: "Where you'll see this",
       specSyntaxTitle: "Accepted syntax",
       specRowFactorial: "factorial of n",
       specRowDoubleFactorial: "double factorial of n",
@@ -261,6 +267,7 @@
       specSummaryOpen: "Spécifications",
       specIntro:
         "La factorielle généralisée n! = Γ(n+1), calculée par l'approximation de Lanczos (g = 7, formule de réflexion pour Re(z) < 0,5). Elle coïncide avec la factorielle classique sur les entiers naturels et l'étend à tout nombre réel ou complexe. Tout est calculé localement dans cette page — aucun serveur.",
+      practWhere: "Où on la retrouve",
       specSyntaxTitle: "Syntaxe acceptée",
       specRowFactorial: "factorielle de n",
       specRowDoubleFactorial: "double factorielle de n",
@@ -402,6 +409,7 @@
       specSummaryOpen: "Spezifikationen",
       specIntro:
         "Die verallgemeinerte Fakultät n! = Γ(n+1), berechnet mit der Lanczos-Näherung (g = 7, Reflexionsformel für Re(z) < 0,5). Sie stimmt mit der klassischen Fakultät auf nichtnegativen ganzen Zahlen überein und erweitert sie auf jede reelle oder komplexe Eingabe. Alles läuft lokal in dieser Seite — kein Server.",
+      practWhere: "Wo Sie das bemerken",
       specSyntaxTitle: "Akzeptierte Syntax",
       specRowFactorial: "Fakultät von n",
       specRowDoubleFactorial: "Doppelfakultät von n",
@@ -1060,11 +1068,13 @@
         items.push({ h: t("practUse"), p: t("practFactorialGamma", { n, d, vol: round(vol, 4) }) });
       }
       items.push({ h: t("practCurve"), p: t("practFactorialCurve") });
+      items.push({ h: t("practWhere"), p: t("practFactorialWhere") });
       items.push({ h: t("practTry"), p: t("practFactorialTry") });
     } else if (kind === "gamma") {
       items.push({ h: t("practWhat"), p: t("practGammaWhat") });
       items.push({ h: t("practUse"), p: t("practGammaUse") });
       items.push({ h: t("practCurve"), p: t("practGammaCurve") });
+      items.push({ h: t("practWhere"), p: t("practGammaWhere") });
       items.push({ h: t("practTry"), p: t("practGammaTry") });
     } else if (kind === "doubleFactorial") {
       const n = plot.center;
@@ -1079,6 +1089,7 @@
         }
       }
       items.push({ h: t("practCurve"), p: t("practDoubleCurve") });
+      items.push({ h: t("practWhere"), p: t("practDoubleWhere") });
       items.push({ h: t("practTry"), p: t("practDoubleTry") });
     } else if (kind === "binomial") {
       const n = plot.n, k = plot.center;
@@ -1092,6 +1103,7 @@
         items.push({ h: t("practUse"), p: t("practBinomialInterp", { k, c: v, cint: cWhole !== null ? round(cWhole, 6) : 0 }) });
       }
       items.push({ h: t("practCurve"), p: t("practBinomialCurve") });
+      items.push({ h: t("practWhere"), p: t("practBinomialWhere") });
       items.push({ h: t("practTry"), p: t("practBinomialTry") });
     } else if (kind === "beta") {
       const a = plot.center, b = plot.b;
@@ -1103,6 +1115,7 @@
         items.push({ h: t("practUse"), p: t("practBetaUse") });
       }
       items.push({ h: t("practCurve"), p: t("practBetaCurve") });
+      items.push({ h: t("practWhere"), p: t("practBetaWhere") });
       items.push({ h: t("practTry"), p: t("practBetaTry") });
     }
 
