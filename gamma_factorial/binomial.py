@@ -46,4 +46,25 @@ def binomial(n: float | complex, k: float | complex) -> float | complex:
         return _zero_like(n, k)
     if _is_nonpositive_integer(n - k + 1):
         return _zero_like(n, k)
+    # Exact multiplicative formula for non-negative integers (mirrors the
+    # JS engine's equivalent shortcut in docs/js/shared.js): avoids both
+    # Gamma-ratio rounding noise on everyday inputs like C(10, 3), and
+    # premature OverflowError from Gamma(n+1) alone overflowing float even
+    # when the final ratio (e.g. C(200, 100)) would not.
+    if (
+        isinstance(n, (int, float))
+        and isinstance(k, (int, float))
+        and float(n).is_integer()
+        and float(k).is_integer()
+        and n >= 0
+        and k >= 0
+        and n <= 1000
+    ):
+        if k > n:
+            return 0.0
+        kk = int(min(k, n - k))
+        result = 1.0
+        for i in range(1, kk + 1):
+            result = result * (n - kk + i) / i
+        return result
     return gamma(n + 1) / (gamma(k + 1) * gamma(n - k + 1))
