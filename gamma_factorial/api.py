@@ -10,7 +10,7 @@ from fastapi.staticfiles import StaticFiles
 
 from .binomial import binomial
 from .cli import NumberParseError, _parse_number
-from .core import beta, factorial, gamma
+from .core import beta, double_factorial, factorial, gamma
 
 app = FastAPI(
     title="gamma-factorial",
@@ -85,6 +85,16 @@ def beta_endpoint(a_value: str, b_value: str) -> dict[str, Any]:
         "operation": "beta",
         "result": _serialize(result),
     }
+
+
+@app.get("/double-factorial/{value}")
+def double_factorial_endpoint(value: str) -> dict[str, Any]:
+    n = _parse(value)
+    try:
+        result = double_factorial(n)
+    except (ValueError, OverflowError) as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from None
+    return {"input": value, "operation": "doubleFactorial", "result": _serialize(result)}
 
 
 _STATIC_DIR = Path(__file__).resolve().parent.parent / "docs"

@@ -17,6 +17,7 @@ checks = [
     ("/binomial/10/3", 200, "application/json"),
     ("/binomial/4.5/2", 200, "application/json"),
     ("/beta/2/3", 200, "application/json"),
+    ("/double-factorial/7", 200, "application/json"),
     ("/openapi.json", 200, "application/json"),
     ("/factorial/-1", 400, "application/json"),
     ("/factorial/abc", 422, "application/json"),
