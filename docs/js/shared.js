@@ -189,6 +189,7 @@
       reasoningEmpty: "Enter an expression (e.g. 5!, gamma(0.2), C(10, 2.5), beta(2, 3)) to see the detailed derivation.",
       appsEmpty: "Enter an expression (e.g. 5!, gamma(0.2), C(10, 2.5), beta(2, 3)) to see how it is used in practice.",
       appEmpty: "Browse the domains below or type an expression at the top to see where it appears in the real world.",
+      fallbackNotice: "Computed locally (couldn't reach the verification API) — result may be approximate.",
     },
     fr: {
       eyebrow: "gamma-factorial",
@@ -378,6 +379,7 @@
       reasoningEmpty: "Saisis une expression (ex. 5!, gamma(0,2), C(10, 2,5), beta(2, 3)) pour voir le raisonnement détaillé.",
       appsEmpty: "Saisis une expression (ex. 5!, gamma(0,2), C(10, 2,5), beta(2, 3)) pour voir son utilité concrète.",
       appEmpty: "Parcoure les domaines ci-dessous ou saisis une expression en haut pour voir où elle apparaît dans le monde réel.",
+      fallbackNotice: "Calculé localement (API de vérification injoignable) — le résultat peut être approximatif.",
     },
     de: {
       eyebrow: "gamma-factorial",
@@ -567,6 +569,7 @@
       reasoningEmpty: "Gib einen Ausdruck ein (z. B. 5!, gamma(0,2), C(10, 2,5), beta(2, 3)), um die detaillierte Herleitung zu sehen.",
       appsEmpty: "Gib einen Ausdruck ein (z. B. 5!, gamma(0,2), C(10, 2,5), beta(2, 3)), um die praktische Verwendung zu sehen.",
       appEmpty: "Durchstöbere die Bereiche unten oder gib einen Ausdruck oben ein, um zu sehen, wo er in der Praxis vorkommt.",
+      fallbackNotice: "Lokal berechnet (Verifizierungs-API nicht erreichbar) — Ergebnis kann ungenau sein.",
     },
   };
 
