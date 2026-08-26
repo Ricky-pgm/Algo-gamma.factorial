@@ -97,10 +97,48 @@ Recognized expressions: `n!`, `factorial(n)`, `gamma(z)`, `C(n, k)` /
 `binomial(n, k)`. Type `help` inside the REPL for a reminder, `quit` (or
 `exit`, or Ctrl-D) to leave.
 
+## HTTP API
+
+`gamma_factorial.api:app` (FastAPI) exposes the same functions over HTTP,
+and also serves the `docs/` calculator as static files at `/` — it's what
+the web calculator calls for its authoritative result. Run it locally with
+any ASGI server, e.g.:
+
+```bash
+pip install uvicorn
+uvicorn gamma_factorial.api:app --reload
+```
+
+```bash
+curl http://127.0.0.1:8000/factorial/5
+# {"input":"5","operation":"factorial","result":120.00000000000031}
+
+curl http://127.0.0.1:8000/gamma/0.5
+curl http://127.0.0.1:8000/binomial/10/3
+curl http://127.0.0.1:8000/beta/2/3
+curl http://127.0.0.1:8000/double-factorial/7
+```
+
+Values are URL-encoded (`+` as `%2B` for complex numbers, e.g.
+`/factorial/1%2B2j`). Errors return `400` (math error, e.g. a pole) or
+`422` (unparseable input) with a JSON `{"detail": "..."}` body. Full
+interactive docs (Swagger UI) are served at `/docs` when the app is
+running; the raw OpenAPI schema is at `/openapi.json`.
+
+`pyproject.toml` declares a Vercel entrypoint
+(`[tool.vercel] entrypoint = "gamma_factorial.api:app"`) for deploying the
+API + calculator together as one app. `docs/` can also be deployed on its
+own as a static site (GitHub Pages, Netlify...) — see the note on API
+fallback mode above.
+
 ## Tests
 
 ```bash
-pytest
+pytest              # Python: gamma_factorial + binomial + beta + double_factorial
+python checker.py   # smoke test against a running/importable app instance
+
+npm install         # once, to pull in jsdom
+npm test            # site tests: loads docs/*.html in jsdom, exercises the calculator
 ```
 
 ## Code quality
