@@ -153,7 +153,7 @@
 (function () {
   "use strict";
 
-  const { t, evalExpression, formatResult, makeAnswerContext, evalAt } = GF;
+  const { t, evalExpression, resolveResult, makeFallbackNotice, formatResult, makeAnswerContext, evalAt } = GF;
 
   const NS = "http://www.w3.org/2000/svg";
   const PLOT_W = 560;
@@ -830,7 +830,7 @@
     container.appendChild(links);
   }
 
-  function runEval() {
+  async function runEval() {
     const expr = exprInput.value.trim();
     if (!expr) return;
 
@@ -838,11 +838,12 @@
     currentResult = null;
 
     try {
-      const { value, plot, kind } = evalExpression(expr);
+      const { value, plot, kind, source } = await resolveResult(expr);
       const display = formatResult(value);
       currentResult = { expr, value, plot };
 
       resultArea.appendChild(makeAnswerContext(expr, value, kind));
+      if (source === "local-fallback") resultArea.appendChild(makeFallbackNotice());
 
       if (plot) {
         const plotWrap = document.createElement("div");
