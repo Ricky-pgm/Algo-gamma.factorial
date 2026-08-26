@@ -141,6 +141,13 @@
         </div>
         <div class="history-list" id="historyList"></div>
       </div>
+
+      <div class="favorites" id="favoritesSection" hidden>
+        <div class="favorites-head">
+          <p class="favorites-title" id="favoritesTitle">Favorites</p>
+        </div>
+        <div class="favorites-list" id="favoritesList"></div>
+      </div>
     </aside>
   </div>
 
@@ -159,6 +166,7 @@
 <script src="js/practical.js"></script>
 <script src="js/keypad.js"></script>
 <script src="js/theme.js"></script>
+<script src="js/favorites.js"></script>
 <script src="js/nav.js"></script>
 <script>
 (function () {
@@ -634,8 +642,27 @@
   const langBtnLabel = document.getElementById("langBtnLabel");
   const langMenu = document.getElementById("langMenu");
 
-  const history = [];
+  const HISTORY_KEY = "gf-history";
   const HISTORY_LIMIT = 8;
+
+  function loadHistory() {
+    let raw = null;
+    try { raw = window.localStorage.getItem(HISTORY_KEY); } catch (e) { return []; }
+    if (!raw) return [];
+    try {
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed.filter((e) => e && typeof e.expr === "string") : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function saveHistory() {
+    history.length = Math.min(history.length, HISTORY_LIMIT);
+    try { window.localStorage.setItem(HISTORY_KEY, JSON.stringify(history)); } catch (e) { /* ignore */ }
+  }
+
+  const history = loadHistory();
 
   function relativeTime(ts) {
     const diffMs = Date.now() - ts;
@@ -684,12 +711,35 @@
 
   historyClearBtn.addEventListener("click", () => {
     history.length = 0;
+    saveHistory();
     renderHistory();
   });
 
   let currentResult = null; // { expr, value, plot }
-  const pinnedCurves = [];
+  const PINNED_KEY = "gf-pinned";
   const MAX_PINS = 3;
+
+  function loadPinned() {
+    let raw = null;
+    try { raw = window.localStorage.getItem(PINNED_KEY); } catch (e) { return []; }
+    if (!raw) return [];
+    try {
+      const parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed)) return [];
+      return parsed
+        .filter((p) => p && typeof p.expr === "string" && typeof p.re === "number")
+        .map((p) => ({ expr: p.expr, value: new GF.Complex(p.re, p.im || 0), plot: p.plot || null }));
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function savePinned() {
+    const serializable = pinnedCurves.map((p) => ({ expr: p.expr, re: p.value.re, im: p.value.im, plot: p.plot }));
+    try { window.localStorage.setItem(PINNED_KEY, JSON.stringify(serializable)); } catch (e) { /* ignore */ }
+  }
+
+  const pinnedCurves = loadPinned();
 
   function renderPinnedList() {
     pinnedList.innerHTML = "";
@@ -713,6 +763,7 @@
       remove.textContent = "×";
       remove.addEventListener("click", () => {
         pinnedCurves.splice(i, 1);
+        savePinned();
         renderPinnedList();
         rerenderPlot();
       });
@@ -738,6 +789,7 @@
       if (pinnedCurves.some((p) => p.expr === expr)) return;
       if (pinnedCurves.length >= MAX_PINS) pinnedCurves.shift();
       pinnedCurves.push({ expr, value, plot });
+      savePinned();
       renderPinnedList();
       rerenderPlot();
     });
@@ -783,6 +835,7 @@
     // when the language changes, to re-render translated labels).
     if (history[0] && history[0].expr === expr && history[0].isError === isError) return;
     history.unshift({ expr, display, isError, ts: Date.now() });
+    saveHistory();
   }
 
   // ===================== evaluation =====================
@@ -897,6 +950,7 @@
     document.getElementById("pinnedTitle").textContent = t("comparing");
     document.getElementById("historyTitle").textContent = t("history");
     historyClearBtn.textContent = t("historyClear");
+    document.getElementById("favoritesTitle").textContent = t("favorites");
     document.getElementById("noteText").innerHTML = "";
     const noteP = document.getElementById("noteText");
     const noteText = t("note", { c1: "1+2i", c2: "1+2j" });
@@ -933,6 +987,7 @@
     GF.renderNav("calc");
     renderHistory();
     renderPinnedList();
+    GF.renderFavoritesList();
     if (history.length === 0) {
       resultEmpty.textContent = t("resultEmpty", { ex1: "5!", ex2: "gamma(2.5)", ex3: "C(10, 3)" });
     }
