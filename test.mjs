@@ -134,20 +134,26 @@ console.log("== index.html ==");
   if (input && evalBtn) {
     input.value = "5!";
     evalBtn.click();
+    await flush();
     ok(d.body.textContent.includes("120"), "evaluating 5! shows 120");
     input.value = "gamma(-0.5)";
     evalBtn.click();
+    await flush();
     input.value = "(-0.5)!";
     evalBtn.click();
+    await flush();
     ok(d.body.textContent.includes("1.7724538509055163"), "(-0.5)! parenthesized form evaluates");
     input.value = "C(10,3)";
     evalBtn.click();
+    await flush();
     ok(d.body.textContent.includes("120"), "C(10,3) exact integer result");
     input.value = "gamma(-0.5)";
     evalBtn.click();
+    await flush();
     ok(d.body.textContent.includes("-3.5449077018110304"), "gamma(-0.5) = -2*sqrt(pi)");
     ok(d.querySelectorAll(".example-chip").length >= 12, `example chips rendered (${d.querySelectorAll(".example-chip").length})`);
     ok(d.querySelectorAll(".spec-panel").length === 1, "spec panel present in aside");
+    ok(d.querySelector(".result-fallback-notice") === null, "no fallback notice when API mock succeeds");
   }
 }
 
@@ -164,6 +170,7 @@ console.log("== comment-cest-calcule.html ==");
   if (input && evalBtn) {
     input.value = "5!";
     evalBtn.click();
+    await flush();
     const toggle = d.querySelector(".reasoning-toggle");
     ok(!!toggle, "reasoning toggle button appears for 5! (6 steps)");
     if (toggle) {
@@ -222,6 +229,7 @@ console.log("== applications.html ==");
   if (input && evalBtn) {
     input.value = "C(49,6)";
     evalBtn.click();
+    await flush();
     ok(d.body.textContent.includes("13983816"), "C(49,6) evaluates to 13983816");
   }
   w.GF.setLang("fr");
