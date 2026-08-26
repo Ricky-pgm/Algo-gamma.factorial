@@ -147,25 +147,25 @@
 </div>
 
 
-<script src="js/shared.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/math.js"></script>
+<script src="js/api.js"></script>
+<script src="js/plot.js"></script>
+<script src="js/reasoning.js"></script>
+<script src="js/practical.js"></script>
+<script src="js/keypad.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/nav.js"></script>
 <script>
 (function () {
   "use strict";
 
-  const { t, evalExpression, resolveResult, makeFallbackNotice, formatResult, makeAnswerContext, evalAt } = GF;
+  const { t, evalExpression, resolveResult, makeFallbackNotice, formatResult, makeAnswerContext, evalAt, defaultRange, makeTextButton, makeToolButton, urlFor } = GF;
 
   const NS = "http://www.w3.org/2000/svg";
   const PLOT_W = 560;
   const PLOT_H = 200;
   const PAD = { left: 44, right: 16, top: 16, bottom: 28 };
-
-  function defaultRange(plot) {
-    if (plot.kind === "binomial") return [-1, plot.n + 1];
-    if (plot.kind === "beta") return [Math.max(0.1, plot.center - 5), plot.center + 5];
-    if (plot.kind === "doubleFactorial") return [Math.max(-1, plot.center - 10), plot.center + 10];
-    const span = Math.max(3, Math.abs(plot.center) * 0.6 + 2);
-    return [plot.center - span, plot.center + span];
-  }
 
   function sampleCurve(plot, range) {
     const points = [];
@@ -727,35 +727,6 @@
     }
     const plotWrap = resultArea.querySelector(".plot-wrap");
     if (plotWrap) drawPlot(plotWrap, series);
-  }
-
-  function makeTextButton(label, onClick) {
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "text-btn";
-    btn.textContent = label;
-    btn.addEventListener("click", onClick);
-    return btn;
-  }
-
-  function makeToolButton(icon, label, onClick) {
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "tool-btn";
-    const iconSpan = document.createElement("span");
-    iconSpan.className = "tool-btn-icon";
-    iconSpan.setAttribute("aria-hidden", "true");
-    iconSpan.textContent = icon;
-    btn.appendChild(iconSpan);
-    btn.appendChild(document.createTextNode(label));
-    btn.addEventListener("click", onClick);
-    return btn;
-  }
-
-  function urlFor(expr) {
-    const url = new URL(window.location.href);
-    url.searchParams.set("expr", expr);
-    return url;
   }
 
   function makePinButton(expr, value, plot) {

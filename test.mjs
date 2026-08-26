@@ -154,6 +154,20 @@ console.log("== index.html ==");
     ok(d.querySelectorAll(".example-chip").length >= 12, `example chips rendered (${d.querySelectorAll(".example-chip").length})`);
     ok(d.querySelectorAll(".spec-panel").length === 1, "spec panel present in aside");
     ok(d.querySelector(".result-fallback-notice") === null, "no fallback notice when API mock succeeds");
+
+    // Regression guard for the index.html cleanup that dropped its local
+    // makeTextButton/makeToolButton/urlFor/defaultRange copies in favor of
+    // GF.* (plot.js) — pin-to-compare exercises makeTextButton end to end.
+    input.value = "5!";
+    evalBtn.click();
+    await flush();
+    const pinBtn = [...d.querySelectorAll(".text-btn")].find((b) => b.textContent === "pin to compare");
+    ok(!!pinBtn, "pin to compare button renders");
+    if (pinBtn) {
+      pinBtn.click();
+      ok(d.getElementById("pinnedSection").hidden === false, "pinned section becomes visible after pinning");
+      ok(d.querySelectorAll(".pinned-chip").length === 1, "pinned chip added to the list");
+    }
   }
 }
 
