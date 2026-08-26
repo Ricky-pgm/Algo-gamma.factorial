@@ -1,8 +1,10 @@
 import pkg from "jsdom";
 const { JSDOM, VirtualConsole } = pkg;
 import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-const DOCS = "/Users/usricvanvanhossou/Projects/gamma-factorial/docs";
+const DOCS = path.join(path.dirname(fileURLToPath(import.meta.url)), "docs");
 let failures = 0;
 
 function ok(cond, label) {
