@@ -68,14 +68,14 @@
 (function () {
   "use strict";
 
-  const { t, evalExpression, formatResult, makeAnswerContext, makeReasoningBlock } = GF;
+  const { t, evalExpression, resolveResult, makeFallbackNotice, formatResult, makeAnswerContext, makeReasoningBlock } = GF;
 
   const exprInput = document.getElementById("exprInput");
   const evalBtn = document.getElementById("evalBtn");
   const resultArea = document.getElementById("resultArea");
   const resultEmpty = document.getElementById("resultEmpty");
 
-  let last = null; // { expr, value, plot, kind }
+  let last = null; // { expr, value, plot, kind, source }
 
   function render() {
     resultArea.innerHTML = "";
@@ -83,8 +83,9 @@
       resultArea.appendChild(resultEmpty);
       return;
     }
-    const { expr, value, plot, kind } = last;
+    const { expr, value, plot, kind, source } = last;
     resultArea.appendChild(makeAnswerContext(expr, value, kind));
+    if (source === "local-fallback") resultArea.appendChild(makeFallbackNotice());
     const reasoning = makeReasoningBlock(plot, value);
     if (reasoning) {
       resultArea.appendChild(reasoning);
@@ -96,13 +97,13 @@
     }
   }
 
-  function run() {
+  async function run() {
     const expr = exprInput.value.trim();
     if (!expr) return;
     resultArea.innerHTML = "";
     try {
-      const { value, plot, kind } = evalExpression(expr);
-      last = { expr, value, plot, kind };
+      const { value, plot, kind, source } = await resolveResult(expr);
+      last = { expr, value, plot, kind, source };
       render();
       window.history.replaceState(null, "", GF.urlFor(expr));
       GF.renderNav("reasoning");
