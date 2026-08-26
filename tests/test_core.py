@@ -2,7 +2,7 @@ import math
 
 import pytest
 
-from gamma_factorial import factorial, gamma
+from gamma_factorial import beta, factorial, gamma
 
 
 def test_integers_match_math_factorial():
@@ -75,3 +75,13 @@ def test_infinite_input_raises_instead_of_returning_nan():
         gamma(float("inf"))
     with pytest.raises(ValueError):
         gamma(float("-inf"))
+
+
+def test_beta_known_values():
+    assert beta(2, 3) == pytest.approx(1 / 12, rel=1e-9)
+    assert beta(1, 1) == pytest.approx(1.0, rel=1e-9)
+
+
+def test_beta_matches_gamma_ratio():
+    for a, b in [(2.5, 1.5), (0.7, 3.2), (4, 4)]:
+        assert beta(a, b) == pytest.approx(gamma(a) * gamma(b) / gamma(a + b), rel=1e-9)
