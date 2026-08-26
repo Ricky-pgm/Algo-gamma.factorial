@@ -2,7 +2,7 @@ import math
 
 import pytest
 
-from gamma_factorial import beta, factorial, gamma
+from gamma_factorial import beta, double_factorial, factorial, gamma
 
 
 def test_integers_match_math_factorial():
@@ -85,3 +85,18 @@ def test_beta_known_values():
 def test_beta_matches_gamma_ratio():
     for a, b in [(2.5, 1.5), (0.7, 3.2), (4, 4)]:
         assert beta(a, b) == pytest.approx(gamma(a) * gamma(b) / gamma(a + b), rel=1e-9)
+
+
+def test_double_factorial_known_values():
+    assert double_factorial(0) == 1
+    assert double_factorial(1) == 1
+    assert double_factorial(-1) == 1
+    assert double_factorial(7) == 105
+    assert double_factorial(8) == 384
+
+
+def test_double_factorial_rejects_non_integer_or_below_minus_one():
+    with pytest.raises(ValueError):
+        double_factorial(2.5)
+    with pytest.raises(ValueError):
+        double_factorial(-2)
