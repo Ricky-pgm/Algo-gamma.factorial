@@ -8,7 +8,7 @@ Unlike a classic recursive/iterative factorial (limited to positive
 integers), this one is defined on almost all of ℝ and ℂ:
 
 ```python
-from gamma_factorial import factorial, binomial
+from gamma_factorial import factorial, binomial, beta, double_factorial
 
 factorial(5)      # 120.0
 factorial(-0.5)   # 1.7724538509055159  (= sqrt(pi))
@@ -20,6 +20,12 @@ factorial(-1)     # ValueError: pole (n! infinite)
 # Generalized binomial coefficient: C(n, k) = Gamma(n+1) / (Gamma(k+1) Gamma(n-k+1))
 binomial(5, 2)    # 10.0     (classic binomial coefficient)
 binomial(4.5, 2)  # 7.875    (continuous interpolation "between" rows of Pascal's triangle)
+
+# Beta function: B(a, b) = Gamma(a) Gamma(b) / Gamma(a + b)
+beta(2, 3)         # 0.08333333333333333  (= 1/12)
+
+# Double factorial: n!! = n(n-2)(n-4)... — integers >= -1 only
+double_factorial(7)  # 105.0
 ```
 
 A standalone web calculator lives in `docs/index.html` — type an
