@@ -30,7 +30,37 @@ const magic = new Proxy(function () {}, {
   set: () => true,
 });
 
-function loadPage(file) {
+// Mirrors gamma_factorial/api.py's _serialize(): a real Complex becomes a
+// bare number, a non-real one becomes {real, imag}.
+function serializeComplex(c) {
+  return c.isReal ? c.re : { real: c.re, imag: c.im };
+}
+
+// Synthesizes a same-shape response for GF.resolveResult()'s fetch calls,
+// reusing the page's own math functions (window.GF) — no real network
+// call, no separate "expected value" to keep in sync by hand.
+function fakeApiFetch(window) {
+  return async (url) => {
+    const [, op, ...parts] = new URL(url, "http://localhost").pathname.split("/");
+    const args = parts.map((p) => window.GF.parseNumber(decodeURIComponent(p)));
+    const compute = {
+      factorial: () => window.GF.factorial(args[0]),
+      gamma: () => window.GF.gamma(args[0]),
+      "double-factorial": () => window.GF.doubleFactorial(args[0]),
+      binomial: () => window.GF.binomial(args[0], args[1]),
+      beta: () => window.GF.beta(args[0], args[1]),
+    }[op];
+    if (!compute) return { ok: false, status: 404, json: async () => ({}) };
+    try {
+      const result = serializeComplex(compute());
+      return { ok: true, status: 200, json: async () => ({ input: parts, operation: op, result }) };
+    } catch (e) {
+      return { ok: false, status: 400, json: async () => ({ detail: e.message }) };
+    }
+  };
+}
+
+function loadPage(file, { fetchImpl = "fake" } = {}) {
   const html = inlinePage(file);
   const errors = [];
   const vc = new VirtualConsole();
@@ -49,9 +79,25 @@ function loadPage(file) {
       window.matchMedia = () => ({ matches: false, addEventListener() {}, removeEventListener() {} });
       window.HTMLCanvasElement.prototype.getContext = () => magic;
       window.addEventListener("error", (e) => errors.push("window.onerror: " + (e.error && e.error.stack || e.message)));
+      if (fetchImpl === "fake") {
+        // window.GF isn't defined yet at this point (the page's own
+        // <script> hasn't run), but it will be by the time anything
+        // actually calls fetch(), since that only happens from a click
+        // handler after the page has finished loading.
+        window.fetch = fakeApiFetch(window);
+      } else if (fetchImpl === "offline") {
+        window.fetch = async () => { throw new TypeError("network unreachable (simulated)"); };
+      }
     },
   });
   return { dom, errors };
+}
+
+// Flushes pending microtasks (e.g. the fetch()/then chain inside
+// resolveResult) so DOM assertions right after a .click() see the
+// post-await state instead of racing it.
+function flush() {
+  return new Promise((resolve) => setTimeout(resolve, 0));
 }
 
 function navChecks(d) {
