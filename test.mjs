@@ -241,6 +241,20 @@ console.log("== applications.html ==");
   const csDescDE = d.querySelector('[data-domain="cs"] .domain-desc');
   ok(csDescDE && csDescDE.textContent.includes("76 Jahre"), "DE translation applied to domain cards");
   w.GF.setLang("en");
+
+  ok(d.querySelectorAll(".domain-expand").length === 6, "6 domain cards have a learn-more accordion");
+  ok(d.querySelectorAll(".domain-inline-result").length === 6, "6 domain cards have an inline-result container");
+  const csCard = d.querySelector('[data-domain="cs"]');
+  const csChip = csCard.querySelector(".domain-expand-example .example-chip");
+  ok(!!csChip, "CS accordion example has its own chip");
+  if (csChip) {
+    const before = w.scrollY;
+    csChip.click();
+    await flush();
+    const inlineResult = csCard.querySelector(".domain-inline-result");
+    ok(!inlineResult.hidden && inlineResult.textContent.trim().length > 0, "clicking a card chip shows a result inline in that card");
+    ok(w.scrollY === before, "clicking a card chip does not scroll the page");
+  }
 }
 
 console.log("== pascal-continuous.html ==");

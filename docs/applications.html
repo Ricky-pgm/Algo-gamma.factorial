@@ -287,14 +287,31 @@
     exprInput.focus();
   });
 
-  // Domain card example chips — scroll up to calculator and run
-  document.getElementById("domainGrid").addEventListener("click", (event) => {
+  // Domain card example chips — show the result inline in the card, no scroll
+  document.getElementById("domainGrid").addEventListener("click", async (event) => {
     const btn = event.target.closest(".example-chip");
     if (!btn) return;
-    exprInput.value = btn.dataset.expr;
-    run();
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    setTimeout(() => exprInput.focus(), 300);
+    const card = btn.closest(".domain-card");
+    const target = card && card.querySelector(".domain-inline-result");
+    const expr = btn.dataset.expr;
+    if (!target) return;
+
+    target.innerHTML = "";
+    target.hidden = false;
+    try {
+      const { value, plot, kind, source } = await resolveResult(expr);
+      target.appendChild(makeAnswerContext(expr, value, kind));
+      if (source === "local-fallback") target.appendChild(makeFallbackNotice());
+    } catch (e) {
+      const p = document.createElement("p");
+      p.className = "result-error";
+      p.textContent = t("error") + ": " + e.message;
+      target.appendChild(p);
+    }
+
+    // Keep the top calculator + shareable URL in sync, without moving focus/scroll
+    exprInput.value = expr;
+    window.history.replaceState(null, "", GF.urlFor(expr));
   });
 
   GF.initLangUI();
