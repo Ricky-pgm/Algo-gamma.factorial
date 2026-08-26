@@ -173,7 +173,14 @@ mypy gamma_factorial               # type checking (strict mode)
   classic convention, it returns `0` when `k < 0` or `k > n` (the Gamma
   pole in the denominator makes the ratio `0`, matching `math.comb`), and
   raises `ValueError` only when `n` itself is a non-positive integer,
-  where the ratio is genuinely indeterminate:
+  where the ratio is genuinely indeterminate.
+- `beta(a, b) = Gamma(a) Gamma(b) / Gamma(a + b)` — the continuous
+  analogue of the binomial coefficient, and the normalizing constant of
+  the Beta distribution used throughout Bayesian statistics.
+- `double_factorial(n)` computes `n!! = n(n-2)(n-4)...` directly (not via
+  Gamma — the continuous generalization needs separate even/odd
+  formulas), so it's only defined for integers `>= -1`
+  (`double_factorial(-1) == 1` by convention).
 
 ## License
 
