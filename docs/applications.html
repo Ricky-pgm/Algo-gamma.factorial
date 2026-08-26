@@ -206,127 +206,59 @@
   </footer>
 </div>
 
-<script src="js/shared.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/math.js"></script>
+<script src="js/api.js"></script>
+<script src="js/plot.js"></script>
+<script src="js/reasoning.js"></script>
+<script src="js/practical.js"></script>
+<script src="js/keypad.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/nav.js"></script>
 <script>
 (function () {
   "use strict";
 
-  const { t, evalExpression, resolveResult, makeFallbackNotice, formatResult, makeAnswerContext, makePracticalBlock } = GF;
+  GF.initDetailPage({
+    navKey: "app",
+    buildContentBlock: (plot, value, kind) => GF.makePracticalBlock(plot, value, kind),
+    titleKey: "appPageTitle",
+    ledeKey: "appPageLede",
+    emptyKey: "appEmpty",
+    afterApplyStaticText: () => {
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        el.textContent = GF.t(el.dataset.i18n);
+      });
+    },
+    afterInit: ({ exprInput }) => {
+      // Domain card example chips — show the result inline in the card, no scroll
+      document.getElementById("domainGrid").addEventListener("click", async (event) => {
+        const btn = event.target.closest(".example-chip");
+        if (!btn) return;
+        const card = btn.closest(".domain-card");
+        const target = card && card.querySelector(".domain-inline-result");
+        const expr = btn.dataset.expr;
+        if (!target) return;
 
-  const exprInput = document.getElementById("exprInput");
-  const evalBtn = document.getElementById("evalBtn");
-  const resultArea = document.getElementById("resultArea");
-  const resultEmpty = document.getElementById("resultEmpty");
+        target.innerHTML = "";
+        target.hidden = false;
+        try {
+          const { value, plot, kind, source } = await GF.resolveResult(expr);
+          target.appendChild(GF.makeAnswerContext(expr, value, kind));
+          if (source === "local-fallback") target.appendChild(GF.makeFallbackNotice());
+        } catch (e) {
+          const p = document.createElement("p");
+          p.className = "result-error";
+          p.textContent = GF.t("error") + ": " + e.message;
+          target.appendChild(p);
+        }
 
-  let last = null;
-
-  function render() {
-    resultArea.innerHTML = "";
-    if (!last) {
-      resultArea.appendChild(resultEmpty);
-      return;
-    }
-    const { expr, value, plot, kind, source } = last;
-    resultArea.appendChild(makeAnswerContext(expr, value, kind));
-    if (source === "local-fallback") resultArea.appendChild(makeFallbackNotice());
-    const practical = makePracticalBlock(plot, value, kind);
-    if (practical) resultArea.appendChild(practical);
-  }
-
-  async function run() {
-    const expr = exprInput.value.trim();
-    if (!expr) return;
-    resultArea.innerHTML = "";
-    try {
-      const { value, plot, kind, source } = await resolveResult(expr);
-      last = { expr, value, plot, kind, source };
-      render();
-      window.history.replaceState(null, "", GF.urlFor(expr));
-      GF.renderNav("app");
-    } catch (e) {
-      const p = document.createElement("p");
-      p.className = "result-error";
-      p.textContent = t("error") + ": " + e.message;
-      resultArea.appendChild(p);
-    }
-  }
-
-  function applyStaticText() {
-    document.getElementById("eyebrow").textContent = t("eyebrow");
-    document.getElementById("pageTitle").textContent = t("appPageTitle");
-    document.getElementById("pageLede").textContent = t("appPageLede");
-    document.title = t("appPageTitle") + " — gamma-factorial";
-    exprInput.placeholder = t("inputPlaceholder");
-    evalBtn.textContent = t("evaluate");
-    resultEmpty.textContent = t("appEmpty");
-    const note = document.getElementById("noteText");
-    note.textContent = t("note", { c1: "1+2i", c2: "1+2j" });
-    document.querySelectorAll("[data-i18n]").forEach(el => {
-      el.textContent = t(el.dataset.i18n);
-    });
-  }
-
-  GF.setLangHook(() => {
-    applyStaticText();
-    GF.renderKeypad();
-    GF.renderNav("app");
-    render();
+        // Keep the top calculator + shareable URL in sync, without moving focus/scroll
+        exprInput.value = expr;
+        window.history.replaceState(null, "", GF.urlFor(expr));
+      });
+    },
   });
-
-  evalBtn.addEventListener("click", run);
-  exprInput.addEventListener("keydown", (event) => {
-    if (event.key === "Enter") run();
-  });
-
-  // Example chips in calculator area
-  document.getElementById("examples").addEventListener("click", (event) => {
-    const btn = event.target.closest(".example-chip");
-    if (!btn) return;
-    exprInput.value = btn.dataset.expr;
-    run();
-    exprInput.focus();
-  });
-
-  // Domain card example chips — show the result inline in the card, no scroll
-  document.getElementById("domainGrid").addEventListener("click", async (event) => {
-    const btn = event.target.closest(".example-chip");
-    if (!btn) return;
-    const card = btn.closest(".domain-card");
-    const target = card && card.querySelector(".domain-inline-result");
-    const expr = btn.dataset.expr;
-    if (!target) return;
-
-    target.innerHTML = "";
-    target.hidden = false;
-    try {
-      const { value, plot, kind, source } = await resolveResult(expr);
-      target.appendChild(makeAnswerContext(expr, value, kind));
-      if (source === "local-fallback") target.appendChild(makeFallbackNotice());
-    } catch (e) {
-      const p = document.createElement("p");
-      p.className = "result-error";
-      p.textContent = t("error") + ": " + e.message;
-      target.appendChild(p);
-    }
-
-    // Keep the top calculator + shareable URL in sync, without moving focus/scroll
-    exprInput.value = expr;
-    window.history.replaceState(null, "", GF.urlFor(expr));
-  });
-
-  GF.initLangUI();
-  GF.setLang(GF.detectInitialLang());
-  GF.initThemeToggle();
-
-  const urlExpr = new URL(window.location.href).searchParams.get("expr");
-  if (urlExpr) {
-    exprInput.value = urlExpr;
-    run();
-  } else {
-    render();
-  }
-
-  exprInput.focus();
 })();
 </script>
 </body>
