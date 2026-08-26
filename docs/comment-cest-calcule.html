@@ -63,101 +63,32 @@
   </footer>
 </div>
 
-<script src="js/shared.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/math.js"></script>
+<script src="js/api.js"></script>
+<script src="js/plot.js"></script>
+<script src="js/reasoning.js"></script>
+<script src="js/practical.js"></script>
+<script src="js/keypad.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/nav.js"></script>
 <script>
 (function () {
   "use strict";
 
-  const { t, evalExpression, resolveResult, makeFallbackNotice, formatResult, makeAnswerContext, makeReasoningBlock } = GF;
-
-  const exprInput = document.getElementById("exprInput");
-  const evalBtn = document.getElementById("evalBtn");
-  const resultArea = document.getElementById("resultArea");
-  const resultEmpty = document.getElementById("resultEmpty");
-
-  let last = null; // { expr, value, plot, kind, source }
-
-  function render() {
-    resultArea.innerHTML = "";
-    if (!last) {
-      resultArea.appendChild(resultEmpty);
-      return;
-    }
-    const { expr, value, plot, kind, source } = last;
-    resultArea.appendChild(makeAnswerContext(expr, value, kind));
-    if (source === "local-fallback") resultArea.appendChild(makeFallbackNotice());
-    const reasoning = makeReasoningBlock(plot, value);
-    if (reasoning) {
-      resultArea.appendChild(reasoning);
-    } else if (kind !== "number") {
+  GF.initDetailPage({
+    navKey: "reasoning",
+    buildContentBlock: (plot, value) => GF.makeReasoningBlock(plot, value),
+    titleKey: "reasoningPageTitle",
+    ledeKey: "reasoningPageLede",
+    emptyKey: "reasoningEmpty",
+    onComplexResult: (resultArea) => {
       const cap = document.createElement("p");
       cap.className = "plot-caption";
-      cap.textContent = t("complexNote");
+      cap.textContent = GF.t("complexNote");
       resultArea.appendChild(cap);
-    }
-  }
-
-  async function run() {
-    const expr = exprInput.value.trim();
-    if (!expr) return;
-    resultArea.innerHTML = "";
-    try {
-      const { value, plot, kind, source } = await resolveResult(expr);
-      last = { expr, value, plot, kind, source };
-      render();
-      window.history.replaceState(null, "", GF.urlFor(expr));
-      GF.renderNav("reasoning");
-    } catch (e) {
-      const p = document.createElement("p");
-      p.className = "result-error";
-      p.textContent = t("error") + ": " + e.message;
-      resultArea.appendChild(p);
-    }
-  }
-
-  function applyStaticText() {
-    document.getElementById("eyebrow").textContent = t("eyebrow");
-    document.getElementById("pageTitle").textContent = t("reasoningPageTitle");
-    document.getElementById("pageLede").textContent = t("reasoningPageLede");
-    document.title = t("reasoningPageTitle") + " — gamma-factorial";
-    exprInput.placeholder = t("inputPlaceholder");
-    evalBtn.textContent = t("evaluate");
-    resultEmpty.textContent = t("reasoningEmpty");
-    const note = document.getElementById("noteText");
-    note.textContent = t("note", { c1: "1+2i", c2: "1+2j" });
-  }
-
-  GF.setLangHook(() => {
-    applyStaticText();
-    GF.renderKeypad();
-    GF.renderNav("reasoning");
-    render();
+    },
   });
-
-  evalBtn.addEventListener("click", run);
-  exprInput.addEventListener("keydown", (event) => {
-    if (event.key === "Enter") run();
-  });
-  document.getElementById("examples").addEventListener("click", (event) => {
-    const btn = event.target.closest(".example-chip");
-    if (!btn) return;
-    exprInput.value = btn.dataset.expr;
-    run();
-  });
-
-  GF.initLangUI();
-  GF.setLang(GF.detectInitialLang());
-  GF.initThemeToggle();
-
-  const urlExpr = new URL(window.location.href).searchParams.get("expr");
-  if (urlExpr) {
-    exprInput.value = urlExpr;
-    run();
-  } else {
-    render();
-  }
-
-  exprInput.focus();
 })();
 </script>
 </body>

@@ -100,6 +100,7 @@
     makeToolButton,
     urlFor,
     makeCopyLinkButton,
+    functionBadgeText,
     round,
   });
 })();
