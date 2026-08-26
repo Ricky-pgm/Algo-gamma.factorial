@@ -1190,6 +1190,37 @@ table.value-table tbody tr:hover td { background: var(--surface-sunken); }
   flex-shrink: 0;
 }
 
+/* ---------- favorites ---------- */
+/* Reuses .history-item/.h-status/.h-main/.h-expr/.h-value verbatim for item
+   rows (same visual language as history), and .pinned-remove for the
+   individual remove control — only the section wrapper is new. */
+
+.favorites {
+  margin-top: 2.2rem;
+}
+
+.favorites-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.6rem;
+  margin: 0 0 0.65rem;
+}
+
+.favorites-title {
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 700;
+  margin: 0;
+}
+
+.favorite-item .favorite-remove {
+  flex-shrink: 0;
+}
+
 /* ---------- reasoning detail toggle ---------- */
 
 .reasoning-extra {
@@ -1567,6 +1598,10 @@ table.value-table tbody tr:hover td { background: var(--surface-sunken); }
     align-items: flex-start;
   }
   .history {
+    flex: 1;
+    min-width: 260px;
+  }
+  .favorites {
     flex: 1;
     min-width: 260px;
   }
