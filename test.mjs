@@ -60,7 +60,7 @@ function fakeApiFetch(window) {
   };
 }
 
-function loadPage(file, { fetchImpl = "fake" } = {}) {
+function loadPage(file, { fetchImpl = "fake", seedLocalStorage = null } = {}) {
   const html = inlinePage(file);
   const errors = [];
   const vc = new VirtualConsole();
@@ -78,6 +78,11 @@ function loadPage(file, { fetchImpl = "fake" } = {}) {
     beforeParse(window) {
       window.matchMedia = () => ({ matches: false, addEventListener() {}, removeEventListener() {} });
       window.HTMLCanvasElement.prototype.getContext = () => magic;
+      if (seedLocalStorage) {
+        for (const [k, v] of Object.entries(seedLocalStorage)) {
+          if (v !== null && v !== undefined) window.localStorage.setItem(k, v);
+        }
+      }
       window.addEventListener("error", (e) => errors.push("window.onerror: " + (e.error && e.error.stack || e.message)));
       if (fetchImpl === "fake") {
         // window.GF isn't defined yet at this point (the page's own
@@ -139,6 +144,8 @@ console.log("== window.GF export surface (docs/js/*.js split) ==");
     "initThemeToggle",
     "setLang", "setLangHook", "initLangUI", "renderNav", "navExpr",
     "makeAnswerContext", "initDetailPage",
+    "isFavorite", "toggleFavorite", "removeFavorite", "getFavorites",
+    "renderFavoritesList", "makeFavoriteButton",
   ];
   const { dom: gfDom } = loadPage("index.html");
   const actualKeys = Object.keys(gfDom.window.GF).filter((k) => !k.startsWith("_")).sort();
@@ -198,7 +205,96 @@ console.log("== index.html ==");
       ok(d.getElementById("pinnedSection").hidden === false, "pinned section becomes visible after pinning");
       ok(d.querySelectorAll(".pinned-chip").length === 1, "pinned chip added to the list");
     }
+
+    // Favorites: toggle button lives in every result's .eq-actions (via
+    // nav.js's makeAnswerContext), independent of whether a plot exists.
+    const favBtn = d.querySelector(".fav-btn");
+    ok(!!favBtn, "favorite toggle button renders");
+    if (favBtn) {
+      ok(favBtn.getAttribute("aria-pressed") === "false", "favorite toggle starts unfavorited");
+      favBtn.click();
+      ok(favBtn.getAttribute("aria-pressed") === "true", "favorite toggle switches to favorited");
+      ok(w.localStorage.getItem("gf-favorites") !== null, "favorites persisted to localStorage");
+      ok(d.getElementById("favoritesSection").hidden === false, "favorites section becomes visible after favoriting");
+      ok(d.querySelectorAll(".favorites-list .favorite-item").length === 1, "favorite item added to the sidebar list");
+    }
+
+    ok(w.localStorage.getItem("gf-history") !== null, "history persisted to localStorage after eval");
+    ok(w.localStorage.getItem("gf-pinned") !== null, "pinned curves persisted to localStorage after pinning");
   }
+}
+
+console.log("== index.html persistence (simulated reload) ==");
+{
+  // First pass: evaluate, pin, and favorite something, then capture what
+  // got written to localStorage.
+  const { dom, errors } = loadPage("index.html");
+  const w = dom.window, d = w.document;
+  ok(errors.length === 0, "no script errors" + (errors.length ? " -> " + errors.join(" | ") : ""));
+  const input = d.getElementById("exprInput");
+  const evalBtn = d.getElementById("evalBtn");
+  input.value = "6!";
+  evalBtn.click();
+  await flush();
+  const pinBtn = [...d.querySelectorAll(".text-btn")].find((b) => b.textContent === "pin to compare");
+  if (pinBtn) pinBtn.click();
+  const favBtn = d.querySelector(".fav-btn");
+  if (favBtn) favBtn.click();
+
+  const seed = {
+    "gf-history": w.localStorage.getItem("gf-history"),
+    "gf-pinned": w.localStorage.getItem("gf-pinned"),
+    "gf-favorites": w.localStorage.getItem("gf-favorites"),
+  };
+
+  // Second pass: a fresh JSDOM instance seeded with the first pass's
+  // localStorage — each loadPage() otherwise gets its own isolated store,
+  // so this is how a page reload is simulated here.
+  const { dom: dom2, errors: errors2 } = loadPage("index.html", { seedLocalStorage: seed });
+  const d2 = dom2.window.document;
+  ok(errors2.length === 0, "reload: no script errors" + (errors2.length ? " -> " + errors2.join(" | ") : ""));
+  ok(d2.getElementById("historySection").hidden === false, "reload: history section restored visible");
+  ok(d2.querySelectorAll(".history-item").length >= 1, "reload: history items restored");
+  ok(d2.getElementById("pinnedSection").hidden === false, "reload: pinned section restored visible");
+  ok(d2.querySelectorAll(".pinned-chip").length === 1, "reload: pinned chip restored");
+  ok(d2.getElementById("favoritesSection").hidden === false, "reload: favorites section restored visible");
+  ok(d2.querySelectorAll(".favorites-list .favorite-item").length === 1, "reload: favorite item restored");
+
+  // Exercise the Complex-reconstruction path: evaluate a plottable
+  // expression on the reloaded page so rerenderPlot() reads the restored
+  // pin's .value.isReal — if reconstruction were skipped (a plain object
+  // instead of a real GF.Complex instance), this would throw.
+  const input2 = d2.getElementById("exprInput");
+  const evalBtn2 = d2.getElementById("evalBtn");
+  input2.value = "7!";
+  evalBtn2.click();
+  await flush();
+  ok(errors2.length === 0, "reload: plotting alongside a restored pin does not throw");
+}
+
+console.log("== index.html persistence: corrupted/absent localStorage ==");
+{
+  const badSeeds = [
+    { key: "gf-history", value: "{not valid json" },
+    { key: "gf-pinned", value: "null" },
+    { key: "gf-pinned", value: '[{"expr":"x"}]' },
+    { key: "gf-favorites", value: '"just a string"' },
+  ];
+  for (const { key, value } of badSeeds) {
+    const { dom, errors } = loadPage("index.html", { seedLocalStorage: { [key]: value } });
+    const d = dom.window.document;
+    ok(errors.length === 0, `corrupted ${key} does not throw a script error`);
+    ok(d.getElementById("historySection").hidden === true, `corrupted ${key}: history still shows empty state`);
+    ok(d.getElementById("favoritesSection").hidden === true, `corrupted ${key}: favorites still shows empty state`);
+  }
+
+  // No seeding at all: the "never used this feature before" case.
+  const { dom, errors } = loadPage("index.html");
+  const d = dom.window.document;
+  ok(errors.length === 0, "no gf-history/gf-pinned/gf-favorites keys yet: no script error");
+  ok(d.getElementById("historySection").hidden === true, "history hidden with no stored key");
+  ok(d.getElementById("pinnedSection").hidden === true, "pinned hidden with no stored key");
+  ok(d.getElementById("favoritesSection").hidden === true, "favorites hidden with no stored key");
 }
 
 console.log("== comment-cest-calcule.html ==");
@@ -226,6 +322,17 @@ console.log("== comment-cest-calcule.html ==");
       ok(extraBefore && !extraBefore.hidden, "extra steps visible after click");
       toggle.click();
       ok(toggle.getAttribute("aria-expanded") === "false", "toggle collapses again");
+    }
+
+    // Favorites work from a detail page too (favorites.js is a shared
+    // module, not index.html-only) — this page has no #favoritesSection,
+    // so only the toggle button + persistence are checked, not a list.
+    const favBtn = d.querySelector(".fav-btn");
+    ok(!!favBtn, "favorite toggle button renders on a detail page");
+    if (favBtn) {
+      favBtn.click();
+      ok(favBtn.getAttribute("aria-pressed") === "true", "favorite toggle works from a detail page");
+      ok(w.localStorage.getItem("gf-favorites") !== null, "favoriting from a detail page persists to localStorage");
     }
   }
 }
