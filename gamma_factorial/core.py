@@ -93,3 +93,23 @@ def factorial(n: float | complex) -> float | complex:
 def beta(a: float | complex, b: float | complex) -> float | complex:
     """Euler's Beta function: B(a, b) = Gamma(a) Gamma(b) / Gamma(a + b)."""
     return gamma(a) * gamma(b) / gamma(a + b)
+
+
+def double_factorial(n: float | complex) -> float:
+    """Double factorial n!! = n(n-2)(n-4)...
+
+    Defined here only for real integers >= -1 (by convention (-1)!! = 1);
+    unlike `factorial`, this is not extended to reals via Gamma (the
+    continuous generalization needs 2^(n/2) Gamma(n/2+1)-style formulas
+    that differ for even/odd n).
+
+    Raises ValueError for non-integers or integers < -1.
+    """
+    if isinstance(n, complex) or not float(n).is_integer() or n < -1:
+        raise ValueError(f"double factorial is only defined for integers >= -1, got {n}")
+    result = 1.0
+    k = int(n)
+    while k > 1:
+        result *= k
+        k -= 2
+    return result
