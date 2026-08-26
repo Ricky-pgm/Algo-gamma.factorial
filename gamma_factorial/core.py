@@ -90,7 +90,7 @@ def factorial(n: float | complex) -> float | complex:
     # Exact product for non-negative integers: keeps small factorials
     # (0! .. 170!) bit-exact instead of carrying Lanczos rounding noise
     # into values people verify by hand (mirrors the JS engine's
-    # equivalent shortcut in docs/js/shared.js). Larger/non-integer/
+    # equivalent shortcut in docs/js/math.js). Larger/non-integer/
     # complex inputs fall through to Gamma.
     if isinstance(n, (int, float)) and float(n).is_integer() and 0 <= n <= 170:
         result = 1.0

@@ -48,9 +48,17 @@ uvicorn gamma_factorial.api:app --reload
   reusing `_parse`/`_serialize` for consistent error handling.
 - `gamma_factorial/cli.py` — the command-line tool and REPL.
 - `docs/` — the static web calculator (plain HTML/CSS/JS, no build step,
-  no framework). `docs/js/shared.js` holds the i18n dictionary (EN/FR/DE),
-  the local math engine used for the live curve plot and offline
-  fallback, and DOM helpers shared across the 6 pages.
+  no framework). `docs/js/` holds 9 classic (non-module) scripts, loaded
+  in dependency order and merged onto a shared `window.GF` namespace —
+  `i18n.js` (EN/FR/DE dictionary), `math.js` (the local math engine),
+  `api.js` (`resolveResult`, the API-first/local-fallback logic),
+  `plot.js` (live curve helpers), `reasoning.js`/`practical.js` (the
+  "how it's computed"/"what it's for" panels), `keypad.js`, `theme.js`,
+  and `nav.js` (navigation, language switching, and `initDetailPage`,
+  the shared init/render loop for the 3 detail pages). Deliberately not
+  `<script type="module">`: real ES modules break `file://` opening on
+  Chrome/Safari (CORS), which would break "open the file directly in a
+  browser."
 - `tests/` — pytest suite for the Python package.
 - `test.mjs` — jsdom-based tests that load the actual `docs/*.html` pages
   and exercise them (evaluating expressions, switching language/theme,
@@ -59,18 +67,19 @@ uvicorn gamma_factorial.api:app --reload
 ## Keeping the JS and Python math in sync
 
 The web calculator's headline result is fetched from the API
-(`GF.resolveResult()` in `docs/js/shared.js`) whenever it's reachable —
-the JS math in `shared.js` is only the source of truth for the live curve
-plot and for the offline fallback (shown with a small notice) when the
-API can't be reached. If you add or change a math function:
+(`GF.resolveResult()` in `docs/js/api.js`) whenever it's reachable — the
+JS math in `docs/js/math.js` is only the source of truth for the live
+curve plot and for the offline fallback (shown with a small notice) when
+the API can't be reached. If you add or change a math function:
 
 1. Implement/fix it in `gamma_factorial/core.py` (or `binomial.py`) first,
    with a pytest case.
 2. Add or update the matching API endpoint in `gamma_factorial/api.py`.
-3. Port the same change to the JS engine in `docs/js/shared.js` so the
-   fallback path doesn't silently diverge from the API.
+3. Port the same change to `docs/js/math.js` so the fallback path
+   doesn't silently diverge from the API.
 4. If it's a new operation exposed to users, wire it into
-   `API_ENDPOINT_BY_KIND` (`shared.js`) so `resolveResult()` can reach it.
+   `API_ENDPOINT_BY_KIND` (`docs/js/api.js`) so `resolveResult()` can
+   reach it.
 
 ## Commit style
 

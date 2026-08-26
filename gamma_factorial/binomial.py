@@ -47,7 +47,7 @@ def binomial(n: float | complex, k: float | complex) -> float | complex:
     if _is_nonpositive_integer(n - k + 1):
         return _zero_like(n, k)
     # Exact multiplicative formula for non-negative integers (mirrors the
-    # JS engine's equivalent shortcut in docs/js/shared.js): avoids both
+    # JS engine's equivalent shortcut in docs/js/math.js): avoids both
     # Gamma-ratio rounding noise on everyday inputs like C(10, 3), and
     # premature OverflowError from Gamma(n+1) alone overflowing float even
     # when the final ratio (e.g. C(200, 100)) would not.
