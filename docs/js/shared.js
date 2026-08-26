@@ -859,13 +859,13 @@
     const dfactMatch = DOUBLE_FACTORIAL_SUFFIX_RE.exec(trimmed);
     if (dfactMatch) {
       const n = evalOperand(dfactMatch[1]);
-      return { value: doubleFactorial(n), plot: plotFor("doubleFactorial", n), kind: "doubleFactorial" };
+      return { value: doubleFactorial(n), plot: plotFor("doubleFactorial", n), kind: "doubleFactorial", args: [n] };
     }
 
     const factMatch = FACTORIAL_SUFFIX_RE.exec(trimmed);
     if (factMatch) {
       const n = evalOperand(factMatch[1]);
-      return { value: factorial(n), plot: plotFor("factorial", n), kind: "factorial" };
+      return { value: factorial(n), plot: plotFor("factorial", n), kind: "factorial", args: [n] };
     }
 
     const callMatch = CALL_RE.exec(trimmed);
@@ -875,25 +875,25 @@
 
       if (func === "factorial" && rawArgs.length === 1) {
         const n = evalOperand(rawArgs[0]);
-        return { value: factorial(n), plot: plotFor("factorial", n), kind: "factorial" };
+        return { value: factorial(n), plot: plotFor("factorial", n), kind: "factorial", args: [n] };
       }
       if (func === "doublefactorial" && rawArgs.length === 1) {
         const n = evalOperand(rawArgs[0]);
-        return { value: doubleFactorial(n), plot: plotFor("doubleFactorial", n), kind: "doubleFactorial" };
+        return { value: doubleFactorial(n), plot: plotFor("doubleFactorial", n), kind: "doubleFactorial", args: [n] };
       }
       if (func === "gamma" && rawArgs.length === 1) {
         const z = evalOperand(rawArgs[0]);
-        return { value: gamma(z), plot: plotFor("gamma", z), kind: "gamma" };
+        return { value: gamma(z), plot: plotFor("gamma", z), kind: "gamma", args: [z] };
       }
       if ((func === "c" || func === "binomial") && rawArgs.length === 2) {
         const n = evalOperand(rawArgs[0]);
         const k = evalOperand(rawArgs[1]);
-        return { value: binomial(n, k), plot: plotFor("binomial", k, { n }), kind: "binomial" };
+        return { value: binomial(n, k), plot: plotFor("binomial", k, { n }), kind: "binomial", args: [n, k] };
       }
       if (func === "beta" && rawArgs.length === 2) {
         const a = evalOperand(rawArgs[0]);
         const b = evalOperand(rawArgs[1]);
-        return { value: beta(a, b), plot: plotFor("beta", a, { b }), kind: "beta" };
+        return { value: beta(a, b), plot: plotFor("beta", a, { b }), kind: "beta", args: [a, b] };
       }
       throw new GammaError(t("errUnrecognized", { expr }));
     }
@@ -902,7 +902,7 @@
     // just echo it back, like a plain calculator would.
     try {
       const n = evalOperand(trimmed);
-      return { value: n, plot: null, kind: "number", isBareNumber: true };
+      return { value: n, plot: null, kind: "number", isBareNumber: true, args: [n] };
     } catch (e) {
       throw new GammaError(t("errUnrecognized", { expr }));
     }
