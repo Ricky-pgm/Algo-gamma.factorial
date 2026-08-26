@@ -189,9 +189,20 @@ console.log("== comment-cest-calcule.html ==");
 console.log("== a-quoi-ca-sert.html ==");
 {
   const { dom, errors } = loadPage("a-quoi-ca-sert.html");
-  navChecks(dom.window.document);
-  themeChecks(dom.window, dom.window.document);
+  const d = dom.window.document;
+  navChecks(d);
+  themeChecks(dom.window, d);
   ok(errors.length === 0, "no script errors" + (errors.length ? " -> " + errors.join(" | ") : ""));
+  const input = d.getElementById("exprInput");
+  const evalBtn = d.getElementById("evalBtn");
+  ok(!!input && !!evalBtn, "input + eval button exist");
+  if (input && evalBtn) {
+    input.value = "5!";
+    evalBtn.click();
+    await flush();
+    ok(d.body.textContent.includes("120"), "evaluating 5! shows 120");
+    ok(d.querySelector(".practical") !== null, "practical-use block renders for 5!");
+  }
 }
 
 console.log("== faq.html ==");
