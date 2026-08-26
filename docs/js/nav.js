@@ -1,6 +1,6 @@
 (function () {
   "use strict";
-  const { t, formatResult, functionBadgeText, makeCopyLinkButton } = window.GF;
+  const { t, formatResult, functionBadgeText, makeCopyLinkButton, makeFavoriteButton } = window.GF;
   // ===================== page infrastructure (3-page layout) =====================
 
   let langChangeHook = null;
@@ -122,6 +122,7 @@
     const actions = document.createElement("div");
     actions.className = "eq-actions";
     actions.appendChild(makeCopyLinkButton(expr));
+    actions.appendChild(makeFavoriteButton(expr, formatResult(value), kind));
     answer.appendChild(actions);
     return answer;
   }
