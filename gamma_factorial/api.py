@@ -10,7 +10,7 @@ from fastapi.staticfiles import StaticFiles
 
 from .binomial import binomial
 from .cli import NumberParseError, _parse_number
-from .core import factorial, gamma
+from .core import beta, factorial, gamma
 
 app = FastAPI(
     title="gamma-factorial",
@@ -68,6 +68,21 @@ def binomial_endpoint(n_value: str, k_value: str) -> dict[str, Any]:
     return {
         "input": {"n": n_value, "k": k_value},
         "operation": "binomial",
+        "result": _serialize(result),
+    }
+
+
+@app.get("/beta/{a_value}/{b_value}")
+def beta_endpoint(a_value: str, b_value: str) -> dict[str, Any]:
+    a = _parse(a_value)
+    b = _parse(b_value)
+    try:
+        result = beta(a, b)
+    except (ValueError, OverflowError) as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from None
+    return {
+        "input": {"a": a_value, "b": b_value},
+        "operation": "beta",
         "result": _serialize(result),
     }
 
