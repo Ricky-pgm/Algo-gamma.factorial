@@ -9,7 +9,9 @@ client = TestClient(app)
 checks = [
     ("/", 200, "text/html"),
     ("/style.css", 200, "text/css"),
-    ("/js/shared.js", 200, "javascript"),
+    ("/js/i18n.js", 200, "javascript"),
+    ("/js/math.js", 200, "javascript"),
+    ("/js/nav.js", 200, "javascript"),
     ("/factorial/5", 200, "application/json"),
     ("/factorial/-0.5", 200, "application/json"),
     ("/factorial/1%2B2j", 200, "application/json"),
