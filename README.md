@@ -24,11 +24,16 @@ binomial(4.5, 2)  # 7.875    (continuous interpolation "between" rows of Pascal'
 
 A standalone web calculator lives in `docs/index.html` — type an
 expression (`5!`, `gamma(2.5)`, `C(10, 3)`, `1+2i`), get an instant result
-plus a live curve of the function around it. Pure HTML/JS, no server, no
-build step: open the file directly in a browser, or deploy the `docs/`
-folder as a static site (GitHub Pages, Netlify, Vercel...). It's a JS port
-of the same Lanczos math as the Python package, including complex-number
-support.
+plus a live curve of the function around it. Pure HTML/JS, no build step.
+
+When served alongside the API (`gamma_factorial.api:app`, which mounts
+`docs/` at `/`), every result is verified against the Python package —
+the same JS math is used only to draw the live curve and as an
+offline fallback (shown with a small "computed locally" notice) if the
+API can't be reached. Opening `docs/index.html` directly as a file, or
+deploying `docs/` on its own as a static site (GitHub Pages, Netlify...),
+still works standalone: results just run in fallback mode the whole
+time.
 
 The calculator also supports:
 - **Pin to compare** — overlay multiple results on the same plot (e.g.
