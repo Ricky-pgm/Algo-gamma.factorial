@@ -10,6 +10,26 @@ def test_integers_match_math_factorial():
         assert factorial(n) == pytest.approx(math.factorial(n), rel=1e-9)
 
 
+def test_small_integers_are_bit_exact():
+    # Regression: factorial() used to always route through Gamma/Lanczos,
+    # so e.g. factorial(12) returned 479001599.9999981 instead of the
+    # exact integer — caught via docs/applications.html displaying that
+    # value to users. Below 23!, every result is exactly representable as
+    # a float, so the exact-product shortcut must match bit-for-bit.
+    for n in range(0, 23):
+        assert factorial(n) == float(math.factorial(n))
+
+
+def test_larger_integers_stay_close_to_exact():
+    # Above 22!, float can no longer represent the exact integer, so
+    # bit-exactness against float(math.factorial(n)) isn't guaranteed
+    # (the two computations round differently) — but the relative error
+    # must stay at float-precision level, not carry Lanczos-approximation
+    # noise (the ~2e-9 relative error the old always-use-Gamma path had).
+    for n in [23, 30, 50, 100, 170]:
+        assert factorial(n) == pytest.approx(math.factorial(n), rel=1e-14)
+
+
 def test_half_integer_known_values():
     sqrt_pi = math.sqrt(math.pi)
     assert factorial(-0.5) == pytest.approx(sqrt_pi, rel=1e-12)
