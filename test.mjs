@@ -120,6 +120,36 @@ function themeChecks(w, d) {
   ok(d.documentElement.dataset.theme === "light", "second click -> back to light");
 }
 
+console.log("== window.GF export surface (docs/js/*.js split) ==");
+{
+  // Guards against a module silently losing (or unintentionally gaining)
+  // a public export across the 9-file split of the former single-file
+  // shared.js — a page loading fine tells you nothing about this, since
+  // a missing GF.foo only breaks whichever code path calls it.
+  const PUBLIC_GF_KEYS = [
+    "t", "detectInitialLang", "hasLang", "setCurrentLang", "langLabel",
+    "Complex", "GammaError", "parseNumber", "formatResult", "evalExpression",
+    "gamma", "gammaSafe", "factorial", "doubleFactorial", "binomial", "beta",
+    "resolveResult", "makeFallbackNotice",
+    "evalAt", "defaultRange", "makeTextButton", "makeToolButton", "urlFor",
+    "makeCopyLinkButton", "functionBadgeText", "round",
+    "buildReasoning", "makeReasoningBlock",
+    "buildPractical", "makePracticalBlock",
+    "insertAtCursor", "renderKeypad",
+    "initThemeToggle",
+    "setLang", "setLangHook", "initLangUI", "renderNav", "navExpr",
+    "makeAnswerContext", "initDetailPage",
+  ];
+  const { dom: gfDom } = loadPage("index.html");
+  const actualKeys = Object.keys(gfDom.window.GF).filter((k) => !k.startsWith("_")).sort();
+  const expectedSorted = [...PUBLIC_GF_KEYS].sort();
+  const missing = expectedSorted.filter((k) => !actualKeys.includes(k));
+  const extra = actualKeys.filter((k) => !expectedSorted.includes(k));
+  ok(missing.length === 0, `no missing GF exports${missing.length ? " -> " + missing.join(", ") : ""}`);
+  ok(extra.length === 0, `no unexpected GF exports${extra.length ? " -> " + extra.join(", ") : ""}`);
+  ok(typeof gfDom.window.GF._refreshThemeButton === "function", "internal theme->nav bridge present");
+}
+
 console.log("== index.html ==");
 {
   const { dom, errors } = loadPage("index.html");
