@@ -69,6 +69,15 @@
         <li><span data-i18n="domainCSEx2"><strong>Feature selection</strong>: choosing 5 features from 20 candidates = <strong>C(20,5)</strong> = 15,504 — that's why exhaustive search is rarely practical.</span> <button class="example-chip" type="button" data-expr="C(20,5)">C(20,5)</button></li>
         <li><span data-i18n="domainCSEx3"><strong>RSA encryption</strong>: factoring a 2048-bit number is hard because the search space is combinatorially vast.</span></li>
       </ul>
+      <details class="domain-expand">
+        <summary data-i18n="domainCSExpandTitle">Where combinatorial explosion hits production code</summary>
+        <div class="domain-expand-body">
+          <p data-i18n="domainCSExpandMechanism"></p>
+          <p class="domain-expand-example"><span data-i18n="domainCSExpandExample"></span> <button class="example-chip" type="button" data-expr="12!">12!</button></p>
+          <p class="domain-expand-note" data-i18n="domainCSExpandNote"></p>
+        </div>
+      </details>
+      <div class="domain-inline-result" hidden></div>
     </article>
 
     <!-- AI & Machine Learning -->
@@ -84,6 +93,15 @@
         <li><span data-i18n="domainAIEx2"><strong>Thompson sampling</strong>: uses Beta posteriors to balance exploration vs exploitation in real-time ad placement.</span> <button class="example-chip" type="button" data-expr="beta(8,4)">beta(8,4)</button></li>
         <li><span data-i18n="domainAIEx3"><strong>Cross-validation</strong>: <strong>C(10,3)</strong> = 120 ways to split data into folds — the basis of robust model evaluation.</span> <button class="example-chip" type="button" data-expr="C(10,3)">C(10,3)</button></li>
       </ul>
+      <details class="domain-expand">
+        <summary data-i18n="domainAIExpandTitle">The combinatorics hiding inside model training</summary>
+        <div class="domain-expand-body">
+          <p data-i18n="domainAIExpandMechanism"></p>
+          <p class="domain-expand-example"><span data-i18n="domainAIExpandExample"></span> <button class="example-chip" type="button" data-expr="C(30,5)">C(30,5)</button></p>
+          <p class="domain-expand-note" data-i18n="domainAIExpandNote"></p>
+        </div>
+      </details>
+      <div class="domain-inline-result" hidden></div>
     </article>
 
     <!-- Statistics -->
@@ -99,6 +117,15 @@
         <li><span data-i18n="domainStatsEx2"><strong>Chi-squared test</strong>: with k=10 degrees of freedom, the distribution is <strong>Gamma(5)</strong> — that's what your stats software computes.</span> <button class="example-chip" type="button" data-expr="gamma(5)">gamma(5)</button></li>
         <li><span data-i18n="domainStatsEx3"><strong>Permutation test</strong>: assigning 12 patients to two groups of 6 gives <strong>C(12,6)</strong> = 924 random assignments — the exact null distribution.</span> <button class="example-chip" type="button" data-expr="C(12,6)">C(12,6)</button></li>
       </ul>
+      <details class="domain-expand">
+        <summary data-i18n="domainStatsExpandTitle">Why the binomial coefficient is everywhere in inference</summary>
+        <div class="domain-expand-body">
+          <p data-i18n="domainStatsExpandMechanism"></p>
+          <p class="domain-expand-example"><span data-i18n="domainStatsExpandExample"></span> <button class="example-chip" type="button" data-expr="C(25,12)">C(25,12)</button></p>
+          <p class="domain-expand-note" data-i18n="domainStatsExpandNote"></p>
+        </div>
+      </details>
+      <div class="domain-inline-result" hidden></div>
     </article>
 
     <!-- Physics -->
@@ -114,6 +141,15 @@
         <li><span data-i18n="domainPhysicsEx2"><strong>Black body radiation</strong>: Planck's law for photon statistics involves Gamma functions — this is how we understand stars.</span> <button class="example-chip" type="button" data-expr="gamma(3)">gamma(3)</button></li>
         <li><span data-i18n="domainPhysicsEx3"><strong>Quantum harmonic oscillator</strong>: the n-th energy level normalization uses <strong>(2n)!!</strong> — connecting factorials to quantum energy quantization.</span> <button class="example-chip" type="button" data-expr="8!!">8!!</button></li>
       </ul>
+      <details class="domain-expand">
+        <summary data-i18n="domainPhysicsExpandTitle">Counting states with double factorials and Gamma</summary>
+        <div class="domain-expand-body">
+          <p data-i18n="domainPhysicsExpandMechanism"></p>
+          <p class="domain-expand-example"><span data-i18n="domainPhysicsExpandExample"></span> <button class="example-chip" type="button" data-expr="9!!">9!!</button></p>
+          <p class="domain-expand-note" data-i18n="domainPhysicsExpandNote"></p>
+        </div>
+      </details>
+      <div class="domain-inline-result" hidden></div>
     </article>
 
     <!-- Biology -->
@@ -129,6 +165,15 @@
         <li><span data-i18n="domainBioEx2"><strong>K-mer counting</strong>: counting 3-mers in a 20-nucleotide sequence explores <strong>C(20,3)</strong> = 1,140 positions — fundamental to genome assembly.</span> <button class="example-chip" type="button" data-expr="C(20,3)">C(20,3)</button></li>
         <li><span data-i18n="domainBioEx3"><strong>Allele frequencies</strong>: Bayesian models use <strong>Beta distributions</strong> to track how gene frequencies evolve in populations.</span> <button class="example-chip" type="button" data-expr="beta(2,5)">beta(2,5)</button></li>
       </ul>
+      <details class="domain-expand">
+        <summary data-i18n="domainBioExpandTitle">Sequence space and the scale of biological search</summary>
+        <div class="domain-expand-body">
+          <p data-i18n="domainBioExpandMechanism"></p>
+          <p class="domain-expand-example"><span data-i18n="domainBioExpandExample"></span> <button class="example-chip" type="button" data-expr="11!!">11!!</button></p>
+          <p class="domain-expand-note" data-i18n="domainBioExpandNote"></p>
+        </div>
+      </details>
+      <div class="domain-inline-result" hidden></div>
     </article>
 
     <!-- Everyday -->
@@ -144,6 +189,15 @@
         <li><span data-i18n="domainEverydayEx2"><strong>PIN security</strong>: a 4-digit PIN has 10⁴ = 10,000 combinations. After 3 wrong attempts, your phone locks — that's why 2-factor authentication matters.</span></li>
         <li><span data-i18n="domainEverydayEx3"><strong>Seating 8 guests</strong> around a round table: <strong>7!</strong> = 5,040 arrangements — explains why the host needs a seating chart algorithm.</span> <button class="example-chip" type="button" data-expr="7!">7!</button></li>
       </ul>
+      <details class="domain-expand">
+        <summary data-i18n="domainEverydayExpandTitle">The hidden math behind games, security, and scheduling</summary>
+        <div class="domain-expand-body">
+          <p data-i18n="domainEverydayExpandMechanism"></p>
+          <p class="domain-expand-example"><span data-i18n="domainEverydayExpandExample"></span> <button class="example-chip" type="button" data-expr="C(52,13)">C(52,13)</button></p>
+          <p class="domain-expand-note" data-i18n="domainEverydayExpandNote"></p>
+        </div>
+      </details>
+      <div class="domain-inline-result" hidden></div>
     </article>
   </section>
 
