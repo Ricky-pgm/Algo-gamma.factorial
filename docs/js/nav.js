@@ -75,6 +75,7 @@
       { page: "apps", href: "a-quoi-ca-sert.html" + q, key: "navApps" },
       { page: "faq", href: "faq.html", key: "navFaq" },
       { page: "app", href: "applications.html" + q, key: "navApp" },
+      { page: "pascal", href: "pascal-continuous.html", key: "navPascal" },
     ];
     nav.innerHTML = "";
     for (const it of items) {

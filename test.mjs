@@ -102,9 +102,9 @@ function flush() {
 
 function navChecks(d) {
   const links = [...d.querySelectorAll("#subNav a")];
-  ok(links.length === 5, `subNav has 5 entries (got ${links.length})`);
+  ok(links.length === 6, `subNav has 6 entries (got ${links.length})`);
   const hrefs = links.map(a => a.getAttribute("href").split("?")[0]).sort();
-  ok(JSON.stringify(hrefs) === JSON.stringify(["a-quoi-ca-sert.html", "applications.html", "comment-cest-calcule.html", "faq.html", "index.html"]), "nav hrefs complete");
+  ok(JSON.stringify(hrefs) === JSON.stringify(["a-quoi-ca-sert.html", "applications.html", "comment-cest-calcule.html", "faq.html", "index.html", "pascal-continuous.html"]), "nav hrefs complete");
 }
 
 function themeChecks(w, d) {
@@ -318,6 +318,19 @@ console.log("== pascal-continuous.html ==");
   const d = dom.window.document;
   ok(errors.length === 0, "no script errors" + (errors.length ? " -> " + errors.join(" | ") : ""));
   ok(d.querySelectorAll("header").length >= 1, "page renders its header");
+  navChecks(d);
+  ok(d.getElementById("themeToggle") !== null, "theme toggle present (shared with the rest of the site)");
+  ok(d.getElementById("pageTitle").textContent === "Pascal's triangle, made continuous", "page title set via shared i18n");
+  ok(d.getElementById("kOut").textContent === "2.00", "cursor readout renders for the default row");
+  ok(d.getElementById("tableBody").children.length === 6, "comparison table has one row per k from 0 to n=5");
+
+  d.getElementById("themeToggle").click();
+  ok(d.documentElement.dataset.theme === "dark", "theme toggle switches to dark like every other page");
+
+  d.getElementById("langBtn").click();
+  d.querySelector('.lang-option[data-lang="fr"]').click();
+  ok(d.getElementById("pageTitle").textContent === "Le triangle de Pascal, rendu continu", "switching to French re-renders the page title");
+  ok(d.getElementById("statusOut").textContent === "valeur entière exacte", "switching language re-renders the status readout too");
 }
 
 console.log("== index.html (API unreachable -> local fallback) ==");
