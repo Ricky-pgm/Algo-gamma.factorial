@@ -251,5 +251,21 @@ console.log("== pascal-continuous.html ==");
   ok(d.querySelectorAll("header").length >= 1, "page renders its header");
 }
 
+console.log("== index.html (API unreachable -> local fallback) ==");
+{
+  const { dom, errors } = loadPage("index.html", { fetchImpl: "offline" });
+  const d = dom.window.document;
+  const input = d.getElementById("exprInput");
+  const evalBtn = d.getElementById("evalBtn");
+  if (input && evalBtn) {
+    input.value = "5!";
+    evalBtn.click();
+    await flush();
+    ok(errors.length === 0, "no script errors" + (errors.length ? " -> " + errors.join(" | ") : ""));
+    ok(d.body.textContent.includes("120"), "5! still evaluates to 120 via local fallback");
+    ok(d.querySelector(".result-fallback-notice") !== null, "fallback notice shown when API is unreachable");
+  }
+}
+
 console.log(failures === 0 ? "\nALL TESTS PASSED" : `\n${failures} FAILURES`);
 process.exit(failures === 0 ? 0 : 1);
