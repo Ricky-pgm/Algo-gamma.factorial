@@ -88,3 +88,8 @@ def factorial(n: float | complex) -> float | complex:
     Raises ValueError at poles (negative integers), where n! is infinite.
     """
     return gamma(n + 1)
+
+
+def beta(a: float | complex, b: float | complex) -> float | complex:
+    """Euler's Beta function: B(a, b) = Gamma(a) Gamma(b) / Gamma(a + b)."""
+    return gamma(a) * gamma(b) / gamma(a + b)
