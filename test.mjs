@@ -146,6 +146,7 @@ console.log("== window.GF export surface (docs/js/*.js split) ==");
     "makeAnswerContext", "initDetailPage",
     "isFavorite", "toggleFavorite", "removeFavorite", "getFavorites",
     "renderFavoritesList", "makeFavoriteButton",
+    "renderMiniChart", "initDomainSlider",
   ];
   const { dom: gfDom } = loadPage("index.html");
   const actualKeys = Object.keys(gfDom.window.GF).filter((k) => !k.startsWith("_")).sort();
@@ -417,6 +418,38 @@ console.log("== applications.html ==");
     ok(!inlineResult.hidden && inlineResult.textContent.trim().length > 0, "clicking a card chip shows a result inline in that card");
     ok(w.scrollY === before, "clicking a card chip does not scroll the page");
   }
+
+  // Domain mini-viz sliders — offline-only (no fetch), one per card.
+  ok(d.querySelectorAll(".domain-viz").length === 6, "6 domain cards have a mini-viz widget");
+  ok(d.querySelectorAll(".domain-viz-slider").length === 6, "6 domain-viz sliders rendered");
+  ok(d.querySelectorAll(".mini-chart-svg").length === 6, "6 mini-chart SVGs rendered on load");
+
+  const csSlider = d.querySelector('[data-domain="cs"] .domain-viz-slider');
+  const csReadout = d.querySelector('[data-domain="cs"] .domain-viz-readout');
+  ok(!!csSlider && !!csReadout, "CS card slider + readout exist");
+  if (csSlider && csReadout) {
+    const before = w.scrollY;
+    const readoutBefore = csReadout.textContent;
+    csSlider.value = "12";
+    csSlider.dispatchEvent(new w.Event("input", { bubbles: true }));
+    await flush();
+    ok(csReadout.textContent !== readoutBefore, "dragging CS slider updates the readout");
+    ok(csReadout.textContent.includes("12"), "CS readout reflects new slider value");
+    ok(w.scrollY === before, "dragging a card slider does not scroll the page");
+  }
+
+  // physics/bio (doubleFactorial) render discrete points, not a connected line
+  const physicsCircles = d.querySelectorAll('[data-domain="physics"] .mini-chart-svg circle');
+  const physicsPath = d.querySelector('[data-domain="physics"] .mini-chart-svg path');
+  ok(physicsCircles.length > 0, "physics card renders discrete point markers (doubleFactorial)");
+  ok(!physicsPath, "physics card does not render a connected curve line");
+
+  // stats/everyday (binomial) render a connected curve
+  const statsPath = d.querySelector('[data-domain="stats"] .mini-chart-svg path');
+  ok(!!statsPath, "stats card renders a connected curve line (binomial)");
+
+  const vizSrc = fs.readFileSync(`${DOCS}/js/domain-viz.js`, "utf8");
+  ok(!vizSrc.includes("fetch("), "domain-viz.js makes no network calls");
 }
 
 console.log("== pascal-continuous.html ==");
