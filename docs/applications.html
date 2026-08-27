@@ -75,6 +75,14 @@
         <li><span data-i18n="domainCSEx2"><strong>Feature selection</strong>: choosing 5 features from 20 candidates = <strong>C(20,5)</strong> = 15,504 — that's why exhaustive search is rarely practical.</span> <button class="example-chip" type="button" data-expr="C(20,5)">C(20,5)</button></li>
         <li><span data-i18n="domainCSEx3"><strong>RSA encryption</strong>: factoring a 2048-bit number is hard because the search space is combinatorially vast.</span></li>
       </ul>
+      <div class="domain-viz" data-domain-viz="cs">
+        <div class="domain-viz-row">
+          <span class="domain-viz-label" data-i18n="domainCSVizLabel">n</span>
+          <input type="range" class="domain-viz-slider" id="csVizSlider" min="3" max="15" step="1" value="8">
+          <span class="domain-viz-readout" id="csVizReadout"></span>
+        </div>
+        <div class="domain-viz-chart" id="csVizChart"></div>
+      </div>
       <details class="domain-expand">
         <summary data-i18n="domainCSExpandTitle">Where combinatorial explosion hits production code</summary>
         <div class="domain-expand-body">
@@ -99,6 +107,14 @@
         <li><span data-i18n="domainAIEx2"><strong>Thompson sampling</strong>: uses Beta posteriors to balance exploration vs exploitation in real-time ad placement.</span> <button class="example-chip" type="button" data-expr="beta(8,4)">beta(8,4)</button></li>
         <li><span data-i18n="domainAIEx3"><strong>Cross-validation</strong>: <strong>C(10,3)</strong> = 120 ways to split data into folds — the basis of robust model evaluation.</span> <button class="example-chip" type="button" data-expr="C(10,3)">C(10,3)</button></li>
       </ul>
+      <div class="domain-viz" data-domain-viz="ai">
+        <div class="domain-viz-row">
+          <span class="domain-viz-label" data-i18n="domainAIVizLabel">a</span>
+          <input type="range" class="domain-viz-slider" id="aiVizSlider" min="1" max="20" step="1" value="8">
+          <span class="domain-viz-readout" id="aiVizReadout"></span>
+        </div>
+        <div class="domain-viz-chart" id="aiVizChart"></div>
+      </div>
       <details class="domain-expand">
         <summary data-i18n="domainAIExpandTitle">The combinatorics hiding inside model training</summary>
         <div class="domain-expand-body">
@@ -123,6 +139,14 @@
         <li><span data-i18n="domainStatsEx2"><strong>Chi-squared test</strong>: with k=10 degrees of freedom, the distribution is <strong>Gamma(5)</strong> — that's what your stats software computes.</span> <button class="example-chip" type="button" data-expr="gamma(5)">gamma(5)</button></li>
         <li><span data-i18n="domainStatsEx3"><strong>Permutation test</strong>: assigning 12 patients to two groups of 6 gives <strong>C(12,6)</strong> = 924 random assignments — the exact null distribution.</span> <button class="example-chip" type="button" data-expr="C(12,6)">C(12,6)</button></li>
       </ul>
+      <div class="domain-viz" data-domain-viz="stats">
+        <div class="domain-viz-row">
+          <span class="domain-viz-label" data-i18n="domainStatsVizLabel">k</span>
+          <input type="range" class="domain-viz-slider" id="statsVizSlider" min="0" max="12" step="1" value="6">
+          <span class="domain-viz-readout" id="statsVizReadout"></span>
+        </div>
+        <div class="domain-viz-chart" id="statsVizChart"></div>
+      </div>
       <details class="domain-expand">
         <summary data-i18n="domainStatsExpandTitle">Why the binomial coefficient is everywhere in inference</summary>
         <div class="domain-expand-body">
@@ -147,6 +171,14 @@
         <li><span data-i18n="domainPhysicsEx2"><strong>Black body radiation</strong>: Planck's law for photon statistics involves Gamma functions — this is how we understand stars.</span> <button class="example-chip" type="button" data-expr="gamma(3)">gamma(3)</button></li>
         <li><span data-i18n="domainPhysicsEx3"><strong>Quantum harmonic oscillator</strong>: the n-th energy level normalization uses <strong>(2n)!!</strong> — connecting factorials to quantum energy quantization.</span> <button class="example-chip" type="button" data-expr="8!!">8!!</button></li>
       </ul>
+      <div class="domain-viz" data-domain-viz="physics">
+        <div class="domain-viz-row">
+          <span class="domain-viz-label" data-i18n="domainPhysicsVizLabel">n</span>
+          <input type="range" class="domain-viz-slider" id="physicsVizSlider" min="1" max="15" step="1" value="7">
+          <span class="domain-viz-readout" id="physicsVizReadout"></span>
+        </div>
+        <div class="domain-viz-chart" id="physicsVizChart"></div>
+      </div>
       <details class="domain-expand">
         <summary data-i18n="domainPhysicsExpandTitle">Counting states with double factorials and Gamma</summary>
         <div class="domain-expand-body">
@@ -171,6 +203,14 @@
         <li><span data-i18n="domainBioEx2"><strong>K-mer counting</strong>: counting 3-mers in a 20-nucleotide sequence explores <strong>C(20,3)</strong> = 1,140 positions — fundamental to genome assembly.</span> <button class="example-chip" type="button" data-expr="C(20,3)">C(20,3)</button></li>
         <li><span data-i18n="domainBioEx3"><strong>Allele frequencies</strong>: Bayesian models use <strong>Beta distributions</strong> to track how gene frequencies evolve in populations.</span> <button class="example-chip" type="button" data-expr="beta(2,5)">beta(2,5)</button></li>
       </ul>
+      <div class="domain-viz" data-domain-viz="bio">
+        <div class="domain-viz-row">
+          <span class="domain-viz-label" data-i18n="domainBioVizLabel">n</span>
+          <input type="range" class="domain-viz-slider" id="bioVizSlider" min="1" max="15" step="1" value="11">
+          <span class="domain-viz-readout" id="bioVizReadout"></span>
+        </div>
+        <div class="domain-viz-chart" id="bioVizChart"></div>
+      </div>
       <details class="domain-expand">
         <summary data-i18n="domainBioExpandTitle">Sequence space and the scale of biological search</summary>
         <div class="domain-expand-body">
@@ -195,6 +235,14 @@
         <li><span data-i18n="domainEverydayEx2"><strong>PIN security</strong>: a 4-digit PIN has 10⁴ = 10,000 combinations. After 3 wrong attempts, your phone locks — that's why 2-factor authentication matters.</span></li>
         <li><span data-i18n="domainEverydayEx3"><strong>Seating 8 guests</strong> around a round table: <strong>7!</strong> = 5,040 arrangements — explains why the host needs a seating chart algorithm.</span> <button class="example-chip" type="button" data-expr="7!">7!</button></li>
       </ul>
+      <div class="domain-viz" data-domain-viz="everyday">
+        <div class="domain-viz-row">
+          <span class="domain-viz-label" data-i18n="domainEverydayVizLabel">k</span>
+          <input type="range" class="domain-viz-slider" id="everydayVizSlider" min="0" max="49" step="1" value="6">
+          <span class="domain-viz-readout" id="everydayVizReadout"></span>
+        </div>
+        <div class="domain-viz-chart" id="everydayVizChart"></div>
+      </div>
       <details class="domain-expand">
         <summary data-i18n="domainEverydayExpandTitle">The hidden math behind games, security, and scheduling</summary>
         <div class="domain-expand-body">
@@ -216,6 +264,7 @@
 <script src="js/math.js"></script>
 <script src="js/api.js"></script>
 <script src="js/plot.js"></script>
+<script src="js/domain-viz.js"></script>
 <script src="js/reasoning.js"></script>
 <script src="js/practical.js"></script>
 <script src="js/keypad.js"></script>
@@ -263,6 +312,41 @@
         // Keep the top calculator + shareable URL in sync, without moving focus/scroll
         exprInput.value = expr;
         window.history.replaceState(null, "", GF.urlFor(expr));
+      });
+
+      // Per-card mini sliders — offline-only, no fetch, purely GF.evalAt driven.
+      const fmt = (y) => new GF.Complex(y, 0).toString();
+      const VIZ_CONFIGS = [
+        { domain: "cs", plot: { kind: "factorial" },
+          // evalAt("factorial", x) goes through gammaSafe(x+1) (Lanczos), which
+          // carries float noise even at integers (e.g. 3628800.0000000214) —
+          // the readout uses the exact-integer GF.factorial() path instead,
+          // matching what the rest of the site displays for n!. The mini-chart
+          // curve itself still samples via evalAt, which is fine for a decorative line.
+          format: (x) => `${x}! = ${fmt(GF.factorial(new GF.Complex(x, 0)).re)}` },
+        { domain: "ai", plot: { kind: "beta", b: 4 },
+          format: (x, y) => `Beta(${x},4) = ${y === null ? "—" : fmt(y)}` },
+        { domain: "stats", plot: { kind: "binomial", n: 12 },
+          format: (x, y) => `C(12,${x}) = ${y === null ? "—" : fmt(y)}` },
+        { domain: "physics", plot: { kind: "doubleFactorial" },
+          format: (x, y) => `${x}!! = ${y === null ? "—" : fmt(y)}` },
+        { domain: "bio", plot: { kind: "doubleFactorial" },
+          format: (x, y) => `${x}!! = ${y === null ? "—" : fmt(y)}` },
+        { domain: "everyday", plot: { kind: "binomial", n: 49 },
+          format: (x, y) => `C(49,${x}) = ${y === null ? "—" : fmt(y)}` },
+      ];
+      VIZ_CONFIGS.forEach((cfg) => {
+        const card = document.querySelector(`.domain-card[data-domain="${cfg.domain}"]`);
+        if (!card) return;
+        const sliderEl = card.querySelector(".domain-viz-slider");
+        const readoutEl = card.querySelector(".domain-viz-readout");
+        const chartEl = card.querySelector(".domain-viz-chart");
+        if (!sliderEl || !readoutEl || !chartEl) return;
+        GF.initDomainSlider({
+          sliderEl, readoutEl, chartEl,
+          plot: Object.assign({ center: Number(sliderEl.value) }, cfg.plot),
+          format: cfg.format,
+        });
       });
     },
   });
