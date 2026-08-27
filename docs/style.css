@@ -1460,6 +1460,98 @@ table.value-table tbody tr:hover td { background: var(--surface-sunken); }
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* ---------- domain mini-viz ---------- */
+
+.domain-viz {
+  margin-top: 0.9rem;
+  border-top: 1px solid var(--rule);
+  padding-top: 0.9rem;
+}
+
+.domain-viz-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.5rem;
+}
+
+.domain-viz-label {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--ink-soft);
+  flex-shrink: 0;
+}
+
+.domain-viz-readout {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--accent-strong);
+  background: var(--accent-soft);
+  border-radius: 6px;
+  padding: 0.1rem 0.5rem;
+  flex-shrink: 0;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.domain-viz-slider {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* input[type=range] styling scoped to .domain-viz-slider — the site's first
+   shared range-input skin (previously only duplicated page-locally in
+   pascal-continuous.html); scoped by class so it never re-skins an
+   unrelated range input elsewhere. */
+input[type="range"].domain-viz-slider {
+  appearance: none;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--rule-strong);
+  outline: none;
+  cursor: pointer;
+}
+input[type="range"].domain-viz-slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--grad);
+  border: 2px solid var(--surface);
+  box-shadow: 0 0 0 1px var(--accent), 0 1px 4px -1px rgba(16, 24, 40, 0.4);
+  cursor: pointer;
+}
+input[type="range"].domain-viz-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--surface);
+  box-shadow: 0 0 0 1px var(--accent), 0 1px 4px -1px rgba(16, 24, 40, 0.4);
+  cursor: pointer;
+}
+input[type="range"].domain-viz-slider:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 2px var(--surface), 0 0 0 3px var(--accent);
+}
+input[type="range"].domain-viz-slider:focus-visible::-moz-range-thumb {
+  box-shadow: 0 0 0 2px var(--surface), 0 0 0 3px var(--accent);
+}
+
+.domain-viz-chart {
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  background: var(--surface-sunken);
+  padding: 2px;
+}
+
+.mini-chart-svg {
+  display: block;
+  width: 100%;
+  height: 56px;
+}
+
 /* ---------- footer ---------- */
 
 .page-foot {
