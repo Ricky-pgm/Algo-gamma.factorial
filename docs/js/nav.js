@@ -252,11 +252,6 @@
       resultEmpty.textContent = t(emptyKey);
       const note = document.getElementById("noteText");
       if (note) note.textContent = t("note", { c1: "1+2i", c2: "1+2j" });
-      const githubLink = document.getElementById("footerGithub");
-      if (githubLink) {
-        githubLink.setAttribute("aria-label", t("footerGithub"));
-        githubLink.title = t("footerGithub");
-      }
       document.querySelectorAll("[data-i18n]").forEach((el) => {
         el.textContent = t(el.dataset.i18n);
       });

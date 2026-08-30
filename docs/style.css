@@ -1709,29 +1709,6 @@ input[type="range"].domain-viz-slider:focus-visible::-moz-range-thumb {
   color: var(--accent);
 }
 
-.footer-meta {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.8rem;
-  flex-wrap: wrap;
-}
-
-.footer-github {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.9rem;
-  height: 1.9rem;
-  color: var(--ink-faint);
-  border-radius: 999px;
-  flex-shrink: 0;
-  transition: color 0.15s, background 0.15s;
-}
-.footer-github:hover {
-  color: var(--accent);
-  background: var(--accent-soft);
-}
 
 .note {
   font-size: 0.86rem;
