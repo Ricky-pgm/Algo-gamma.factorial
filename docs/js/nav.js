@@ -73,9 +73,9 @@
       { page: "calc", href: "index.html" + q, key: "navCalc" },
       { page: "reasoning", href: "comment-cest-calcule.html" + q, key: "navReasoning" },
       { page: "apps", href: "a-quoi-ca-sert.html" + q, key: "navApps" },
-      { page: "faq", href: "faq.html", key: "navFaq" },
       { page: "app", href: "applications.html" + q, key: "navApp" },
       { page: "pascal", href: "pascal-continuous.html", key: "navPascal" },
+      { page: "practice", href: "practice.html", key: "navPractice" },
     ];
     nav.innerHTML = "";
     for (const it of items) {
@@ -99,6 +99,7 @@
     }
     const eq = document.createElement("div");
     eq.className = "eq";
+    eq.dataset.kind = kind;
     if (kind === "number") {
       const val = document.createElement("span");
       val.className = "eq-val";
@@ -197,6 +198,9 @@
       resultEmpty.textContent = t(emptyKey);
       const note = document.getElementById("noteText");
       if (note) note.textContent = t("note", { c1: "1+2i", c2: "1+2j" });
+      document.querySelectorAll("[data-i18n]").forEach((el) => {
+        el.textContent = t(el.dataset.i18n);
+      });
       if (afterApplyStaticText) afterApplyStaticText();
     }
 
