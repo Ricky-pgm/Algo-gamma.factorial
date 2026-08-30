@@ -435,16 +435,22 @@ h1 {
   font-weight: 600;
   font-size: 0.95rem;
   background: var(--grad);
+  background-size: 180% 180%;
+  background-position: 0% 50%;
   color: #ffffff;
   border: 1px solid transparent;
-  border-radius: 12px;
-  padding: 0.6rem 1.25rem;
+  border-radius: 999px;
+  padding: 0.6rem 1.4rem;
   cursor: pointer;
   flex-shrink: 0;
   box-shadow: 0 8px 20px -8px color-mix(in srgb, var(--accent) 65%, transparent);
-  transition: filter 0.15s, transform 0.05s;
+  transition: background-position 0.35s ease, box-shadow 0.2s ease, transform 0.05s;
 }
-.evaluate-btn:hover { filter: brightness(1.05); transform: translateY(-1px); }
+.evaluate-btn:hover {
+  background-position: 100% 50%;
+  box-shadow: 0 12px 28px -8px color-mix(in srgb, var(--accent) 75%, transparent);
+  transform: translateY(-1px);
+}
 .evaluate-btn:active { transform: scale(0.97); }
 
 .keypad {
