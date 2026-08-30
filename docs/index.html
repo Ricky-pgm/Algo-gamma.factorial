@@ -29,9 +29,14 @@
             <button class="lang-option" type="button" role="menuitem" data-lang="de">Deutsch</button>
           </div>
         </div>
+        <div class="nav-switch">
+          <button class="nav-btn" id="navBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-label="">
+            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+          <nav class="nav-menu" id="subNav" role="menu" aria-label="Sections" hidden></nav>
+        </div>
       </div>
     </div>
-    <nav class="sub-nav" id="subNav" aria-label="Sections"></nav>
   </div>
 </header>
 
@@ -152,9 +157,11 @@
   </div>
 
   <footer class="page-foot">
-    <p class="note" id="noteText"></p>
-    <p class="links" id="linksText"></p>
-    <p class="links"><a href="faq.html" data-i18n="navFaq"></a></p>
+    <nav class="footer-nav" id="footerNav" aria-label="All pages"></nav>
+    <div class="footer-meta">
+      <p class="note" id="noteText"></p>
+      <a class="footer-github" id="footerGithub" href="https://github.com/Ricky-pgm/Algo-gamma.factorial" target="_blank" rel="noopener"><svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg></a>
+    </div>
   </footer>
 </div>
 
@@ -175,7 +182,7 @@
 (function () {
   "use strict";
 
-  const { t, evalExpression, resolveResult, makeFallbackNotice, formatResult, makeAnswerContext, evalAt, defaultRange, makeTextButton, makeToolButton, urlFor } = GF;
+  const { t, evalExpression, resolveResult, makeFallbackNotice, formatResult, makeAnswerContext, evalAt, defaultRange, makeIconButton, urlFor } = GF;
 
   const NS = "http://www.w3.org/2000/svg";
   const PLOT_W = 560;
@@ -566,14 +573,11 @@
     container.__lastCurves = curves;
 
     if (viewportRange) {
-      const resetBtn = document.createElement("button");
-      resetBtn.type = "button";
-      resetBtn.className = "reset-zoom-btn";
-      resetBtn.textContent = t("resetZoom");
-      resetBtn.addEventListener("click", () => {
+      const RESET_ICON = '<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>';
+      const resetBtn = makeIconButton(RESET_ICON, t("resetZoom"), () => {
         viewportRange = null;
         drawPlot(container, series, true);
-      });
+      }, "reset-zoom-btn");
       container.appendChild(resetBtn);
     }
   }
@@ -787,8 +791,10 @@
     if (plotWrap) drawPlot(plotWrap, series);
   }
 
+  const PIN_ICON = '<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16h14v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7h1a1 1 0 0 0 0-2H8a1 1 0 0 0 0 2h1z"/></svg>';
+
   function makePinButton(expr, value, plot) {
-    return makeTextButton(t("pinToCompare"), () => {
+    return makeIconButton(PIN_ICON, t("pinToCompare"), () => {
       if (pinnedCurves.some((p) => p.expr === expr)) return;
       if (pinnedCurves.length >= MAX_PINS) pinnedCurves.shift();
       pinnedCurves.push({ expr, value, plot });
@@ -901,14 +907,18 @@
         const { wrap: tableWrap, rows } = makeValueTable(plot);
         const toolRow = document.createElement("div");
         toolRow.className = "table-toggle-row";
-        const toggleBtn = makeToolButton("▤", t("showTable"), () => {
+        const TABLE_ICON = '<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/></svg>';
+        const DOWNLOAD_ICON = '<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>';
+        const IMAGE_ICON = '<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>';
+        const toggleBtn = makeIconButton(TABLE_ICON, t("showTable"), () => {
           tableWrap.hidden = !tableWrap.hidden;
           const label = tableWrap.hidden ? t("showTable") : t("hideTable");
-          toggleBtn.lastChild.textContent = label;
+          toggleBtn.title = label;
+          toggleBtn.setAttribute("aria-label", label);
         });
         toolRow.appendChild(toggleBtn);
-        toolRow.appendChild(makeToolButton("⇩", t("exportCsv"), () => exportCsv(plot, rows)));
-        toolRow.appendChild(makeToolButton("🖼", t("exportPng"), () => exportPng(plotWrap)));
+        toolRow.appendChild(makeIconButton(DOWNLOAD_ICON, t("exportCsv"), () => exportCsv(plot, rows)));
+        toolRow.appendChild(makeIconButton(IMAGE_ICON, t("exportPng"), () => exportPng(plotWrap)));
         resultArea.appendChild(toolRow);
         resultArea.appendChild(tableWrap);
       } else if (kind !== "number") {
@@ -968,19 +978,10 @@
         noteP.appendChild(document.createTextNode(part));
       }
     }
-    const linksP = document.getElementById("linksText");
-    linksP.textContent = "";
-    const linkA = document.createElement("a");
-    linkA.href = "pascal-continuous.html";
-    linkA.textContent = t("linkText");
-    const codeEl = document.createElement("code");
-    codeEl.textContent = "binomial(n, k)";
-    const linksTemplate = t("links", { link: "LINK", code: "CODE" });
-    const linksParts = linksTemplate.split(/(LINK|CODE)/);
-    for (const part of linksParts) {
-      if (part === "LINK") linksP.appendChild(linkA);
-      else if (part === "CODE") linksP.appendChild(codeEl);
-      else linksP.appendChild(document.createTextNode(part));
+    const githubLink = document.getElementById("footerGithub");
+    if (githubLink) {
+      githubLink.setAttribute("aria-label", t("footerGithub"));
+      githubLink.title = t("footerGithub");
     }
   }
 
@@ -1011,6 +1012,7 @@
   // ===================== init =====================
 
   GF.initLangUI();
+  GF.initNavUI();
   GF.setLang(GF.detectInitialLang());
   GF.initThemeToggle();
 

@@ -559,23 +559,36 @@ h1 {
   margin: 0;
 }
 
-.text-btn {
-  font-size: 0.8rem;
-  background: none;
-  border: 1px solid transparent;
-  color: var(--ink-faint);
+/* Icon-only action button: a neutral circle (no colored chip), matching
+   .theme-toggle's visual language. Replaces .text-btn/.tool-btn-icon —
+   copy-link, favorite, pin, reset-zoom, and the plot export controls all
+   use this now instead of a text label or an emoji-in-a-colored-chip. */
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  background: var(--surface);
+  border: 1px solid var(--rule-strong);
+  color: var(--ink-soft);
+  border-radius: 999px;
   cursor: pointer;
-  padding: 0.2rem 0.45rem;
-  border-radius: 8px;
   flex-shrink: 0;
-  transition: color 0.15s, background 0.15s;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
 }
-.text-btn:hover {
+.icon-btn:hover {
+  border-color: var(--accent);
   color: var(--accent);
   background: var(--accent-soft);
 }
-.text-btn.copied {
+.icon-btn.copied {
   color: var(--curve);
+  border-color: var(--curve);
+}
+.icon-btn[aria-pressed="true"] {
+  color: var(--accent);
+  border-color: var(--accent);
 }
 
 .result-error {
@@ -638,22 +651,8 @@ svg#plot {
   position: absolute;
   top: 0.55rem;
   right: 0.55rem;
-  font-family: var(--font-ui);
-  font-size: 0.75rem;
-  font-weight: 600;
-  background: var(--surface);
-  border: 1px solid var(--rule-strong);
-  color: var(--ink-soft);
-  border-radius: 12px;
-  padding: 0.3rem 0.7rem;
-  cursor: pointer;
-  box-shadow: 0 2px 8px -3px rgba(16, 24, 40, 0.25);
   z-index: 1;
-  transition: color 0.15s, border-color 0.15s;
-}
-.reset-zoom-btn:hover {
-  border-color: var(--accent);
-  color: var(--accent);
+  box-shadow: 0 2px 8px -3px rgba(16, 24, 40, 0.25);
 }
 
 /* ---------- table ---------- */
@@ -685,16 +684,11 @@ svg#plot {
   color: var(--accent);
   background: var(--accent-soft);
 }
-.tool-btn-icon {
-  display: grid;
-  place-items: center;
-  width: 20px;
-  height: 20px;
-  border-radius: 7px;
-  background: var(--accent-soft);
-  color: var(--accent);
-  font-size: 0.8rem;
-  line-height: 1;
+
+.action-btns {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
 }
 
 .value-table-wrap {
@@ -1591,6 +1585,17 @@ input[type="range"].domain-viz-slider:focus-visible::-moz-range-thumb {
   text-transform: uppercase;
   color: var(--ink-faint);
   font-weight: 700;
+  margin: 0 0 0.4rem;
+}
+
+.practice-streak {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-family: var(--font-ui);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--accent-strong);
   margin: 0 0 0.9rem;
 }
 
@@ -1601,6 +1606,19 @@ input[type="range"].domain-viz-slider:focus-visible::-moz-range-thumb {
   font-weight: 600;
   color: var(--ink);
   margin: 0 0 1.1rem;
+}
+
+.practice-hint-btn {
+  margin: 0 0 0.9rem;
+}
+
+.practice-hint {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  background: var(--accent-soft);
+  border-radius: 10px;
+  padding: 0.6rem 0.85rem;
+  margin: -0.4rem 0 0.9rem;
 }
 
 .practice-form {
@@ -1642,6 +1660,21 @@ input[type="range"].domain-viz-slider:focus-visible::-moz-range-thumb {
   margin: 0;
 }
 
+.practice-why {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  margin: 0.5rem 0 0;
+}
+
+@keyframes practice-pulse {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+.practice-pulse {
+  animation: practice-pulse 0.35s ease-out;
+}
+
 .practice-next-row {
   margin-top: 1rem;
 }
@@ -1650,12 +1683,60 @@ input[type="range"].domain-viz-slider:focus-visible::-moz-range-thumb {
 
 .page-foot {
   margin-top: 2.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.footer-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 1rem;
+}
+.footer-nav-link {
+  font-family: var(--font-ui);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+  text-decoration: none;
+}
+.footer-nav-link:hover {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.footer-nav-link.active {
+  color: var(--accent);
+}
+
+.footer-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.footer-github {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  color: var(--ink-faint);
+  border-radius: 999px;
+  flex-shrink: 0;
+  transition: color 0.15s, background 0.15s;
+}
+.footer-github:hover {
+  color: var(--accent);
+  background: var(--accent-soft);
 }
 
 .note {
   font-size: 0.86rem;
   color: var(--ink-faint);
-  margin: 0 0 0.6rem;
+  margin: 0;
 }
 .note code {
   font-family: var(--font-mono);
@@ -1681,51 +1762,69 @@ input[type="range"].domain-viz-slider:focus-visible::-moz-range-thumb {
   font-size: 0.85em;
 }
 
-/* ---------- navigation (3-page layout) ---------- */
+/* ---------- navigation (compact header dropdown) ---------- */
+/* Mirrors .lang-switch/.lang-btn/.lang-menu/.lang-option exactly, so the
+   two header dropdowns (language, pages) share one visual/interaction
+   language. */
 
-.sub-nav {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.2rem;
+.nav-switch {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.nav-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.1rem;
+  height: 2.1rem;
   background: var(--surface);
   border: 1px solid var(--rule-strong);
-  border-radius: 14px;
-  padding: 4px;
-  margin: 0 0 1.5rem;
-  box-shadow: var(--shadow-card);
-}
-
-.header-inner .sub-nav {
-  background: var(--surface-sunken);
-  border: 1px solid var(--rule);
-  box-shadow: none;
-  padding: 4px;
-  margin: 0;
-  border-radius: 14px;
-}
-
-.nav-link {
-  flex: 1 1 auto;
-  text-align: center;
-  font-family: var(--font-ui);
-  font-size: 0.85rem;
-  font-weight: 600;
   color: var(--ink-soft);
-  text-decoration: none;
-  border: none;
-  background: transparent;
-  border-radius: 10px;
-  padding: 0.5rem 0.9rem;
-  white-space: nowrap;
-  transition: color 0.15s, background 0.15s;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
 }
-.nav-link:hover {
+.nav-btn:hover {
+  border-color: var(--accent);
   color: var(--accent);
-  background: var(--surface);
+  background: var(--accent-soft);
 }
-.nav-link.active {
-  color: #ffffff;
-  background: var(--accent);
+
+.nav-menu {
+  position: absolute;
+  top: calc(100% + 0.45rem);
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border: 1px solid var(--rule-strong);
+  border-radius: 12px;
+  box-shadow: var(--shadow-card);
+  padding: 0.3rem;
+  min-width: 190px;
+  z-index: 10;
+}
+.nav-menu[hidden] { display: none; }
+
+.nav-item {
+  display: block;
+  width: 100%;
+  font-family: var(--font-ui);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--ink);
+  text-decoration: none;
+  padding: 0.55rem 0.7rem;
+  border-radius: 8px;
+  text-align: left;
+}
+.nav-item:hover {
+  background: var(--surface-sunken);
+}
+.nav-item.active {
+  color: var(--accent);
+  background: var(--accent-soft);
 }
 
 .detail-links {
@@ -1797,17 +1896,6 @@ input[type="range"].domain-viz-slider:focus-visible::-moz-range-thumb {
     padding: 0.6rem 0.65rem;
     border-radius: 18px;
   }
-  .sub-nav {
-    border-radius: 14px;
-  }
-  .nav-link {
-    flex: 1 1 30%;
-    min-width: 0;
-    padding: 0.5rem 0.3rem;
-    font-size: 0.72rem;
-    white-space: normal;
-    line-height: 1.25;
-  }
   .calc {
     padding: 1.2rem 1rem 1.1rem;
     border-radius: 14px;
@@ -1840,14 +1928,16 @@ input[type="range"].domain-viz-slider:focus-visible::-moz-range-thumb {
     white-space: normal;
     margin-top: -0.1rem;
   }
-  .lang-menu {
+  .lang-menu,
+  .nav-menu {
     position: fixed;
     bottom: calc(0.9rem + env(safe-area-inset-bottom));
     right: 0.9rem;
     left: 0.9rem;
     min-width: 0;
   }
-  .lang-option {
+  .lang-option,
+  .nav-item {
     padding: 0.7rem 0.8rem;
     font-size: 0.95rem;
   }
@@ -1858,4 +1948,7 @@ input[type="range"].domain-viz-slider:focus-visible::-moz-range-thumb {
 
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; }
+  /* The blanket rule above only catches `transition`, not `animation` —
+     the practice-page success pulse needs its own explicit guard. */
+  .practice-pulse { animation: none; }
 }

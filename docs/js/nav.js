@@ -26,34 +26,58 @@
     langChangeHook = fn;
   }
 
-  function initLangUI() {
-    const langBtn = document.getElementById("langBtn");
-    const langMenu = document.getElementById("langMenu");
-    if (!langBtn || !langMenu) return;
-    langBtn.addEventListener("click", () => {
-      const isOpen = !langMenu.hidden;
-      langMenu.hidden = isOpen;
-      langBtn.setAttribute("aria-expanded", String(!isOpen));
+  // Generic toggle-button + panel dropdown: hidden-attribute toggle,
+  // outside-click close, Escape close. Shared by the language switch and
+  // the nav menu so the 4 listeners aren't duplicated per dropdown.
+  function initDropdown(btn, menu, { itemSelector, onSelect } = {}) {
+    if (!btn || !menu) return;
+    btn.addEventListener("click", () => {
+      const isOpen = !menu.hidden;
+      menu.hidden = isOpen;
+      btn.setAttribute("aria-expanded", String(!isOpen));
     });
-    langMenu.addEventListener("click", (event) => {
-      const opt = event.target.closest(".lang-option");
-      if (!opt) return;
-      setLang(opt.dataset.lang);
-      langMenu.hidden = true;
-      langBtn.setAttribute("aria-expanded", "false");
-    });
+    if (itemSelector) {
+      menu.addEventListener("click", (event) => {
+        const opt = event.target.closest(itemSelector);
+        if (!opt) return;
+        if (onSelect) onSelect(opt);
+        menu.hidden = true;
+        btn.setAttribute("aria-expanded", "false");
+      });
+    }
     document.addEventListener("click", (event) => {
-      if (!langBtn.contains(event.target) && !langMenu.contains(event.target)) {
-        langMenu.hidden = true;
-        langBtn.setAttribute("aria-expanded", "false");
+      if (!btn.contains(event.target) && !menu.contains(event.target)) {
+        menu.hidden = true;
+        btn.setAttribute("aria-expanded", "false");
       }
     });
     document.addEventListener("keydown", (event) => {
       if (event.key === "Escape") {
-        langMenu.hidden = true;
-        langBtn.setAttribute("aria-expanded", "false");
+        menu.hidden = true;
+        btn.setAttribute("aria-expanded", "false");
       }
     });
+  }
+
+  function initLangUI() {
+    const langBtn = document.getElementById("langBtn");
+    const langMenu = document.getElementById("langMenu");
+    initDropdown(langBtn, langMenu, {
+      itemSelector: ".lang-option",
+      onSelect: (opt) => setLang(opt.dataset.lang),
+    });
+  }
+
+  // Nav dropdown trigger (top-right, replaces the old full-width nav row).
+  // Items are real <a href> elements, so no navigation logic is needed —
+  // just close the menu on item click (before the browser navigates away).
+  function initNavUI() {
+    const navBtn = document.getElementById("navBtn");
+    const navMenu = document.getElementById("subNav");
+    if (!navBtn || !navMenu) return;
+    navBtn.setAttribute("aria-label", t("navMenu"));
+    navBtn.title = t("navMenu");
+    initDropdown(navBtn, navMenu, { itemSelector: ".nav-item" });
   }
 
   // The expression currently in play: the page's own input if any, else the URL.
@@ -64,27 +88,57 @@
     return fromUrl || "";
   }
 
-  function renderNav(activePage) {
-    const nav = document.getElementById("subNav");
-    if (!nav) return;
+  // Single source of truth for "all pages" — used by both the header
+  // dropdown and the footer nav, so the 7-entry list is never duplicated.
+  function navItems() {
     const expr = navExpr();
     const q = expr ? "?expr=" + encodeURIComponent(expr) : "";
-    const items = [
+    return [
       { page: "calc", href: "index.html" + q, key: "navCalc" },
       { page: "reasoning", href: "comment-cest-calcule.html" + q, key: "navReasoning" },
       { page: "apps", href: "a-quoi-ca-sert.html" + q, key: "navApps" },
       { page: "app", href: "applications.html" + q, key: "navApp" },
       { page: "pascal", href: "pascal-continuous.html", key: "navPascal" },
       { page: "practice", href: "practice.html", key: "navPractice" },
+      { page: "faq", href: "faq.html", key: "navFaq" },
     ];
+  }
+
+  function renderHeaderNav(activePage) {
+    const nav = document.getElementById("subNav");
+    if (!nav) return;
     nav.innerHTML = "";
-    for (const it of items) {
+    for (const it of navItems()) {
       const a = document.createElement("a");
-      a.className = "nav-link" + (activePage === it.page ? " active" : "");
+      a.className = "nav-item" + (activePage === it.page ? " active" : "");
       a.href = it.href;
+      a.setAttribute("role", "menuitem");
+      if (activePage === it.page) a.setAttribute("aria-current", "page");
       a.textContent = t(it.key);
       nav.appendChild(a);
     }
+  }
+
+  function renderFooterNav(activePage) {
+    const nav = document.getElementById("footerNav");
+    if (!nav) return;
+    nav.innerHTML = "";
+    for (const it of navItems()) {
+      const a = document.createElement("a");
+      a.className = "footer-nav-link" + (activePage === it.page ? " active" : "");
+      a.href = it.href;
+      if (activePage === it.page) a.setAttribute("aria-current", "page");
+      a.textContent = t(it.key);
+      nav.appendChild(a);
+    }
+  }
+
+  // Kept as the single call-site every page/module already uses —
+  // renders both the header dropdown and the footer nav from one call,
+  // so no existing renderNav(navKey) call needs to change.
+  function renderNav(activePage) {
+    renderHeaderNav(activePage);
+    renderFooterNav(activePage);
   }
 
   // A compact "expression = value" context line, used by the detail pages.
@@ -198,6 +252,11 @@
       resultEmpty.textContent = t(emptyKey);
       const note = document.getElementById("noteText");
       if (note) note.textContent = t("note", { c1: "1+2i", c2: "1+2j" });
+      const githubLink = document.getElementById("footerGithub");
+      if (githubLink) {
+        githubLink.setAttribute("aria-label", t("footerGithub"));
+        githubLink.title = t("footerGithub");
+      }
       document.querySelectorAll("[data-i18n]").forEach((el) => {
         el.textContent = t(el.dataset.i18n);
       });
@@ -227,6 +286,7 @@
     }
 
     initLangUI();
+    initNavUI();
     setLang(window.GF.detectInitialLang());
     window.GF.initThemeToggle();
 
@@ -249,6 +309,7 @@
     setLang,
     setLangHook,
     initLangUI,
+    initNavUI,
     renderNav,
     navExpr,
     makeAnswerContext,
