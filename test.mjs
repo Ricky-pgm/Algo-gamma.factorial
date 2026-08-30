@@ -107,9 +107,14 @@ function flush() {
 
 function navChecks(d) {
   const links = [...d.querySelectorAll("#subNav a")];
-  ok(links.length === 6, `subNav has 6 entries (got ${links.length})`);
+  ok(links.length === 7, `subNav has 7 entries (got ${links.length})`);
   const hrefs = links.map(a => a.getAttribute("href").split("?")[0]).sort();
-  ok(JSON.stringify(hrefs) === JSON.stringify(["a-quoi-ca-sert.html", "applications.html", "comment-cest-calcule.html", "index.html", "pascal-continuous.html", "practice.html"]), "nav hrefs complete");
+  ok(JSON.stringify(hrefs) === JSON.stringify(["a-quoi-ca-sert.html", "applications.html", "comment-cest-calcule.html", "faq.html", "index.html", "pascal-continuous.html", "practice.html"]), "nav hrefs complete");
+}
+
+function footerChecks(d) {
+  const links = [...d.querySelectorAll("#footerNav a")];
+  ok(links.length === 7, `footer nav has 7 entries (got ${links.length})`);
 }
 
 function themeChecks(w, d) {
@@ -136,13 +141,13 @@ console.log("== window.GF export surface (docs/js/*.js split) ==");
     "Complex", "GammaError", "parseNumber", "formatResult", "evalExpression",
     "gamma", "gammaSafe", "factorial", "doubleFactorial", "binomial", "beta",
     "resolveResult", "makeFallbackNotice",
-    "evalAt", "defaultRange", "makeTextButton", "makeToolButton", "urlFor",
+    "evalAt", "defaultRange", "makeIconButton", "urlFor",
     "makeCopyLinkButton", "functionBadgeText", "round",
     "buildReasoning", "makeReasoningBlock",
     "buildPractical", "makePracticalBlock",
     "insertAtCursor", "renderKeypad",
     "initThemeToggle",
-    "setLang", "setLangHook", "initLangUI", "renderNav", "navExpr",
+    "setLang", "setLangHook", "initLangUI", "initNavUI", "renderNav", "navExpr",
     "makeAnswerContext", "initDetailPage",
     "isFavorite", "toggleFavorite", "removeFavorite", "getFavorites",
     "renderFavoritesList", "makeFavoriteButton",
@@ -166,6 +171,7 @@ console.log("== index.html ==");
   ok(errors.length === 0, "no script errors" + (errors.length ? " -> " + errors.join(" | ") : ""));
   ok(!!w.GF, "window.GF defined");
   navChecks(d);
+  footerChecks(d);
   themeChecks(w, d);
   const input = d.getElementById("exprInput");
   const evalBtn = d.getElementById("evalBtn");
@@ -196,17 +202,19 @@ console.log("== index.html ==");
 
     // Regression guard for the index.html cleanup that dropped its local
     // makeTextButton/makeToolButton/urlFor/defaultRange copies in favor of
-    // GF.* (plot.js) — pin-to-compare exercises makeTextButton end to end.
+    // GF.* (plot.js) — pin-to-compare exercises makeIconButton end to end.
     input.value = "5!";
     evalBtn.click();
     await flush();
-    const pinBtn = [...d.querySelectorAll(".text-btn")].find((b) => b.textContent === "pin to compare");
+    const pinBtn = [...d.querySelectorAll(".icon-btn")].find((b) => b.getAttribute("aria-label") === "pin to compare");
     ok(!!pinBtn, "pin to compare button renders");
     if (pinBtn) {
       pinBtn.click();
       ok(d.getElementById("pinnedSection").hidden === false, "pinned section becomes visible after pinning");
       ok(d.querySelectorAll(".pinned-chip").length === 1, "pinned chip added to the list");
     }
+    const copyBtn = d.querySelector(".eq-actions .icon-btn");
+    ok(!!copyBtn && (copyBtn.getAttribute("aria-label") || "").length > 0, "icon-only copy button has an aria-label");
 
     // Favorites: toggle button lives in every result's .eq-actions (via
     // nav.js's makeAnswerContext), independent of whether a plot exists.
@@ -238,7 +246,7 @@ console.log("== index.html persistence (simulated reload) ==");
   input.value = "6!";
   evalBtn.click();
   await flush();
-  const pinBtn = [...d.querySelectorAll(".text-btn")].find((b) => b.textContent === "pin to compare");
+  const pinBtn = [...d.querySelectorAll(".icon-btn")].find((b) => b.getAttribute("aria-label") === "pin to compare");
   if (pinBtn) pinBtn.click();
   const favBtn = d.querySelector(".fav-btn");
   if (favBtn) favBtn.click();
@@ -304,6 +312,7 @@ console.log("== comment-cest-calcule.html ==");
   const { dom, errors } = loadPage("comment-cest-calcule.html");
   const w = dom.window, d = w.document;
   navChecks(d);
+  footerChecks(d);
   themeChecks(w, d);
   ok(errors.length === 0, "no script errors" + (errors.length ? " -> " + errors.join(" | ") : ""));
   // Test reasoning toggle: 5! has 6 steps, so toggle should appear
@@ -344,6 +353,7 @@ console.log("== a-quoi-ca-sert.html ==");
   const { dom, errors } = loadPage("a-quoi-ca-sert.html");
   const d = dom.window.document;
   navChecks(d);
+  footerChecks(d);
   themeChecks(dom.window, d);
   ok(errors.length === 0, "no script errors" + (errors.length ? " -> " + errors.join(" | ") : ""));
   const input = d.getElementById("exprInput");
@@ -364,6 +374,7 @@ console.log("== faq.html ==");
   const w = dom.window, d = w.document;
   ok(errors.length === 0, "no script errors" + (errors.length ? " -> " + errors.join(" | ") : ""));
   navChecks(d);
+  footerChecks(d);
   themeChecks(w, d);
   ok(d.querySelectorAll(".faq-item").length === 8, "8 FAQ items rendered");
   ok(d.body.textContent.includes("What exactly does"), "English copy applied");
@@ -380,6 +391,7 @@ console.log("== applications.html ==");
   ok(errors.length === 0, "no script errors" + (errors.length ? " -> " + errors.join(" | ") : ""));
   ok(!!w.GF, "window.GF defined");
   navChecks(d);
+  footerChecks(d);
   themeChecks(w, d);
   ok(d.querySelectorAll(".domain-card").length === 6, "6 domain cards rendered");
   ok(d.querySelectorAll(".domain-card .example-chip").length >= 12, "domain cards have example chips");
@@ -460,6 +472,7 @@ console.log("== pascal-continuous.html ==");
   ok(errors.length === 0, "no script errors" + (errors.length ? " -> " + errors.join(" | ") : ""));
   ok(d.querySelectorAll("header").length >= 1, "page renders its header");
   navChecks(d);
+  footerChecks(d);
   ok(d.getElementById("themeToggle") !== null, "theme toggle present (shared with the rest of the site)");
   ok(d.getElementById("pageTitle").textContent === "Pascal's triangle, made continuous", "page title set via shared i18n");
   ok(d.getElementById("kOut").textContent === "2.00", "cursor readout renders for the default row");
@@ -496,6 +509,7 @@ console.log("== practice.html ==");
   const d = dom.window.document;
   ok(errors.length === 0, "no script errors" + (errors.length ? " -> " + errors.join(" | ") : ""));
   navChecks(d);
+  footerChecks(d);
   const card = d.querySelector(".practice-card");
   ok(!!card, "an exercise card renders on load");
   const prompt = d.querySelector(".practice-prompt");
@@ -506,15 +520,28 @@ console.log("== practice.html ==");
   const exprText = prompt ? prompt.textContent.replace(/\s*=\s*\?$/, "") : "";
   const correct = dom.window.GF.evalExpression(exprText).value;
 
+  // Hint reveal
+  const hintBtn = d.querySelector(".practice-hint-btn");
+  ok(!!hintBtn, "hint button present before answering");
+  hintBtn.click();
+  const hintEl = d.querySelector(".practice-hint");
+  ok(!!hintEl && !hintEl.hidden && hintEl.textContent.length > 0, "hint text reveals on click");
+  ok(hintBtn.hidden === true, "hint button hides itself after revealing");
+
   const input = d.getElementById("practiceInput");
   const checkBtn = d.getElementById("practiceCheckBtn");
   input.value = String(correct.re);
   checkBtn.click();
   ok(d.querySelector(".practice-feedback-correct") !== null, "correct answer shows positive feedback");
+  ok(d.querySelector(".practice-feedback-correct.practice-pulse") !== null, "correct feedback gets the success-pulse class");
+  ok(d.querySelector(".practice-why") !== null, "a why-explanation renders after checking a correct answer");
+  ok(dom.window.localStorage.getItem("gf-practice-streak") === JSON.stringify({ count: 1 }), "streak incremented to 1 after a correct answer");
 
   input.value = String(correct.re + 12345);
   checkBtn.click();
   ok(d.querySelector(".practice-feedback-incorrect") !== null, "wrong answer shows corrective feedback with the right value");
+  ok(d.querySelector(".practice-why") !== null, "a why-explanation renders after checking an incorrect answer");
+  ok(dom.window.localStorage.getItem("gf-practice-streak") === JSON.stringify({ count: 0 }), "streak resets to 0 after a wrong answer");
 
   const nextBtn = d.getElementById("practiceNextBtn");
   ok(!!nextBtn, "a next-exercise control is present");
@@ -522,7 +549,32 @@ console.log("== practice.html ==");
     nextBtn.click();
     const newPrompt = d.querySelector(".practice-prompt");
     ok(!!newPrompt, "a new exercise renders after clicking next");
+    ok(d.querySelector(".practice-hint-btn") !== null && d.querySelector(".practice-hint-btn").hidden === false, "hint button reappears fresh (un-revealed) for the new exercise");
   }
+}
+
+console.log("== practice.html streak persistence across a simulated reload ==");
+{
+  const { dom } = loadPage("practice.html", { seedLocalStorage: { "gf-practice-streak": JSON.stringify({ count: 4 }) } });
+  const d = dom.window.document;
+  const streakEl = d.querySelector(".practice-streak");
+  ok(!!streakEl && streakEl.textContent.includes("4"), "seeded streak count renders on load");
+}
+
+console.log("== practice.html streak corrupted-data fallback ==");
+{
+  const { dom, errors } = loadPage("practice.html", { seedLocalStorage: { "gf-practice-streak": "{not valid json" } });
+  ok(errors.length === 0, "corrupted gf-practice-streak does not throw");
+  const streakEl = dom.window.document.querySelector(".practice-streak");
+  ok(!!streakEl && streakEl.textContent.includes("0"), "corrupted streak falls back to 0");
+}
+
+console.log("== practice.html streak wrong-shape fallback ==");
+{
+  const { dom, errors } = loadPage("practice.html", { seedLocalStorage: { "gf-practice-streak": JSON.stringify({ count: "not a number" }) } });
+  ok(errors.length === 0, "wrong-shaped gf-practice-streak does not throw");
+  const streakEl = dom.window.document.querySelector(".practice-streak");
+  ok(!!streakEl && streakEl.textContent.includes("0"), "wrong-shaped streak falls back to 0");
 }
 
 console.log(failures === 0 ? "\nALL TESTS PASSED" : `\n${failures} FAILURES`);
