@@ -32,25 +32,18 @@
     return [plot.center - span, plot.center + span];
   }
 
-  function makeTextButton(label, onClick) {
+  // Icon-only action button: a neutral circle (no colored chip), inline
+  // SVG using stroke="currentColor" so it's theme-aware automatically,
+  // label becomes the tooltip (title) and accessible name (aria-label)
+  // since there's no visible text. Replaces the old makeTextButton/
+  // makeToolButton "sticker" look (colored pill or emoji-in-a-chip).
+  function makeIconButton(svg, label, onClick, extraClass) {
     const btn = document.createElement("button");
     btn.type = "button";
-    btn.className = "text-btn";
-    btn.textContent = label;
-    btn.addEventListener("click", onClick);
-    return btn;
-  }
-
-  function makeToolButton(icon, label, onClick) {
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "tool-btn";
-    const iconSpan = document.createElement("span");
-    iconSpan.className = "tool-btn-icon";
-    iconSpan.setAttribute("aria-hidden", "true");
-    iconSpan.textContent = icon;
-    btn.appendChild(iconSpan);
-    btn.appendChild(document.createTextNode(label));
+    btn.className = "icon-btn" + (extraClass ? " " + extraClass : "");
+    btn.innerHTML = svg;
+    btn.setAttribute("aria-label", label);
+    btn.title = label;
     btn.addEventListener("click", onClick);
     return btn;
   }
@@ -61,20 +54,28 @@
     return url;
   }
 
+  const LINK_ICON = '<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.07 0l2.83-2.83a5 5 0 0 0-7.07-7.07l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7.07 0L4.1 13.83a5 5 0 0 0 7.07 7.07l1.5-1.5"/></svg>';
+  const CHECK_ICON = '<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+
   function makeCopyLinkButton(expr) {
-    const btn = makeTextButton(t("copyLink"), async () => {
+    const btn = makeIconButton(LINK_ICON, t("copyLink"), async () => {
       try {
         await navigator.clipboard.writeText(urlFor(expr).toString());
-        btn.textContent = t("copied");
+        btn.innerHTML = CHECK_ICON;
+        btn.title = t("copied");
+        btn.setAttribute("aria-label", t("copied"));
         btn.classList.add("copied");
         setTimeout(() => {
-          btn.textContent = t("copyLink");
+          btn.innerHTML = LINK_ICON;
+          btn.title = t("copyLink");
+          btn.setAttribute("aria-label", t("copyLink"));
           btn.classList.remove("copied");
         }, 1500);
       } catch (e) {
-        btn.textContent = t("copyFailed");
+        btn.title = t("copyFailed");
+        btn.setAttribute("aria-label", t("copyFailed"));
       }
-    });
+    }, "copy-link-btn");
     return btn;
   }
 
@@ -96,8 +97,7 @@
   Object.assign(window.GF, {
     evalAt,
     defaultRange,
-    makeTextButton,
-    makeToolButton,
+    makeIconButton,
     urlFor,
     makeCopyLinkButton,
     functionBadgeText,

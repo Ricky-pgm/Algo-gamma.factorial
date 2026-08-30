@@ -113,14 +113,24 @@
     }
   }
 
+  // Same star shape for both states — outline (fill="none") when not
+  // favorited, filled (fill="currentColor") when it is. No colored chip,
+  // matches the site's other icon-only action buttons.
+  const STAR_POINTS = "12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2";
+  const STAR_OUTLINE = `<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="${STAR_POINTS}"/></svg>`;
+  const STAR_FILLED = `<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="${STAR_POINTS}"/></svg>`;
+
   function makeFavoriteButton(expr, display, kind) {
     const btn = document.createElement("button");
     btn.type = "button";
-    btn.className = "text-btn fav-btn";
+    btn.className = "icon-btn fav-btn";
 
     function refresh() {
       const fav = isFavorite(expr);
-      btn.textContent = (fav ? "★ " : "☆ ") + t(fav ? "removeFromFavorites" : "addToFavorites");
+      btn.innerHTML = fav ? STAR_FILLED : STAR_OUTLINE;
+      const label = t(fav ? "removeFromFavorites" : "addToFavorites");
+      btn.title = label;
+      btn.setAttribute("aria-label", label);
       btn.setAttribute("aria-pressed", String(fav));
     }
 
