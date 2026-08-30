@@ -232,6 +232,13 @@ body::before {
   align-items: center;
   gap: 0.5rem;
   white-space: nowrap;
+  text-decoration: none;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.eyebrow:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent);
 }
 
 .eyebrow::before {
