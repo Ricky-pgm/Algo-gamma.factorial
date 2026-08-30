@@ -53,6 +53,11 @@ An interactive demo of the continuous Pascal's triangle (slider on `n`,
 curve of `C(n, k)` vs. `k`) is available in `docs/pascal-continuous.html` -
 also linked from the calculator page.
 
+A small set of practice exercises (factorial, Gamma, binomial, double
+factorial, three difficulty levels) is available in `docs/practice.html`,
+for checking your understanding after reading through the site — answers
+are checked locally, no server round-trip.
+
 ## Installation
 
 ```bash

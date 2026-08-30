@@ -7,7 +7,8 @@ static web calculator in `docs/`.
 ## Setup
 
 ```bash
-# Python package + dev tools (pytest, ruff, mypy, httpx2)
+# Python package + dev tools (pytest, ruff, mypy, httpx2 — Starlette's
+# TestClient backend, not a typo for httpx)
 pip install -e ".[dev]"
 
 # Site test tooling (jsdom, for test.mjs)
@@ -48,17 +49,22 @@ uvicorn gamma_factorial.api:app --reload
   reusing `_parse`/`_serialize` for consistent error handling.
 - `gamma_factorial/cli.py` — the command-line tool and REPL.
 - `docs/` — the static web calculator (plain HTML/CSS/JS, no build step,
-  no framework). `docs/js/` holds 9 classic (non-module) scripts, loaded
-  in dependency order and merged onto a shared `window.GF` namespace —
-  `i18n.js` (EN/FR/DE dictionary), `math.js` (the local math engine),
-  `api.js` (`resolveResult`, the API-first/local-fallback logic),
-  `plot.js` (live curve helpers), `reasoning.js`/`practical.js` (the
-  "how it's computed"/"what it's for" panels), `keypad.js`, `theme.js`,
-  and `nav.js` (navigation, language switching, and `initDetailPage`,
-  the shared init/render loop for the 3 detail pages). Deliberately not
+  no framework). `docs/js/` holds 12 classic (non-module) scripts, loaded
+  in the same fixed dependency order on every page and merged onto a
+  shared `window.GF` namespace — `i18n.js` (EN/FR/DE dictionary),
+  `math.js` (the local math engine), `api.js` (`resolveResult`, the
+  API-first/local-fallback logic), `plot.js` (live curve helpers),
+  `domain-viz.js` (per-card mini charts on `applications.html`),
+  `reasoning.js`/`practical.js` (the "how it's computed"/"what it's for"
+  panels), `keypad.js`, `theme.js`, `favorites.js` (saved-expression
+  persistence), `nav.js` (navigation, language switching, and
+  `initDetailPage`, the shared init/render loop for the detail pages),
+  and `practice.js` (the exercises on `practice.html`). Deliberately not
   `<script type="module">`: real ES modules break `file://` opening on
   Chrome/Safari (CORS), which would break "open the file directly in a
-  browser."
+  browser." All 7 pages load all 12 scripts, even ones a given page
+  doesn't use — keeps the load order simple and uniform instead of a
+  per-page subset that could drift out of sync.
 - `tests/` — pytest suite for the Python package.
 - `test.mjs` — jsdom-based tests that load the actual `docs/*.html` pages
   and exercise them (evaluating expressions, switching language/theme,

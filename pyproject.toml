@@ -14,6 +14,9 @@ entrypoint = "gamma_factorial.api:app"
 gamma-factorial = "gamma_factorial.cli:main"
 
 [project.optional-dependencies]
+# httpx2 (not a typo for httpx): Starlette's TestClient — used by
+# checker.py via fastapi.testclient — has deprecated httpx in favor of
+# httpx2 as its HTTP backend.
 dev = ["pytest", "ruff", "mypy", "httpx2"]
 
 [build-system]
