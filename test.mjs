@@ -503,6 +503,30 @@ console.log("== index.html (API unreachable -> local fallback) ==");
   }
 }
 
+console.log("== math.js error messages resolve real i18n text, not a ReferenceError ==");
+{
+  // Regression guard: math.js used to call the bare `t(...)` global instead
+  // of GF.t, so every GammaError path (invalid input, poles, unrecognized
+  // expressions) threw "t is not defined" instead of its real message —
+  // silently shown to users via nav.js's `t("error") + ": " + e.message`.
+  const { dom } = loadPage("index.html");
+  const d = dom.window.document;
+  const input = d.getElementById("exprInput");
+  const evalBtn = d.getElementById("evalBtn");
+  input.value = "-2!!";
+  evalBtn.click();
+  await flush();
+  const errEl = d.querySelector(".result-error");
+  ok(!!errEl && !errEl.textContent.includes("is not defined"), "double-factorial domain error is a real message, not a ReferenceError: " + (errEl && errEl.textContent));
+  ok(!!errEl && /-1|−1/.test(errEl.textContent), "double-factorial error correctly states the -1 boundary: " + (errEl && errEl.textContent));
+
+  input.value = "-1!";
+  evalBtn.click();
+  await flush();
+  const poleEl = d.querySelector(".result-error");
+  ok(!!poleEl && !poleEl.textContent.includes("is not defined"), "gamma pole error is a real message, not a ReferenceError: " + (poleEl && poleEl.textContent));
+}
+
 console.log("== practice.html ==");
 {
   const { dom, errors } = loadPage("practice.html");

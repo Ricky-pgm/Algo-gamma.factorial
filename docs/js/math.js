@@ -1,6 +1,7 @@
 (function () {
   "use strict";
   // ===================== math engine =====================
+  const { t } = window.GF;
 
   const G = 7;
   const LANCZOS_COEF = [
