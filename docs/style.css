@@ -117,6 +117,26 @@ body {
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  position: relative;
+}
+
+/* Faint oversized Γ watermark — layered with (not replacing) the radial
+   glow above; color follows --ink so it flips automatically light/dark. */
+body::before {
+  content: "Γ";
+  position: fixed;
+  top: -8vw;
+  right: -4vw;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 48vw;
+  line-height: 1;
+  color: var(--ink);
+  opacity: 0.025;
+  pointer-events: none;
+  z-index: -1;
+  user-select: none;
 }
 
 ::selection {
@@ -129,14 +149,16 @@ body {
 }
 
 .page {
-  max-width: 880px;
+  max-width: 1180px;
   margin: 0 auto;
 }
 
 /* ---------- home two-column layout ---------- */
 
+/* Historically narrower/wider than .page for index.html's aside — now
+   intentionally equal; kept as its own rule so it stays overridable. */
 .page-home {
-  max-width: 1120px;
+  max-width: 1180px;
 }
 
 .home-grid {
@@ -166,9 +188,7 @@ body {
 /* ---------- sticky header bar ---------- */
 
 .site-header {
-  position: sticky;
-  top: 0.7rem;
-  z-index: 40;
+  margin-bottom: 1.4rem;
 }
 
 .header-inner {
@@ -176,9 +196,7 @@ body {
   flex-direction: column;
   gap: 0.65rem;
   padding: 0.7rem 0.8rem;
-  background: color-mix(in srgb, var(--surface) 72%, transparent);
-  backdrop-filter: blur(14px) saturate(1.35);
-  -webkit-backdrop-filter: blur(14px) saturate(1.35);
+  background: var(--surface);
   border: 1px solid var(--rule);
   border-radius: 22px;
   box-shadow: var(--shadow-card);
@@ -217,11 +235,17 @@ body {
 }
 
 .eyebrow::before {
-  content: "";
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--accent);
+  content: "Γ";
+  width: auto;
+  height: auto;
+  border-radius: 0;
+  background: none;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 1.05em;
+  line-height: 1;
+  color: var(--accent);
   flex-shrink: 0;
 }
 
@@ -264,7 +288,7 @@ body {
   background: var(--surface);
   border: 1px solid var(--rule-strong);
   color: var(--ink-soft);
-  border-radius: 999px;
+  border-radius: 12px;
   padding: 0.42rem 0.85rem;
   cursor: pointer;
   transition: color 0.15s, border-color 0.15s, background 0.15s;
@@ -430,7 +454,7 @@ h1 {
   background: var(--surface-sunken);
   border: 1px solid transparent;
   color: var(--ink-soft);
-  border-radius: 999px;
+  border-radius: 10px;
   padding: 0.4rem 0.75rem;
   cursor: pointer;
   min-width: 2.7rem;
@@ -498,6 +522,12 @@ h1 {
   color: var(--accent);
   font-weight: 700;
 }
+/* Per-function-kind color, mirroring .function-badge's existing palette. */
+.eq[data-kind="factorial"] .eq-op { color: var(--k-factorial); }
+.eq[data-kind="gamma"] .eq-op { color: var(--k-gamma); }
+.eq[data-kind="doubleFactorial"] .eq-op { color: var(--k-double); }
+.eq[data-kind="binomial"] .eq-op { color: var(--k-binomial); }
+.eq[data-kind="beta"] .eq-op { color: var(--k-beta); }
 .eq-val {
   font-size: clamp(1.85rem, 6vw, 2.6rem);
   font-weight: 700;
@@ -614,7 +644,7 @@ svg#plot {
   background: var(--surface);
   border: 1px solid var(--rule-strong);
   color: var(--ink-soft);
-  border-radius: 999px;
+  border-radius: 12px;
   padding: 0.3rem 0.7rem;
   cursor: pointer;
   box-shadow: 0 2px 8px -3px rgba(16, 24, 40, 0.25);
@@ -1552,6 +1582,70 @@ input[type="range"].domain-viz-slider:focus-visible::-moz-range-thumb {
   height: 56px;
 }
 
+/* ---------- practice page ---------- */
+
+.practice-progress {
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  font-weight: 700;
+  margin: 0 0 0.9rem;
+}
+
+.practice-prompt {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(1.4rem, 4vw, 1.9rem);
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0 0 1.1rem;
+}
+
+.practice-form {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.practice-input {
+  flex: 1;
+  min-width: 0;
+  background: var(--surface-sunken);
+  border: 1.5px solid var(--rule-strong);
+  border-radius: 12px;
+  padding: 0.6rem 0.9rem;
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 1.05rem;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.practice-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-soft);
+}
+
+.practice-feedback {
+  margin-top: 1rem;
+  min-height: 1.6rem;
+}
+.practice-feedback-correct {
+  color: var(--series-3);
+  font-weight: 700;
+  margin: 0;
+}
+.practice-feedback-incorrect {
+  color: var(--err);
+  font-weight: 600;
+  margin: 0;
+}
+
+.practice-next-row {
+  margin-top: 1rem;
+}
+
 /* ---------- footer ---------- */
 
 .page-foot {
@@ -1652,7 +1746,7 @@ input[type="range"].domain-viz-slider:focus-visible::-moz-range-thumb {
   text-decoration: none;
   border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
   background: var(--accent-soft);
-  border-radius: 999px;
+  border-radius: 12px;
   padding: 0.42rem 0.9rem;
   transition: color 0.15s, border-color 0.15s, background 0.15s;
 }
@@ -1706,10 +1800,12 @@ input[type="range"].domain-viz-slider:focus-visible::-moz-range-thumb {
   body {
     padding: 0.9rem 0.9rem calc(3rem + env(safe-area-inset-bottom));
   }
+  .site-header {
+    margin-bottom: 1.2rem;
+  }
   .header-inner {
     padding: 0.6rem 0.65rem;
     border-radius: 18px;
-    margin-bottom: 1.2rem;
   }
   .sub-nav {
     border-radius: 14px;
