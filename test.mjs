@@ -109,7 +109,7 @@ function navChecks(d) {
   const links = [...d.querySelectorAll("#subNav a")];
   ok(links.length === 6, `subNav has 6 entries (got ${links.length})`);
   const hrefs = links.map(a => a.getAttribute("href").split("?")[0]).sort();
-  ok(JSON.stringify(hrefs) === JSON.stringify(["a-quoi-ca-sert.html", "applications.html", "comment-cest-calcule.html", "faq.html", "index.html", "pascal-continuous.html"]), "nav hrefs complete");
+  ok(JSON.stringify(hrefs) === JSON.stringify(["a-quoi-ca-sert.html", "applications.html", "comment-cest-calcule.html", "index.html", "pascal-continuous.html", "practice.html"]), "nav hrefs complete");
 }
 
 function themeChecks(w, d) {
@@ -147,6 +147,7 @@ console.log("== window.GF export surface (docs/js/*.js split) ==");
     "isFavorite", "toggleFavorite", "removeFavorite", "getFavorites",
     "renderFavoritesList", "makeFavoriteButton",
     "renderMiniChart", "initDomainSlider",
+    "initPracticePage",
   ];
   const { dom: gfDom } = loadPage("index.html");
   const actualKeys = Object.keys(gfDom.window.GF).filter((k) => !k.startsWith("_")).sort();
@@ -486,6 +487,41 @@ console.log("== index.html (API unreachable -> local fallback) ==");
     ok(errors.length === 0, "no script errors" + (errors.length ? " -> " + errors.join(" | ") : ""));
     ok(d.body.textContent.includes("120"), "5! still evaluates to 120 via local fallback");
     ok(d.querySelector(".result-fallback-notice") !== null, "fallback notice shown when API is unreachable");
+  }
+}
+
+console.log("== practice.html ==");
+{
+  const { dom, errors } = loadPage("practice.html");
+  const d = dom.window.document;
+  ok(errors.length === 0, "no script errors" + (errors.length ? " -> " + errors.join(" | ") : ""));
+  navChecks(d);
+  const card = d.querySelector(".practice-card");
+  ok(!!card, "an exercise card renders on load");
+  const prompt = d.querySelector(".practice-prompt");
+  ok(!!prompt && /=\s*\?$/.test(prompt.textContent), "prompt shows an expression awaiting an answer");
+
+  // Read the expression back out of the prompt so the answer we type is
+  // correct regardless of EXERCISES' shuffled order.
+  const exprText = prompt ? prompt.textContent.replace(/\s*=\s*\?$/, "") : "";
+  const correct = dom.window.GF.evalExpression(exprText).value;
+
+  const input = d.getElementById("practiceInput");
+  const checkBtn = d.getElementById("practiceCheckBtn");
+  input.value = String(correct.re);
+  checkBtn.click();
+  ok(d.querySelector(".practice-feedback-correct") !== null, "correct answer shows positive feedback");
+
+  input.value = String(correct.re + 12345);
+  checkBtn.click();
+  ok(d.querySelector(".practice-feedback-incorrect") !== null, "wrong answer shows corrective feedback with the right value");
+
+  const nextBtn = d.getElementById("practiceNextBtn");
+  ok(!!nextBtn, "a next-exercise control is present");
+  if (nextBtn && !nextBtn.hidden) {
+    nextBtn.click();
+    const newPrompt = d.querySelector(".practice-prompt");
+    ok(!!newPrompt, "a new exercise renders after clicking next");
   }
 }
 
