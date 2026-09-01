@@ -1920,13 +1920,11 @@ input[type="range"].domain-viz-slider:focus-visible::-moz-range-thumb {
   }
   .lang-menu,
   .nav-menu {
-    position: fixed;
-    top: auto;
-    bottom: calc(0.9rem + env(safe-area-inset-bottom));
-    right: 0.9rem;
-    left: 0.9rem;
+    right: 0;
     min-width: 0;
-    max-height: calc(100vh - 1.8rem - env(safe-area-inset-bottom));
+    width: max-content;
+    max-width: calc(100vw - 1.8rem);
+    max-height: 70vh;
     overflow-y: auto;
   }
   .lang-option,
